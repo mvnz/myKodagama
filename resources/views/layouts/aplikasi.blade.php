@@ -51,7 +51,8 @@
         $adaTransaksi       = $bisaSimpanan || $bisaPinjaman || $bisaAngsuran;
         $bisaLaporan        = $u->hasPermission('laporan.lihat');
         $bisaMonitoring     = $u->hasPermission('monitoring.lihat');
-        $adaLaporan         = $bisaLaporan || $bisaMonitoring;
+        $bisaShu            = $u->hasPermission('shu.lihat');
+        $adaLaporan         = $bisaLaporan || $bisaMonitoring || $bisaShu;
         $bisaAppSetting     = $u->hasPermission('pengaturan.aplikasi');
         $bisaSpSetting      = $u->hasPermission('pengaturan.simpan-pinjam');
         $bisaNotifWa        = $u->hasPermission('pengaturan.aplikasi'); // admin only
@@ -168,6 +169,14 @@
         </a>
       </div>
       @endif
+
+      @can('shu.lihat')
+      <div class="nav-item">
+        <a href="{{ route('shu.index') }}" class="nav-link {{ request()->routeIs('shu.*') ? 'active' : '' }}">
+          <i class="bi bi-pie-chart-fill"></i> SHU
+        </a>
+      </div>
+      @endcan
 
       @if($bisaMonitoring)
       @php $monitoringAktif = request()->routeIs('monitoring.*'); @endphp

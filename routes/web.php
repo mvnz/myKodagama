@@ -13,6 +13,8 @@ use App\Http\Controllers\LogAktivitasController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\UnitKerjaController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ShuController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -86,4 +88,19 @@ Route::middleware('auth')->group(function () {
     // Monitoring
     Route::get('/monitoring/simpanan', [MonitoringController::class, 'simpanan'])->name('monitoring.simpanan');
     Route::get('/monitoring/pinjaman', [MonitoringController::class, 'pinjaman'])->name('monitoring.pinjaman');
+
+    // Export CSV
+    Route::get('/export/anggota',  [ExportController::class, 'anggota'])->name('export.anggota');
+    Route::get('/export/simpanan', [ExportController::class, 'simpanan'])->name('export.simpanan');
+    Route::get('/export/pinjaman', [ExportController::class, 'pinjaman'])->name('export.pinjaman');
+    Route::get('/export/angsuran', [ExportController::class, 'angsuran'])->name('export.angsuran');
+
+    // SHU
+    Route::get('/shu', [ShuController::class, 'index'])->name('shu.index');
+    Route::get('/shu/hitung', [ShuController::class, 'hitung'])->name('shu.hitung');
+    Route::post('/shu', [ShuController::class, 'store'])->name('shu.store');
+    Route::get('/shu/{shu}', [ShuController::class, 'show'])->name('shu.show');
+    Route::post('/shu/{shu}/finalisasi', [ShuController::class, 'finalisasi'])->name('shu.finalisasi');
+    Route::get('/shu/{shu}/cetak', [ShuController::class, 'cetak'])->name('shu.cetak');
+    Route::delete('/shu/{shu}', [ShuController::class, 'destroy'])->name('shu.destroy');
 });

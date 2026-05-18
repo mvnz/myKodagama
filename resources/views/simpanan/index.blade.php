@@ -92,9 +92,12 @@
       </button>
     </div>
     @can('simpanan.tambah')
-    <div class="col-md-2">
-      <a href="{{ route('simpanan.create') }}" class="btn btn-success w-100">
+    <div class="col-md-2 d-flex gap-2">
+      <a href="{{ route('simpanan.create') }}" class="btn btn-success flex-fill">
         <i class="bi bi-plus me-1"></i> Tambah
+      </a>
+      <a href="{{ route('export.simpanan', request()->query()) }}" class="btn btn-outline-secondary" title="Export CSV">
+        <i class="bi bi-file-earmark-spreadsheet"></i>
       </a>
     </div>
     @endcan

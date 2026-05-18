@@ -93,9 +93,12 @@
       <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel me-1"></i> Filter</button>
     </div>
     @can('pinjaman.tambah')
-    <div class="col-md-3">
-      <a href="{{ route('pinjaman.create') }}" class="btn btn-success w-100">
+    <div class="col-md-3 d-flex gap-2">
+      <a href="{{ route('pinjaman.create') }}" class="btn btn-success flex-fill">
         <i class="bi bi-plus me-1"></i> Ajukan Pinjaman
+      </a>
+      <a href="{{ route('export.pinjaman', request()->query()) }}" class="btn btn-outline-secondary" title="Export CSV">
+        <i class="bi bi-file-earmark-spreadsheet"></i>
       </a>
     </div>
     @endcan

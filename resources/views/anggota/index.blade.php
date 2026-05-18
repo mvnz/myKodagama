@@ -104,9 +104,12 @@
         <i class="bi bi-funnel me-1"></i> Filter
       </button>
     </div>
-    <div class="col-md-2">
-      <a href="{{ route('anggota.create') }}" class="btn btn-success w-100">
+    <div class="col-md-2 d-flex gap-2">
+      <a href="{{ route('anggota.create') }}" class="btn btn-success flex-fill">
         <i class="bi bi-person-plus me-1"></i> Tambah
+      </a>
+      <a href="{{ route('export.anggota', request()->query()) }}" class="btn btn-outline-secondary" title="Export CSV">
+        <i class="bi bi-file-earmark-spreadsheet"></i>
       </a>
     </div>
   </form>

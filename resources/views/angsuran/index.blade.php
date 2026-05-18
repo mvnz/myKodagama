@@ -95,8 +95,11 @@
         <option value="terlambat" {{ request('jatuh_tempo') === 'terlambat' ? 'selected' : '' }}>Terlambat</option>
       </select>
     </div>
-    <div class="col-md-2">
-      <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel me-1"></i> Filter</button>
+    <div class="col-md-2 d-flex gap-2">
+      <button type="submit" class="btn btn-primary flex-fill"><i class="bi bi-funnel me-1"></i> Filter</button>
+      <a href="{{ route('export.angsuran', request()->query()) }}" class="btn btn-outline-secondary" title="Export CSV">
+        <i class="bi bi-file-earmark-spreadsheet"></i>
+      </a>
     </div>
   </form>
 </div>

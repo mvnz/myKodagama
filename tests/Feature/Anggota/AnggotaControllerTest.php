@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Anggota;
 
-use App\Models\Anggota;
+use App\Models\Koperasi\Anggota;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -77,7 +77,7 @@ class AnggotaControllerTest extends TestCase
     private function dataAnggotaValid(array $override = []): array
     {
         return array_merge([
-            'nomor_anggota'     => 'KOP-202601-9999',
+            'nomor_anggota'     => 'KOP-2026-9999',
             'nama'              => 'Tes Pengguna',
             'nik'               => '1234567890000001',
             'tempat_lahir'      => 'Yogyakarta',

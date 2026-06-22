@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Anggota;
+use App\Models\Koperasi\Anggota;
 
 #[Fillable(['name', 'username', 'no_wa', 'email', 'password', 'role', 'role_id', 'anggota_id'])]
 #[Hidden(['password', 'remember_token'])]

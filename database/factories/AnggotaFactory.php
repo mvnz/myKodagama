@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Anggota;
+use App\Models\Koperasi\Anggota;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AnggotaFactory extends Factory
@@ -12,7 +12,7 @@ class AnggotaFactory extends Factory
     public function definition(): array
     {
         return [
-            'nomor_anggota'     => 'KOP-' . fake()->unique()->numerify('######'),
+            'nomor_anggota'     => 'KOP-' . fake()->year() . '-' . fake()->unique()->numerify('####'),
             'nama'              => fake()->name(),
             'nik'               => fake()->unique()->numerify('################'),
             'tempat_lahir'      => fake()->city(),
@@ -23,9 +23,15 @@ class AnggotaFactory extends Factory
             'pekerjaan'         => fake()->jobTitle(),
             'email'             => fake()->unique()->safeEmail(),
             'status'            => 'aktif',
+            'jenis_anggota'     => fake()->randomElement(['PNS GOL 1', 'PNS GOL 2', 'PNS GOL 3', 'Non-PNS']),
             'tanggal_bergabung' => fake()->dateTimeBetween('-5 years', 'now')->format('Y-m-d'),
             'foto'              => null,
         ];
+    }
+
+    public function golongan(string $jenis): static
+    {
+        return $this->state(fn ($attributes) => ['jenis_anggota' => $jenis]);
     }
 
     public function tidakAktif(): static

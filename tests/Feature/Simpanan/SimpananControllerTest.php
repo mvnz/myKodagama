@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Simpanan;
 
-use App\Models\Anggota;
-use App\Models\Simpanan;
+use App\Models\Koperasi\Anggota;
+use App\Models\Koperasi\Simpanan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

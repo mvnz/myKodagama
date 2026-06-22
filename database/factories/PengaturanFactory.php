@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Pengaturan;
+use App\Models\Koperasi\Pengaturan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PengaturanFactory extends Factory

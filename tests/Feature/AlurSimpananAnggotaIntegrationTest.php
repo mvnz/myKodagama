@@ -5,10 +5,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\Anggota;
+use App\Models\Koperasi\Anggota;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\Simpanan;
+use App\Models\Koperasi\Simpanan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;

@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\E2E;
 
-use App\Models\Anggota;
-use App\Models\Angsuran;
-use App\Models\Pinjaman;
-use App\Models\Simpanan;
+use App\Models\Koperasi\Anggota;
+use App\Models\Koperasi\Angsuran;
+use App\Models\Koperasi\Pinjaman;
+use App\Models\Koperasi\Simpanan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -43,7 +43,7 @@ class AlurAnggotaTest extends TestCase
 
         // ── 2. Daftar anggota baru ────────────────────────────────
         $responseAnggota = $this->post(route('anggota.store'), [
-            'nomor_anggota'     => 'KOP-202601-0001',
+            'nomor_anggota'     => 'KOP-2026-0001',
             'nama'              => 'Wulandari Putri',
             'nik'               => '3471011234560001',
             'tempat_lahir'      => 'Sleman',

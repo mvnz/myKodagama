@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Angsuran;
-use App\Models\Pinjaman;
+use App\Models\Koperasi\Angsuran;
+use App\Models\Koperasi\Pinjaman;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AngsuranFactory extends Factory

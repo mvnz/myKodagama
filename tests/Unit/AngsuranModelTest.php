@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Models\Angsuran;
-use App\Models\Pinjaman;
+use App\Models\Koperasi\Angsuran;
+use App\Models\Koperasi\Pinjaman;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

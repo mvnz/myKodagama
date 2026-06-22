@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Pengaturan;
 
-use App\Models\Pengaturan;
+use App\Models\Koperasi\Pengaturan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

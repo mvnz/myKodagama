@@ -5,11 +5,11 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
-use App\Models\Anggota;
-use App\Models\Simpanan;
-use App\Models\Pinjaman;
-use App\Models\Angsuran;
-use App\Models\Pengaturan;
+use App\Models\Koperasi\Anggota;
+use App\Models\Koperasi\Simpanan;
+use App\Models\Koperasi\Pinjaman;
+use App\Models\Koperasi\Angsuran;
+use App\Models\Koperasi\Pengaturan;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -118,7 +118,7 @@ class DatabaseSeeder extends Seeder
         $anggotaList = [];
         foreach ($anggotaData as $data) {
             $anggota = Anggota::create(array_merge($data, [
-                'nomor_anggota'    => 'KOP-' . date('Ym') . '-' . str_pad($nomor++, 4, '0', STR_PAD_LEFT),
+                'nomor_anggota'    => 'KOP-' . date('Y') . '-' . str_pad($nomor++, 4, '0', STR_PAD_LEFT),
                 'status'           => 'aktif',
                 'tanggal_bergabung'=> now()->subYears(rand(1,5))->format('Y-m-d'),
             ]));

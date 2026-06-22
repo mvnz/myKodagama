@@ -5,10 +5,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\Anggota;
-use App\Models\Angsuran;
+use App\Models\Koperasi\Anggota;
+use App\Models\Koperasi\Angsuran;
 use App\Models\Permission;
-use App\Models\Pinjaman;
+use App\Models\Koperasi\Pinjaman;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

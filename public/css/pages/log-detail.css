@@ -1,0 +1,66 @@
+/* ── Detail Log Card ─────────────────────────────── */
+.detail-log-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    border: 1px solid #e8eef8;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+.detail-log-header {
+    padding: 1.2rem 1.6rem;
+    border-bottom: 1px solid #f0f4ff;
+    background: #fafbff;
+    display: flex; align-items: center; gap: .75rem;
+}
+.detail-log-header h6 {
+    margin: 0; font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 1rem; color: #112344;
+}
+.detail-log-body { padding: 1.6rem; }
+
+.info-row { display: flex; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid #f3f6ff; align-items: flex-start; }
+.info-row:last-child { border-bottom: none; }
+.info-label { width: 150px; flex-shrink: 0; font-size: .8rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: .4px; padding-top: .1rem; }
+.info-value  { font-size: .9rem; color: #112344; }
+
+/* ── Aksi Pills (shared with log.css) ──────────────── */
+.aksi-pill {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .35rem .85rem; border-radius: 50px;
+    font-size: .78rem; font-weight: 600; white-space: nowrap;
+}
+.aksi-tambah  { background: #d1fae5; color: #065f46; }
+.aksi-ubah    { background: #fef3c7; color: #92400e; }
+.aksi-hapus   { background: #fee2e2; color: #991b1b; }
+.aksi-bayar   { background: #dbeafe; color: #1e40af; }
+.aksi-setujui { background: #ede9fe; color: #5b21b6; }
+.aksi-tolak   { background: #f3f4f6; color: #374151; }
+
+/* ── Modul Chip ──────────────────────────────────── */
+.modul-chip {
+    padding: .3rem .8rem; border-radius: 8px;
+    font-size: .78rem; font-weight: 600;
+    background: #f0f4ff; color: #175cdd;
+    border: 1px solid #dbe8ff;
+}
+
+/* ── Diff Card ───────────────────────────────────── */
+.diff-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8eef8;
+}
+.diff-card-header {
+    padding: .7rem 1rem;
+    font-size: .82rem; font-weight: 700;
+    display: flex; align-items: center; gap: .4rem;
+}
+.diff-card-header.lama { background: #fff5f5; color: #991b1b; border-bottom: 1px solid #fecaca; }
+.diff-card-header.baru { background: #f0fdf4; color: #065f46; border-bottom: 1px solid #bbf7d0; }
+.diff-card pre {
+    margin: 0; padding: 1rem;
+    font-size: .78rem; line-height: 1.7;
+    max-height: 380px; overflow: auto;
+    background: #fff; color: #374151;
+}

@@ -1,0 +1,32 @@
+@media print {
+    .sidebar, .topnav-app, .d-print-none { display: none !important; }
+    .main-content { margin-left: 0 !important; background: #fff !important; padding: 0 !important; }
+    body { background: #fff !important; }
+    @page { margin: 1cm; size: A4 portrait; }
+}
+
+/* Info bar */
+.print-info-bar {
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: .5rem;
+    padding-bottom: .3rem;
+}
+.pi-row {
+    display: flex; gap: .1rem 2rem;
+    padding: .15rem 0;
+    border-bottom: 1px dashed #f3f4f6;
+}
+.pi-row:last-child { border-bottom: none; }
+.pi-row > div { font-size: 8pt; }
+.pi-lbl { font-size: 7pt; color: #9ca3af; display: block; }
+
+/* Tabel angsuran print */
+.print-ang-table { border-collapse: collapse; width: 100%; font-size: 7.5pt; }
+.print-ang-table th {
+    background: #175cdd; color: #fff;
+    padding: .2rem .3rem;
+    text-align: left; font-size: 7pt;
+}
+.print-ang-table td { border-bottom: 1px solid #e5e7eb; padding: .18rem .3rem; }
+.print-row-lunas td { background: #f0fdf4; color: #166534; }
+.print-row-telat td { background: #fff1f2; }

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Pengaturan;
+use App\Models\Koperasi\Pengaturan;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -38,11 +38,11 @@ class AppServiceProvider extends ServiceProvider
                     ->pluck('nilai', 'kunci');
 
                 $view->with([
-                    'namaKoperasiLayout' => $profil->get('nama_koperasi', 'Koperasi'),
-                    'subNamaLayout'      => $profil->get('sub_nama', 'Simpan Pinjam'),
+                    'namaKoperasiLayout' => $profil->get('nama_koperasi', 'myKodagama'),
+                    'subNamaLayout'      => $profil->get('sub_nama', ''),
                 ]);
             } catch (\Throwable) {
-                $view->with(['namaKoperasiLayout' => 'Koperasi', 'subNamaLayout' => 'Simpan Pinjam']);
+                $view->with(['namaKoperasiLayout' => 'myKodagama', 'subNamaLayout' => '']);
             }
 
             // Eager load roleModel dengan permissions untuk auth user

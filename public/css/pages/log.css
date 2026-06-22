@@ -1,0 +1,132 @@
+/* ── Stat Cards ─────────────────────────────────── */
+.log-stat-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.4rem 1.6rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    border: 1px solid rgba(23,92,221,.08);
+    display: flex; align-items: center; gap: 1.1rem;
+    position: relative; overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+}
+.log-stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(23,92,221,.12); }
+.log-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+}
+.log-stat-card.card-biru::before   { background: linear-gradient(90deg,#175cdd,#3b7ae0); }
+.log-stat-card.card-hijau::before  { background: linear-gradient(90deg,#10b981,#34d399); }
+.log-stat-card.card-ungu::before   { background: linear-gradient(90deg,#8b5cf6,#a78bfa); }
+.log-stat-card.card-oranye::before { background: linear-gradient(90deg,#f59e0b,#fbbf24); }
+.log-stat-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+}
+.log-stat-label { font-size: .77rem; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.log-stat-value { font-size: 1.75rem; font-weight: 700; color: #112344; line-height: 1.2; }
+
+/* ── Filter Card ─────────────────────────────────── */
+.filter-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.3rem 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.05);
+    border: 1px solid #e8eef8;
+    margin-bottom: 1.5rem;
+}
+.filter-card .form-label { font-size: .78rem; font-weight: 600; color: #374151; margin-bottom: .3rem; }
+.filter-card .form-control,
+.filter-card .form-select {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 9px;
+    font-size: .86rem;
+    padding: .5rem .85rem;
+    transition: border-color .2s, box-shadow .2s;
+}
+.filter-card .form-control:focus,
+.filter-card .form-select:focus {
+    border-color: #175cdd;
+    box-shadow: 0 0 0 3px rgba(23,92,221,.1);
+}
+
+/* ── Log Table Card ──────────────────────────────── */
+.log-table-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    border: 1px solid #e8eef8;
+    overflow: hidden;
+}
+.log-table-header {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid #f0f4ff;
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fafbff;
+}
+.log-table-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 1rem; color: #112344;
+    display: flex; align-items: center; gap: .5rem;
+}
+
+/* ── Aksi Pills ──────────────────────────────────── */
+.aksi-pill {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .3rem .75rem; border-radius: 50px;
+    font-size: .75rem; font-weight: 600; white-space: nowrap;
+}
+.aksi-tambah  { background: #d1fae5; color: #065f46; }
+.aksi-ubah    { background: #fef3c7; color: #92400e; }
+.aksi-hapus   { background: #fee2e2; color: #991b1b; }
+.aksi-bayar   { background: #dbeafe; color: #1e40af; }
+.aksi-setujui { background: #ede9fe; color: #5b21b6; }
+.aksi-tolak   { background: #f3f4f6; color: #374151; }
+
+/* ── Modul Chip ──────────────────────────────────── */
+.modul-chip {
+    padding: .25rem .65rem; border-radius: 8px;
+    font-size: .73rem; font-weight: 600;
+    background: #f0f4ff; color: #175cdd;
+    border: 1px solid #dbe8ff; white-space: nowrap;
+}
+
+/* ── User Avatar ─────────────────────────────────── */
+.user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg,#175cdd,#8b5cf6);
+    color: #fff; font-size: .72rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; text-transform: uppercase;
+}
+
+/* ── Tabel Row ───────────────────────────────────── */
+.log-tabel thead th {
+    background: #f5f8ff; color: #112344;
+    font-weight: 700; font-size: .75rem;
+    text-transform: uppercase; letter-spacing: .55px;
+    border-bottom: 2px solid #e5ecfa;
+    padding: .9rem 1rem; white-space: nowrap;
+}
+.log-tabel tbody td {
+    padding: .82rem 1rem; vertical-align: middle;
+    border-bottom: 1px solid #f3f6ff; font-size: .875rem;
+}
+.log-tabel tbody tr:last-child td { border-bottom: none; }
+.log-tabel tbody tr:hover { background: #f8fbff; }
+
+/* ── Detail Btn ──────────────────────────────────── */
+.btn-log-detail {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 1.5px solid #e5e7eb; background: #fff; color: #6b7280;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .85rem; transition: all .2s;
+}
+.btn-log-detail:hover { border-color: #175cdd; color: #175cdd; background: #f0f4ff; }
+
+/* ── Empty State ─────────────────────────────────── */
+.log-empty { padding: 3.5rem 1rem; text-align: center; color: #9ca3af; }
+.log-empty i { font-size: 2.8rem; display: block; margin-bottom: .75rem; opacity: .4; }

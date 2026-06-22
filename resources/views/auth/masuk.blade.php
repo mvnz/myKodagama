@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Masuk — Koperasi Kodagama</title>
+  <title>Masuk — Koda+</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ asset('css/koperasi.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/pages/inline-extracted.css') }}">
 </head>
 <body class="auth-page">
 
@@ -18,39 +19,39 @@
       <a href="{{ route('beranda') }}" class="auth-logo">
         <i class="bi bi-bank2"></i>
         <div>
-          <div class="name">Kodagama</div>
+          <div class="name">Koda+</div>
           <div class="tagline">Koperasi Simpan Pinjam</div>
         </div>
       </a>
 
-      <h2 class="mt-5 mb-3" style="font-size:2rem;font-weight:300;line-height:1.4">
-        Kelola Keuangan <br><strong style="font-weight:700">Lebih Mudah</strong>
+      <h2 class="mt-5 mb-3 is-d87646d3">
+        Kelola Keuangan <br><strong class="is-83e4487b">Lebih Mudah</strong>
       </h2>
-      <p class="mb-5" style="opacity:.8;line-height:1.7">
+      <p class="mb-5 is-fd60827e">
         Platform manajemen koperasi yang lengkap untuk mengelola simpanan, pinjaman, dan angsuran anggota secara efisien.
       </p>
 
       <div class="d-flex flex-column gap-3">
         <div class="d-flex align-items-center gap-3">
-          <div class="d-flex align-items-center justify-content-center rounded-circle"
-            style="width:40px;height:40px;background:rgba(255,255,255,.15);flex-shrink:0">
+          <div class="d-flex align-items-center justify-content-center rounded-circle is-1ea1ea6f"
+           >
             <i class="bi bi-shield-check-fill"></i>
           </div>
-          <span style="opacity:.85">Sistem aman &amp; terenkripsi</span>
+          <span class="is-32995a01">Sistem aman &amp; terenkripsi</span>
         </div>
         <div class="d-flex align-items-center gap-3">
-          <div class="d-flex align-items-center justify-content-center rounded-circle"
-            style="width:40px;height:40px;background:rgba(255,255,255,.15);flex-shrink:0">
+          <div class="d-flex align-items-center justify-content-center rounded-circle is-1ea1ea6f"
+           >
             <i class="bi bi-graph-up-arrow"></i>
           </div>
-          <span style="opacity:.85">Laporan keuangan real-time</span>
+          <span class="is-32995a01">Laporan keuangan real-time</span>
         </div>
         <div class="d-flex align-items-center gap-3">
-          <div class="d-flex align-items-center justify-content-center rounded-circle"
-            style="width:40px;height:40px;background:rgba(255,255,255,.15);flex-shrink:0">
+          <div class="d-flex align-items-center justify-content-center rounded-circle is-1ea1ea6f"
+           >
             <i class="bi bi-people-fill"></i>
           </div>
-          <span style="opacity:.85">Manajemen anggota terpadu</span>
+          <span class="is-32995a01">Manajemen anggota terpadu</span>
         </div>
       </div>
     </div>
@@ -111,7 +112,7 @@
         </div>
 
         <div class="d-grid">
-          <button type="submit" class="btn btn-primary btn-lg" style="border-radius:12px;font-weight:600;padding:.9rem">
+          <button type="submit" class="btn btn-primary btn-lg is-4786ecb6">
             <i class="bi bi-box-arrow-in-right me-2"></i> Masuk
           </button>
         </div>
@@ -130,18 +131,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.getElementById('togglePassword').addEventListener('click', function () {
-      const pwd = document.getElementById('password');
-      const icon = this.querySelector('i');
-      if (pwd.type === 'password') {
-        pwd.type = 'text';
-        icon.classList.replace('bi-eye', 'bi-eye-slash');
-      } else {
-        pwd.type = 'password';
-        icon.classList.replace('bi-eye-slash', 'bi-eye');
-      }
-    });
-  </script>
+  <script src="{{ asset('js/pages/masuk.js') }}"></script>
 </body>
 </html>

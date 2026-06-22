@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Concerns;
 
-use App\Models\LogAktivitas;
+use App\Models\Koperasi\LogAktivitas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 

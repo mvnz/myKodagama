@@ -1,0 +1,103 @@
+/* ── Base Reset ─────────────────────────────────── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Times New Roman", Times, serif; font-size: 11pt; color: #000; background: #fff; }
+.page { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm 20mm 25mm 25mm; }
+
+/* ── Kop Surat ──────────────────────────────────── */
+.kop { display: flex; align-items: center; gap: 14px; padding-bottom: 8px; }
+.kop-logo {
+    width: 65px; height: 65px; border: 3px solid #000; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22pt; font-weight: 900; flex-shrink: 0; letter-spacing: -1px;
+}
+.kop-teks { flex: 1; }
+.kop-teks .nama-koperasi { font-size: 17pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; line-height: 1.1; }
+.kop-teks .sub-nama { font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
+.kop-teks .kop-kontak { font-size: 9pt; margin-top: 4px; color: #222; }
+.garis-kop { border: none; border-top: 3px solid #000; margin-top: 6px; }
+.garis-kop-tipis { border: none; border-top: 1.5px solid #000; margin-top: 2px; }
+
+/* ── Judul Dokumen ──────────────────────────────── */
+.judul-dokumen { text-align: center; margin: 14px 0 4px; }
+.judul-dokumen h2 { font-size: 13pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; text-decoration: underline; }
+.judul-dokumen p { font-size: 10.5pt; margin-top: 3px; }
+
+/* ── Info Dokumen ───────────────────────────────── */
+.info-dokumen { margin: 12px 0 16px; font-size: 10pt; }
+.info-dokumen table { border-collapse: collapse; }
+.info-dokumen td { padding: 1px 0; }
+.info-dokumen td:first-child { width: 140px; }
+.info-dokumen td:nth-child(2) { padding: 0 8px; }
+
+/* ── Tabel Laporan ──────────────────────────────── */
+.tabel-laporan { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10.5pt; }
+.tabel-laporan th { background: #e8e8e8; border: 1px solid #000; padding: 5px 8px; text-align: center; font-weight: 700; }
+.tabel-laporan td { border: 1px solid #555; padding: 4px 8px; vertical-align: top; }
+.tabel-laporan .td-no { width: 28px; text-align: center; }
+.tabel-laporan .td-uang { text-align: right; white-space: nowrap; }
+.tabel-laporan .td-bold { font-weight: 700; }
+.tabel-laporan .tr-total td { background: #e8e8e8; font-weight: 700; border-top: 2px solid #000; }
+.tabel-laporan .tr-surplus td { background: #d0e8d0; font-weight: 700; border-top: 2px solid #000; }
+.tabel-laporan .tr-defisit td { background: #f5d0d0; font-weight: 700; border-top: 2px solid #000; }
+.tabel-laporan .tr-sub th { background: #f5f5f5; font-weight: 600; font-size: 10pt; text-align: left; padding-left: 10px; }
+.tabel-laporan .indent  { padding-left: 24px; }
+.tabel-laporan .indent2 { padding-left: 40px; }
+
+/* Standalone aliases (SHU / laporan uses unprefixed) */
+.td-no   { width: 32px; text-align: center; }
+.td-uang { text-align: right; white-space: nowrap; }
+.tr-total td { background: #e8e8e8; font-weight: 700; border-top: 2px solid #000; }
+
+/* ── Badge Base ─────────────────────────────────── */
+.badge-s { display: inline-block; padding: 1px 7px; border-radius: 3px; font-size: 8.5pt; font-weight: 600; border: 1px solid #999; }
+/* Anggota */
+.badge-aktif       { background: #d0f0d0; border-color: #5a9a5a; color: #1a5c1a; }
+.badge-tidak-aktif { background: #f5d0d0; border-color: #c00;    color: #800; }
+.badge-menunggu    { background: #fff3cd; border-color: #b8860b;  color: #5a4000; }
+/* Angsuran */
+.badge-sudah     { background: #d0f0d0; border-color: #5a9a5a; color: #1a5c1a; }
+.badge-belum     { background: #fff3cd; border-color: #b8860b;  color: #5a4000; }
+.badge-terlambat { background: #f5d0d0; border-color: #c00;    color: #800; }
+/* Simpanan */
+.badge-setor { background: #d0f0d0; border-color: #5a9a5a; color: #1a5c1a; }
+.badge-tarik { background: #f5d0d0; border-color: #c00;    color: #800; }
+/* Pinjaman */
+.badge-diajukan     { background: #fff3cd; border-color: #b8860b; color: #5a4000; }
+.badge-diverifikasi { background: #e8f0fe; border-color: #3377cc; color: #0a4477; }
+.badge-disetujui    { background: #d0f0d0; border-color: #5a9a5a; color: #1a5c1a; }
+.badge-lunas        { background: #cce5ff; border-color: #3377aa; color: #0a4477; }
+.badge-ditolak      { background: #f5d0d0; border-color: #c00;    color: #800; }
+
+/* ── Seksi Judul & TTD (SHU / Laporan) ─────────── */
+.seksi-judul { font-size: 10.5pt; font-weight: 700; text-transform: uppercase; margin: 18px 0 6px; border-bottom: 1px solid #000; padding-bottom: 3px; }
+.seksi-judul span { display: inline-block; width: 24px; }
+.ttd-area { margin-top: 30px; display: flex; justify-content: space-between; }
+.ttd-box  { width: 200px; text-align: center; font-size: 10pt; }
+.ttd-box .ttd-garis { margin-top: 55px; padding-top: 4px; font-weight: 700; }
+
+/* ── Toolbar (layar saja) ───────────────────────── */
+.no-print { font-family: Arial, sans-serif; padding: 10px 20px; background: #f3f4f6; border-bottom: 1px solid #ddd; display: flex; gap: 10px; align-items: center; }
+.no-print button,
+.no-print a { padding: 6px 18px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.btn-print { background: #175cdd; color: #fff; }
+.btn-back  { background: #6b7280; color: #fff; }
+
+/* ── Footer Cetak ───────────────────────────────── */
+.footer-cetak { display: none; }
+
+/* ── Print Media ────────────────────────────────── */
+@media print {
+    .no-print { display: none !important; }
+    .page { padding: 0; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .footer-cetak {
+        display: flex;
+        justify-content: space-between;
+        font-size: 8.5pt; color: #444;
+        border-top: 1px solid #999;
+        padding-top: 5px; margin-top: 24px;
+    }
+}
+
+/* Default @page — override per modul jika perlu */
+@page { size: A4 portrait; margin: 18mm 15mm 20mm 20mm; }

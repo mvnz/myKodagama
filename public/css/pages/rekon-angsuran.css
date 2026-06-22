@@ -1,0 +1,28 @@
+.rekon-angsuran-title {
+    color: #112344;
+}
+
+.rekon-angsuran-hero-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(245, 158, 11, 0.12);
+}
+
+.rekon-angsuran-hero-icon-i {
+    color: #f59e0b;
+    font-size: 1.4rem;
+}
+
+.rekon-angsuran-map-box {
+    background: #f8faff;
+    border: 1px solid #e2e8f0;
+}
+
+.rekon-angsuran-icon-amber {
+    color: #f59e0b;
+}
+
+.rekon-angsuran-help-list {
+    font-size: 0.9rem;
+    line-height: 2;
+}

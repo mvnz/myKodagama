@@ -1,0 +1,58 @@
+/* ── Timeline ── */
+.help-step-line {
+    position: absolute;
+    left: 27px; top: 56px; bottom: -12px;
+    width: 2px;
+    background: linear-gradient(180deg, #175cdd 0%, #e2e8f0 100%);
+    z-index: 0;
+}
+.help-step-wrap {
+    position: relative;
+    padding-left: 68px;
+    padding-bottom: 28px;
+}
+.help-step-wrap:last-child { padding-bottom: 0; }
+.help-step-wrap:last-child .help-step-line { display: none; }
+.help-step-num {
+    position: absolute; left: 0; top: 0;
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; font-weight: 800; color: #fff; z-index: 1;
+}
+.help-step-card {
+    background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 14px; padding: 18px 22px;
+    box-shadow: 0 1px 4px rgba(23,92,221,.06);
+}
+.help-step-card h5 { font-weight: 700; color: #112344; margin-bottom: 6px; }
+.help-step-card p  { color: #4b5563; margin-bottom: 0; font-size: .92rem; line-height: 1.65; }
+
+/* ── Sub list ── */
+.help-sub-list { margin-top: 10px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.help-sub-list li { display: flex; align-items: flex-start; gap: 10px; font-size: .9rem; color: #1f2937; line-height: 1.5; }
+.help-sub-list li .bi { color: #175cdd; font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
+
+/* ── Tip / Warn ── */
+.help-tip {
+    background: #eff6ff; border-left: 3px solid #175cdd;
+    border-radius: 0 8px 8px 0; padding: 9px 14px;
+    margin-top: 10px; font-size: .84rem; color: #1e40af;
+}
+.help-warn {
+    background: #fff7ed; border-left: 3px solid #f59e0b;
+    border-radius: 0 8px 8px 0; padding: 9px 14px;
+    margin-top: 10px; font-size: .84rem; color: #92400e;
+}
+
+/* ── Misc ── */
+.help-badge { font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; letter-spacing: .3px; }
+.help-section-title { font-size: .7rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 14px; }
+.help-role-card { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; }
+.help-role-card h6 { font-weight: 700; color: #112344; margin-bottom: 8px; }
+.help-role-card ul { padding-left: 18px; margin: 0; font-size: .85rem; color: #4b5563; }
+.help-role-card ul li { margin-bottom: 3px; }
+.help-nav-link { font-size: .84rem; color: #374151; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f1f5f9; }
+.help-nav-link:hover { color: #175cdd; }
+.help-nav-link .bi { color: #175cdd; flex-shrink: 0; }
+.help-shortcut { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px; font-size: .85rem; }
+.help-shortcut .bi { color: #175cdd; font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }

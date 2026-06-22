@@ -1,0 +1,5 @@
+.bulan-label     { font-size: .75rem; color: #6b7280; font-weight: 600; }
+.progress-bar-thin { height: 6px; border-radius: 99px; }
+.badge-jenis     { font-size: .72rem; }
+.tabel-detail thead th { background: #f1f5f9; font-size: .8rem; font-weight: 700; }
+.tabel-detail td { font-size: .85rem; vertical-align: middle; }

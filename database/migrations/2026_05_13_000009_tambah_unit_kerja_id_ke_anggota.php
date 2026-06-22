@@ -17,7 +17,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('anggota', function (Blueprint $table) {
-            $table->dropForeignIdFor(\App\Models\UnitKerja::class);
+            $table->dropForeignIdFor(\App\Models\Koperasi\UnitKerja::class);
             $table->dropColumn('unit_kerja_id');
         });
     }

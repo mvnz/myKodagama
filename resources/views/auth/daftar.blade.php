@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Anggota — Koperasi Kodagama</title>
+  <title>Daftar Anggota — Koda+</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ asset('css/koperasi.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/pages/inline-extracted.css') }}">
 </head>
 <body class="auth-page">
 
@@ -17,37 +18,37 @@
       <a href="{{ route('beranda') }}" class="auth-logo">
         <i class="bi bi-bank2"></i>
         <div>
-          <div class="name">Kodagama</div>
+          <div class="name">Koda+</div>
           <div class="tagline">Koperasi Simpan Pinjam</div>
         </div>
       </a>
-      <h2 class="mt-5 mb-3" style="font-size:2rem;font-weight:300;line-height:1.4">
-        Bergabung &amp; <br><strong style="font-weight:700">Jadilah Anggota</strong>
+      <h2 class="mt-5 mb-3 is-d87646d3">
+        Bergabung &amp; <br><strong class="is-83e4487b">Jadilah Anggota</strong>
       </h2>
-      <p class="mb-5" style="opacity:.8;line-height:1.7">
+      <p class="mb-5 is-fd60827e">
         Daftarkan diri Anda sebagai anggota koperasi. Pendaftaran Anda akan diverifikasi oleh petugas sebelum aktif.
       </p>
       <div class="d-flex flex-column gap-3">
         <div class="d-flex align-items-center gap-3">
-          <div class="d-flex align-items-center justify-content-center rounded-circle"
-            style="width:40px;height:40px;background:rgba(255,255,255,.15);flex-shrink:0">
+          <div class="d-flex align-items-center justify-content-center rounded-circle is-1ea1ea6f"
+           >
             <i class="bi bi-1-circle-fill"></i>
           </div>
-          <span style="opacity:.85">Isi formulir pendaftaran</span>
+          <span class="is-32995a01">Isi formulir pendaftaran</span>
         </div>
         <div class="d-flex align-items-center gap-3">
-          <div class="d-flex align-items-center justify-content-center rounded-circle"
-            style="width:40px;height:40px;background:rgba(255,255,255,.15);flex-shrink:0">
+          <div class="d-flex align-items-center justify-content-center rounded-circle is-1ea1ea6f"
+           >
             <i class="bi bi-2-circle-fill"></i>
           </div>
-          <span style="opacity:.85">Tunggu verifikasi petugas</span>
+          <span class="is-32995a01">Tunggu verifikasi petugas</span>
         </div>
         <div class="d-flex align-items-center gap-3">
-          <div class="d-flex align-items-center justify-content-center rounded-circle"
-            style="width:40px;height:40px;background:rgba(255,255,255,.15);flex-shrink:0">
+          <div class="d-flex align-items-center justify-content-center rounded-circle is-1ea1ea6f"
+           >
             <i class="bi bi-3-circle-fill"></i>
           </div>
-          <span style="opacity:.85">Akun aktif &amp; siap digunakan</span>
+          <span class="is-32995a01">Akun aktif &amp; siap digunakan</span>
         </div>
       </div>
     </div>
@@ -109,7 +110,7 @@
           </div>
         </div>
         <div class="d-grid">
-          <button type="submit" class="btn btn-primary btn-lg" style="border-radius:12px;font-weight:600;padding:.9rem">
+          <button type="submit" class="btn btn-primary btn-lg is-4786ecb6">
             <i class="bi bi-send me-2"></i> Kirim Pendaftaran
           </button>
         </div>

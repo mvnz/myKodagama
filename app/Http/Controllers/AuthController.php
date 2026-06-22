@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Anggota;
+use App\Models\Koperasi\Anggota;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function tampilMasuk()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return redirect()->route('home');
         }
         return view('auth.masuk');
     }
@@ -35,9 +35,23 @@ class AuthController extends Controller
 
         if (Auth::attempt($kredensial, $ingat)) {
             $request->session()->regenerate();
-            $user     = Auth::user();
+            $user = Auth::user();
+
+            // Blokir login jika anggota terhubung tapi statusnya tidak aktif
+            if ($user->anggota_id) {
+                $anggota = Anggota::find($user->anggota_id);
+                if (!$anggota || $anggota->status !== 'aktif') {
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                    return back()->withErrors([
+                        'email' => 'Akun Anda tidak dapat digunakan karena status keanggotaan tidak aktif.',
+                    ])->onlyInput('email');
+                }
+            }
+
             $roleNama = $user->roleModel?->nama ?? 'Pengguna';
-            return redirect()->intended(route('dashboard'))
+            return redirect()->intended(route('home'))
                 ->with('sukses', 'Selamat datang, ' . $user->name . '! (' . $roleNama . ')');
         }
 

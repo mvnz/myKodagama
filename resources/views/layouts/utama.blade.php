@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('judul', 'Koperasi Kodagama')</title>
-  <meta name="description" content="@yield('deskripsi', 'Koperasi Simpan Pinjam Kodagama - Melayani dengan Ikhlas')">
+  <title>@yield('judul', 'Koda+')</title>
+  <meta name="description" content="@yield('deskripsi', 'Koda+ - Sistem Manajemen Koperasi')">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <!-- Google Fonts -->
@@ -20,6 +20,7 @@
 
   <!-- CSS Koperasi -->
   <link rel="stylesheet" href="{{ asset('css/koperasi.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/pages/inline-extracted.css') }}">
 
   @stack('css')
 </head>
@@ -53,7 +54,7 @@
     <div class="container d-flex align-items-center justify-content-between py-2">
       <a href="{{ route('beranda') }}" class="logo d-flex align-items-center gap-2 text-decoration-none">
         <i class="bi bi-bank2 fs-2 text-primary"></i>
-        <h1 class="mb-0">Koperasi <span>Kodagama</span></h1>
+        <h1 class="mb-0">Koda<span>+</span></h1>
       </a>
 
       <!-- Desktop Nav -->
@@ -78,7 +79,7 @@
     </div>
 
     <!-- Mobile Nav -->
-    <nav class="d-xl-none border-top" id="mobile-nav" style="display:none!important">
+    <nav class="d-xl-none border-top is-9703d2e0" id="mobile-nav">
       <ul class="list-unstyled p-3 mb-0 bg-white">
         <li class="mb-2"><a href="{{ route('beranda') }}" class="d-block p-2 rounded {{ request()->routeIs('beranda') ? 'text-primary fw-bold' : 'text-dark' }}">Beranda</a></li>
         <li class="mb-2"><a href="{{ route('beranda') }}#tentang" class="d-block p-2 rounded text-dark">Tentang</a></li>
@@ -109,18 +110,18 @@
     <div class="container">
       <div class="row g-4">
         <div class="col-lg-4">
-          <h4 class="text-white mb-3"><i class="bi bi-bank2 me-2"></i>Koperasi Kodagama</h4>
-          <p style="font-size:.9rem;line-height:1.7">Koperasi simpan pinjam yang berdedikasi melayani anggota dengan prinsip kejujuran, kemandirian, dan kepedulian sosial sejak 2005.</p>
+          <h4 class="text-white mb-3"><i class="bi bi-bank2 me-2"></i>Koda+</h4>
+          <p class="is-e95a782a">Koperasi simpan pinjam yang berdedikasi melayani anggota dengan prinsip kejujuran, kemandirian, dan kepedulian sosial sejak 2005.</p>
           <div class="mt-3">
-            <div class="d-flex align-items-start gap-2 mb-2" style="font-size:.9rem">
+            <div class="d-flex align-items-start gap-2 mb-2 is-727130b2">
               <i class="bi bi-geo-alt-fill text-primary mt-1"></i>
               <span>Jl. Koperasi No. 45, Yogyakarta 55211</span>
             </div>
-            <div class="d-flex align-items-center gap-2 mb-2" style="font-size:.9rem">
+            <div class="d-flex align-items-center gap-2 mb-2 is-727130b2">
               <i class="bi bi-telephone-fill text-primary"></i>
               <span>(0274) 123-4567</span>
             </div>
-            <div class="d-flex align-items-center gap-2" style="font-size:.9rem">
+            <div class="d-flex align-items-center gap-2 is-727130b2">
               <i class="bi bi-envelope-fill text-primary"></i>
               <span>info@koperasi-kodagama.id</span>
             </div>
@@ -146,7 +147,7 @@
         </div>
         <div class="col-lg-4 col-md-4">
           <h5>Jam Operasional</h5>
-          <ul class="list-unstyled" style="font-size:.9rem">
+          <ul class="list-unstyled is-727130b2">
             <li class="d-flex justify-content-between mb-1 py-1 border-bottom border-secondary">
               <span>Senin – Jumat</span><span>08:00 – 16:00</span>
             </li>
@@ -162,7 +163,7 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        &copy; {{ date('Y') }} Koperasi Kodagama. Semua Hak Dilindungi.
+        &copy; {{ date('Y') }} Koda+. Semua Hak Dilindungi.
         <span class="ms-2">|</span>
         <span class="ms-2">Terdaftar dan Diawasi oleh Kementerian Koperasi RI</span>
       </div>
@@ -177,33 +178,7 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    // Mobile nav toggle
-    const toggle = document.getElementById('mobile-toggle');
-    const mobileNav = document.getElementById('mobile-nav');
-    if (toggle && mobileNav) {
-      toggle.addEventListener('click', () => {
-        mobileNav.style.display = mobileNav.style.display === 'none' ? 'block' : 'none';
-      });
-    }
-
-    // Scroll top
-    const scrollTopBtn = document.getElementById('scrollTop');
-    window.addEventListener('scroll', () => {
-      if (scrollTopBtn) {
-        scrollTopBtn.classList.toggle('active', window.scrollY > 300);
-      }
-    });
-
-    // Auto hide alerts
-    setTimeout(() => {
-      document.querySelectorAll('.alert-sukses, .alert-galat').forEach(el => {
-        el.style.transition = 'opacity .5s';
-        el.style.opacity = '0';
-        setTimeout(() => el.remove(), 500);
-      });
-    }, 4000);
-  </script>
+  <script src="{{ asset('js/pages/utama-layout.js') }}"></script>
 
   @stack('js')
 </body>

@@ -1,0 +1,247 @@
+.kartu-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.member-card-preview {
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+}
+
+.member-card {
+    width: 85.6mm;
+    height: 54mm;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(142deg, #e8edf4 0%, #f7f9fd 45%, #d6deea 100%);
+    box-shadow: 0 18px 44px rgba(10, 26, 55, 0.26);
+    border: 1px solid #cfd9e8;
+    padding: 6mm 7mm 5.5mm;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.member-card__shine {
+    position: absolute;
+    left: -24%;
+    top: -28%;
+    width: 74%;
+    height: 64%;
+    background: linear-gradient(145deg, rgba(29, 176, 216, 0.94), rgba(29, 176, 216, 0.2));
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.member-card__accent {
+    position: absolute;
+    left: -2%;
+    bottom: -2%;
+    width: 80%;
+    height: 22%;
+    background: linear-gradient(170deg, #0d1018 15%, #161f34 65%, #21a8cf 100%);
+    clip-path: polygon(0 16%, 70% 0, 100% 100%, 0 100%);
+}
+
+.member-card__title {
+    position: relative;
+    z-index: 2;
+    text-align: right;
+    font-size: 5.8mm;
+    letter-spacing: 0.05em;
+    font-weight: 800;
+    color: #1c212a;
+    font-family: "Arial Black", "Trebuchet MS", sans-serif;
+    white-space: nowrap;
+}
+
+.member-card__content {
+    position: relative;
+    z-index: 2;
+    margin-top: 3.2mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4.4mm;
+}
+
+.member-card__meta {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 8mm;
+}
+
+.member-card__label {
+    font-size: 2.8mm;
+    color: #39424f;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+
+.member-card__value {
+    font-size: 3.5mm;
+    color: #202733;
+    font-weight: 700;
+    margin: 0.6mm 0 2mm;
+    overflow-wrap: anywhere;
+}
+
+.member-card__value--number {
+    color: #0f2145;
+    font-weight: 900;
+    background: rgba(255, 255, 255, 0.76);
+    border-radius: 1.6mm;
+    display: inline-block;
+    padding: 0.4mm 1.2mm;
+}
+
+.member-card__photo {
+    width: 17mm;
+    height: 20mm;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #d2d8e4;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.member-card__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-card__photo span {
+    font-size: 10mm;
+    font-weight: 800;
+    color: #1f2e4b;
+}
+
+.member-card__footer {
+    position: absolute;
+    left: 7mm;
+    right: 7mm;
+    bottom: 2.8mm;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 2.5mm;
+}
+
+.member-card__brand-mark {
+    width: 5.4mm;
+    height: 5.4mm;
+    border-radius: 1px;
+    background: #17a7ce;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3mm;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.member-card__brand-text {
+    color: #ffffff;
+    font-size: 3.1mm;
+    letter-spacing: 0.04em;
+    font-weight: 800;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.kartu-body {
+    background: #ffffff;
+    border: 1px solid #dde3ef;
+    border-radius: 16px;
+    padding: 24px 28px;
+}
+
+.kartu-label {
+    font-size: .78rem;
+    color: #8895a7;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.kartu-value {
+    font-size: .92rem;
+    color: #1e2d44;
+    font-weight: 600;
+}
+
+@media print {
+    @page {
+        size: 85.6mm 54mm;
+        margin: 0;
+    }
+
+    .sidebar,
+    .topnav-app,
+    .topbar,
+    nav,
+    .breadcrumb,
+    .btn,
+    .d-print-none,
+    .main-content > .text-center.py-3.border-top {
+        display: none !important;
+    }
+
+    .main-content,
+    .content-area {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .content-area {
+        width: 85.6mm !important;
+        height: 54mm !important;
+        min-height: 54mm !important;
+        overflow: hidden !important;
+    }
+
+    html,
+    body {
+        background: #ffffff !important;
+        width: 85.6mm !important;
+        height: 54mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .kartu-wrapper {
+        width: 85.6mm !important;
+        height: 54mm !important;
+        max-width: none;
+        margin: 0;
+        min-height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .member-card-preview {
+        width: 85.6mm !important;
+        height: 54mm !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .member-card {
+        width: 85.6mm !important;
+        height: 54mm !important;
+        box-shadow: none;
+        border: 1px solid #b9c6d8;
+        border-radius: 0;
+        margin: 0 !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}

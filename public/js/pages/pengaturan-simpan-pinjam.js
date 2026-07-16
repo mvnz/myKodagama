@@ -67,6 +67,11 @@
         new TomSelect(el, {
           allowEmptyOption: true,
           placeholder: el.dataset.placeholder || 'Semua Jenis Anggota',
+          dropdownParent: 'body',
+          onInitialize: function () {
+            this.wrapper.classList.add('ts-jenis-anggota');
+            this.dropdown.classList.add('ts-jenis-anggota-dropdown');
+          },
         });
       } catch (_) {}
     });

@@ -5,9 +5,40 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\Pos\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RiwayatController extends Controller
 {
+    private function supplierBreakdown(string $dari, string $sampai)
+    {
+        $debetPerSupplier = DB::table('pos_pencairan')
+            ->selectRaw('toko_id as supplier_id, SUM(jumlah) as total_debet')
+            ->whereDate('created_at', '>=', $dari)
+            ->whereDate('created_at', '<=', $sampai)
+            ->groupBy('toko_id');
+
+        return DB::table('pos_item as i')
+            ->join('pos_transaksi as trx', 'trx.id', '=', 'i.transaksi_id')
+            ->join('pos_produk as p', 'p.id', '=', 'i.produk_id')
+            ->leftJoin('pos_toko as s', 's.id', '=', 'p.supplier_id')
+            ->leftJoinSub($debetPerSupplier, 'deb', function ($join) {
+                $join->on('deb.supplier_id', '=', 'p.supplier_id');
+            })
+            ->whereBetween('trx.tanggal', [$dari, $sampai])
+            ->selectRaw('COALESCE(s.id, 0) as supplier_id')
+            ->selectRaw("COALESCE(s.nama, 'Tanpa Supplier') as supplier_nama")
+            ->selectRaw('p.nama as nama_barang')
+            ->selectRaw('SUM(i.qty) as jumlah')
+            ->selectRaw('ROUND(SUM(i.subtotal) / NULLIF(SUM(i.qty), 0), 2) as harga_jual')
+            ->selectRaw('SUM(i.subtotal) as total')
+            ->selectRaw('SUM(i.subtotal - (i.harga_pokok * i.qty)) as profit')
+            ->selectRaw('COALESCE(deb.total_debet, 0) as total_debet')
+            ->groupByRaw('COALESCE(s.id, 0), COALESCE(s.nama, "Tanpa Supplier"), p.nama, COALESCE(deb.total_debet, 0)')
+            ->orderBy('supplier_id')
+            ->orderByDesc('total')
+            ->get();
+    }
+
     public function index(Request $request)
     {
         $dari   = $request->dari   ?? now()->format('Y-m-01');
@@ -114,9 +145,11 @@ class RiwayatController extends Controller
             ->limit(10)
             ->get();
 
+        $supplierBreakdown = $this->supplierBreakdown($dari, $sampai);
+
         return view('pos.laporan', compact(
             'harian', 'mode', 'bulan', 'tahun', 'tanggal', 'minggu',
-            'totalOmzet', 'totalTransaksi', 'topProduk',
+            'totalOmzet', 'totalTransaksi', 'topProduk', 'supplierBreakdown',
             'rataRata', 'rataRataLabel', 'grafikLabel'
         ));
     }
@@ -185,6 +218,8 @@ class RiwayatController extends Controller
             ->limit(10)
             ->get();
 
+        $supplierBreakdown = $this->supplierBreakdown($dari, $sampai);
+
         $profil = \App\Models\Koperasi\Pengaturan::semuaNilai();
 
         // Build period label
@@ -202,7 +237,7 @@ class RiwayatController extends Controller
             'harian', 'mode', 'bulan', 'tahun', 'tanggal', 'minggu',
             'dari', 'sampai', 'periodeLabel',
             'totalOmzet', 'totalTransaksi', 'rataRata',
-            'transaksiDetail', 'topProduk', 'profil'
+            'transaksiDetail', 'topProduk', 'supplierBreakdown', 'profil'
         ));
     }
 }

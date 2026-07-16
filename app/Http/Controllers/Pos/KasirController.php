@@ -106,14 +106,20 @@ class KasirController extends Controller
         $diskon   = (int) ($request->diskon ?? 0);
         $subtotal = array_sum(array_map(fn($i) => $i['qty'] * $produkMap[$i['id']]->harga_jual, $items));
         $total    = max(0, $subtotal - $diskon);
+        $metodeBayar = (string) $request->metode_bayar;
         $bayar    = (int) $request->bayar;
 
-        if ($bayar < $total) {
-            if ($isAjax) return response()->json(['error' => 'Jumlah bayar kurang dari total.'], 422);
-            return back()->withErrors(['bayar' => 'Jumlah bayar kurang dari total.']);
-        }
+        if ($metodeBayar !== 'tunai') {
+            $bayar = $total;
+            $kembalian = 0;
+        } else {
+            if ($bayar < $total) {
+                if ($isAjax) return response()->json(['error' => 'Jumlah bayar kurang dari total.'], 422);
+                return back()->withErrors(['bayar' => 'Jumlah bayar kurang dari total.']);
+            }
 
-        $kembalian = $bayar - $total;
+            $kembalian = $bayar - $total;
+        }
 
         $trxData = null;
         DB::transaction(function () use ($items, $produkMap, $subtotal, $diskon, $total, $bayar, $kembalian, $request, &$trxData) {
@@ -192,6 +198,7 @@ class KasirController extends Controller
                 'total'     => $total,
                 'bayar'     => $bayar,
                 'kembalian' => $kembalian,
+                'metode_bayar' => $trxData->metode_bayar,
             ]);
         }
 

@@ -52,18 +52,18 @@
     <div class="kstat-card kstat-green">
       <div class="kstat-deco"></div><div class="kstat-deco2"></div>
       <div class="kstat-icon"><i class="bi bi-wallet2"></i></div>
-      <div class="kstat-value">Rp {{ number_format($suppliers->sum('saldo'), 0, ',', '.') }}</div>
-      <div class="kstat-label">Total Saldo</div>
-      <div class="kstat-trend"><i class="bi bi-cash-stack me-1"></i> Saldo aktif</div>
+      <div class="kstat-value">Rp {{ number_format($suppliers->sum('penjualan'), 0, ',', '.') }}</div>
+      <div class="kstat-label">Total Penjualan</div>
+      <div class="kstat-trend"><i class="bi bi-cash-stack me-1"></i> Omzet supplier</div>
     </div>
   </div>
   <div class="col-xl-3 col-sm-6">
     <div class="kstat-card kstat-red">
       <div class="kstat-deco"></div><div class="kstat-deco2"></div>
-      <div class="kstat-icon"><i class="bi bi-slash-circle"></i></div>
-      <div class="kstat-value">{{ $suppliers->where('produk_count', 0)->count() }}</div>
-      <div class="kstat-label">Tanpa Produk</div>
-      <div class="kstat-trend"><i class="bi bi-exclamation me-1"></i> Perlu ditambah produk</div>
+      <div class="kstat-icon"><i class="bi bi-graph-up-arrow"></i></div>
+      <div class="kstat-value">Rp {{ number_format($suppliers->sum('profit'), 0, ',', '.') }}</div>
+      <div class="kstat-label">Total Profit</div>
+      <div class="kstat-trend"><i class="bi bi-currency-dollar me-1"></i> Margin bersih supplier</div>
     </div>
   </div>
 </div>
@@ -123,7 +123,8 @@
           <th><a href="{{ $sUrl('pemilik') }}" class="text-decoration-none text-reset d-inline-flex align-items-center">Pemilik {!! $sIco('pemilik') !!}</a></th>
           <th>Kontak</th>
           <th class="text-center">Produk</th>
-          <th class="text-end"><a href="{{ $sUrl('saldo') }}" class="text-decoration-none text-reset d-inline-flex align-items-center justify-content-end">Saldo {!! $sIco('saldo') !!}</a></th>
+          <th class="text-end"><a href="{{ $sUrl('penjualan') }}" class="text-decoration-none text-reset d-inline-flex align-items-center justify-content-end">Penjualan {!! $sIco('penjualan') !!}</a></th>
+          <th class="text-end"><a href="{{ $sUrl('profit') }}" class="text-decoration-none text-reset d-inline-flex align-items-center justify-content-end">Profit {!! $sIco('profit') !!}</a></th>
           <th class="text-center">Aksi</th>
         </tr>
       </thead>
@@ -151,7 +152,10 @@
             </span>
           </td>
           <td class="text-end fw-600 is-feb6723d">
-            Rp {{ number_format($sup->saldo, 0, ',', '.') }}
+            Rp {{ number_format($sup->penjualan ?? 0, 0, ',', '.') }}
+          </td>
+          <td class="text-end fw-600 text-success">
+            Rp {{ number_format($sup->profit ?? 0, 0, ',', '.') }}
           </td>
           <td class="text-center">
             <a href="{{ route('pos.toko.show', $sup) }}" class="btn btn-sm btn-outline-primary py-0 px-2 me-1" title="Detail">
@@ -171,7 +175,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="7" class="text-center text-muted py-4">
+          <td colspan="8" class="text-center text-muted py-4">
             <i class="bi bi-truck is-a4ea9cc4"></i>
             <div class="mt-2">Belum ada supplier. <a href="{{ route('pos.toko.create') }}" class="text-warning">Tambah sekarang</a></div>
           </td>

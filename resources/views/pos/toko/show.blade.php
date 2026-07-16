@@ -71,30 +71,54 @@
 
   {{-- Info Supplier --}}
   <div class="col-lg-3">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body">
-        <div class="text-center mb-3 pb-3 border-bottom">
-          <div class="mx-auto d-flex align-items-center justify-content-center mb-3 is-6ef98e8e"
-              >
+    <div class="card border-0 shadow-sm h-100 supplier-info-card">
+      <div class="card-body p-4">
+        <div class="text-center mb-3 pb-3 border-bottom supplier-head">
+          <div class="mx-auto d-flex align-items-center justify-content-center mb-3 supplier-avatar">
             <i class="bi bi-truck"></i>
           </div>
-          <div class="fw-700 mb-1 is-3a464b54">{{ $toko->nama }}</div>
+          <div class="fw-700 mb-1 supplier-name">{{ $toko->nama }}</div>
           @if($toko->pemilik)
-            <div class="text-muted small"><i class="bi bi-person me-1"></i>{{ $toko->pemilik }}</div>
+            <div class="supplier-owner"><i class="bi bi-person me-1"></i>{{ $toko->pemilik }}</div>
           @endif
         </div>
-        <div class="d-flex flex-column gap-2 is-a7560b14">
+
+        <div class="d-flex flex-column gap-3 supplier-meta-list">
           @if($toko->telepon)
-          <div class="d-flex gap-2 align-items-start"><i class="bi bi-telephone text-muted mt-1" style="flex-shrink:0;"></i><span>{{ $toko->telepon }}</span></div>
+          <div class="supplier-meta-item">
+            <i class="bi bi-telephone supplier-meta-icon"></i>
+            <div>
+              <div class="supplier-meta-label">Telepon</div>
+              <div class="supplier-meta-value">{{ $toko->telepon }}</div>
+            </div>
+          </div>
           @endif
           @if($toko->email)
-          <div class="d-flex gap-2 align-items-start"><i class="bi bi-envelope text-muted mt-1" style="flex-shrink:0;"></i><span class="text-break">{{ $toko->email }}</span></div>
+          <div class="supplier-meta-item">
+            <i class="bi bi-envelope supplier-meta-icon"></i>
+            <div>
+              <div class="supplier-meta-label">Email</div>
+              <div class="supplier-meta-value text-break">{{ $toko->email }}</div>
+            </div>
+          </div>
           @endif
           @if($toko->alamat || $toko->kota)
-          <div class="d-flex gap-2 align-items-start"><i class="bi bi-geo-alt text-muted mt-1" style="flex-shrink:0;"></i><span>{{ $toko->alamat }}{{ $toko->kota ? ', '.$toko->kota : '' }}</span></div>
+          <div class="supplier-meta-item">
+            <i class="bi bi-geo-alt supplier-meta-icon"></i>
+            <div>
+              <div class="supplier-meta-label">Alamat</div>
+              <div class="supplier-meta-value">{{ $toko->alamat }}{{ $toko->kota ? ', '.$toko->kota : '' }}</div>
+            </div>
+          </div>
           @endif
           @if($toko->deskripsi)
-          <div class="d-flex gap-2 align-items-start mt-1"><i class="bi bi-info-circle text-muted mt-1" style="flex-shrink:0;"></i><span class="text-muted">{{ $toko->deskripsi }}</span></div>
+          <div class="supplier-meta-item">
+            <i class="bi bi-info-circle supplier-meta-icon"></i>
+            <div>
+              <div class="supplier-meta-label">Catatan</div>
+              <div class="supplier-meta-value supplier-note">{{ $toko->deskripsi }}</div>
+            </div>
+          </div>
           @endif
         </div>
       </div>
@@ -105,111 +129,118 @@
   <div class="col-lg-9">
     <ul class="nav nav-tabs mb-0">
       <li class="nav-item">
-        <button class="nav-link active fw-600" data-bs-toggle="tab" data-bs-target="#tabSaldo">
-          <i class="bi bi-clock-history me-1 is-f571fe9b"></i>Saldo Masuk
-          <span class="badge bg-secondary ms-1">{{ $saldoLog->total() }}</span>
+        <button class="nav-link fw-600 {{ $activeTab === 'produk' ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#tabProduk" type="button">
+          <i class="bi bi-box-seam me-1 is-f571fe9b"></i>Produk Supplier
+          <span class="badge bg-secondary ms-1">{{ $produkList->total() }}</span>
         </button>
       </li>
       <li class="nav-item">
-        <button class="nav-link fw-600" data-bs-toggle="tab" data-bs-target="#tabCairan">
-          <i class="bi bi-cash-coin me-1 text-success"></i>Pencairan
-          <span class="badge bg-secondary ms-1">{{ $pencairanList->total() }}</span>
+        <button class="nav-link fw-600 {{ $activeTab === 'mutasi' ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#tabMutasi" type="button">
+          <i class="bi bi-arrow-left-right me-1 text-success"></i>Mutasi Saldo
+          <span class="badge bg-secondary ms-1">{{ $mutasiList->total() }}</span>
         </button>
       </li>
     </ul>
 
     <div class="tab-content">
 
-      {{-- Tab: Saldo Masuk --}}
-      <div class="tab-pane fade show active" id="tabSaldo">
+      {{-- Tab: Daftar Produk Supplier --}}
+      <div class="tab-pane fade {{ $activeTab === 'produk' ? 'show active' : '' }}" id="tabProduk">
         <div class="card border-0 shadow-sm is-e03ef8be">
           <div class="table-responsive">
             <table class="table tabel-koperasi mb-0">
               <thead class="is-98f358ac">
                 <tr>
-                  <th>Waktu</th>
-                  <th>Transaksi</th>
-                  <th class="text-end">Jumlah Masuk</th>
-                  <th class="text-end">Saldo Sesudah</th>
-                  <th>Keterangan</th>
+                  <th>Kode</th>
+                  <th>Nama Produk</th>
+                  <th class="text-center">Stok</th>
+                  <th class="text-end">Harga Beli</th>
+                  <th class="text-end">Harga Jual</th>
+                  <th class="text-center">Status</th>
                 </tr>
               </thead>
               <tbody>
-                @forelse($saldoLog as $log)
+                @forelse($produkList as $produk)
                 <tr>
-                  <td class="is-70f18850">{{ $log->created_at->format('d M Y H:i') }}</td>
-                  <td>
-                    @if($log->transaksi)
-                      <a href="{{ route('pos.riwayat.show', $log->transaksi) }}" class="fw-600 text-decoration-none is-link-amber-sm">
-                        {{ $log->transaksi->nomor }}
-                      </a>
-                    @else
-                      <span class="text-muted">—</span>
-                    @endif
+                  <td><code>{{ $produk->kode }}</code></td>
+                  <td class="fw-600 is-feb6723d">{{ $produk->nama }}</td>
+                  <td class="text-center">{{ number_format($produk->stok) }}</td>
+                  <td class="text-end">Rp {{ number_format($produk->harga_beli, 0, ',', '.') }}</td>
+                  <td class="text-end fw-600">Rp {{ number_format($produk->harga_jual, 0, ',', '.') }}</td>
+                  <td class="text-center">
+                    <span class="badge {{ $produk->is_aktif ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary' }}">
+                      {{ $produk->is_aktif ? 'Aktif' : 'Nonaktif' }}
+                    </span>
                   </td>
-                  <td class="text-end fw-600 text-success">+ Rp {{ number_format($log->jumlah, 0, ',', '.') }}</td>
-                  <td class="text-end fw-600 is-feb6723d">Rp {{ number_format($log->saldo_sesudah, 0, ',', '.') }}</td>
-                  <td class="text-muted is-9ee0bb07">{{ $log->keterangan }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="text-center text-muted py-4">
-                  <i class="bi bi-inbox is-a4ea9cc4"></i>
-                  <div class="mt-2">Belum ada riwayat saldo.</div>
+                <tr><td colspan="6" class="text-center text-muted py-4">
+                  <i class="bi bi-box-seam is-a4ea9cc4"></i>
+                  <div class="mt-2">Belum ada produk untuk supplier ini.</div>
                 </td></tr>
                 @endforelse
               </tbody>
             </table>
           </div>
-          @if($saldoLog->hasPages())
-          <div class="card-footer bg-white border-top py-2 px-4">{{ $saldoLog->links() }}</div>
+          @if($produkList->hasPages())
+          <div class="card-footer bg-white border-top py-2 px-4">{{ $produkList->appends(['tab' => 'produk'])->links() }}</div>
           @endif
         </div>
       </div>
 
-      {{-- Tab: Riwayat Pencairan --}}
-      <div class="tab-pane fade" id="tabCairan">
+      {{-- Tab: Mutasi Saldo (Debet/Kredit) --}}
+      <div class="tab-pane fade {{ $activeTab === 'mutasi' ? 'show active' : '' }}" id="tabMutasi">
         <div class="card border-0 shadow-sm is-e03ef8be">
           <div class="table-responsive">
             <table class="table tabel-koperasi mb-0">
               <thead class="is-98f358ac">
                 <tr>
                   <th>Waktu</th>
-                  <th>Metode</th>
-                  <th>Penerima / Rekening</th>
-                  <th class="text-end">Jumlah</th>
-                  <th class="text-end">Saldo Sesudah</th>
+                  <th>Aktivitas</th>
+                  <th class="text-nowrap">Referensi</th>
+                  <th class="text-end">Debet</th>
+                  <th class="text-end">Kredit</th>
+                  <th class="text-end">Saldo Akhir</th>
                   <th>Keterangan</th>
                 </tr>
               </thead>
               <tbody>
-                @forelse($pencairanList as $cair)
+                @forelse($mutasiList as $m)
                 <tr>
-                  <td class="is-70f18850">{{ $cair->created_at->format('d M Y H:i') }}</td>
+                  <td class="is-70f18850">{{ \Illuminate\Support\Carbon::parse($m->waktu)->format('d M Y H:i') }}</td>
                   <td>
-                    <span class="badge {{ $cair->metode === 'cash' ? 'bg-success-subtle text-success' : 'bg-primary-subtle text-primary' }}">
-                      {{ strtoupper($cair->metode) }}
+                    <span class="badge {{ $m->tipe === 'kredit' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }}">
+                      {{ $m->tipe === 'kredit' ? 'Saldo Masuk' : 'Pencairan ' . strtoupper($m->metode ?? '') }}
                     </span>
                   </td>
-                  <td class="is-9ee0bb07">
-                    @if($cair->nama_penerima)<div class="fw-600">{{ $cair->nama_penerima }}</div>@endif
-                    @if($cair->metode === 'transfer')<div class="text-muted">{{ $cair->nama_bank }} — {{ $cair->no_rekening }}</div>@endif
-                    @if(!$cair->nama_penerima && $cair->metode === 'cash')<span class="text-muted">—</span>@endif
+                  <td class="text-nowrap">
+                    @if($m->tipe === 'kredit' && $m->referensi)
+                      <span class="mutasi-ref" title="{{ $m->referensi }}">{{ $m->referensi }}</span>
+                    @elseif($m->tipe === 'debet')
+                      <div class="fw-600">{{ $m->nama_penerima ?? '—' }}</div>
+                      @if(($m->metode ?? '') === 'transfer' && $m->nama_bank)
+                        <div class="text-muted is-9ee0bb07">{{ $m->nama_bank }} — {{ $m->no_rekening }}</div>
+                      @endif
+                    @else
+                      <span class="text-muted">—</span>
+                    @endif
                   </td>
-                  <td class="text-end fw-600 text-danger">- Rp {{ number_format($cair->jumlah, 0, ',', '.') }}</td>
-                  <td class="text-end fw-600 is-feb6723d">Rp {{ number_format($cair->saldo_sesudah, 0, ',', '.') }}</td>
-                  <td class="text-muted is-9ee0bb07">{{ $cair->keterangan ?? '—' }}</td>
+                  <td class="text-end fw-600 text-danger">{{ $m->tipe === 'debet' ? '- Rp ' . number_format($m->jumlah, 0, ',', '.') : '—' }}</td>
+                  <td class="text-end fw-600 text-success">{{ $m->tipe === 'kredit' ? '+ Rp ' . number_format($m->jumlah, 0, ',', '.') : '—' }}</td>
+                  <td class="text-end fw-600 is-feb6723d">Rp {{ number_format($m->saldo_sesudah, 0, ',', '.') }}</td>
+                  <td class="text-muted is-9ee0bb07">{{ $m->keterangan ?: '—' }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center text-muted py-4">
-                  <i class="bi bi-cash-coin is-a4ea9cc4"></i>
-                  <div class="mt-2">Belum ada riwayat pencairan.</div>
+                <tr><td colspan="7" class="text-center text-muted py-4">
+                  <i class="bi bi-arrow-left-right is-a4ea9cc4"></i>
+                  <div class="mt-2">Belum ada mutasi saldo.</div>
                 </td></tr>
                 @endforelse
               </tbody>
             </table>
           </div>
-          @if($pencairanList->hasPages())
-          <div class="card-footer bg-white border-top py-2 px-4">{{ $pencairanList->links() }}</div>
+          @if($mutasiList->hasPages())
+          <div class="card-footer bg-white border-top py-2 px-4">{{ $mutasiList->appends(['tab' => 'mutasi'])->links() }}</div>
           @endif
         </div>
       </div>

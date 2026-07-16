@@ -115,8 +115,9 @@
             <label class="form-label fw-semibold">Jumlah Bayar</label>
             <input type="number" name="bayar" id="bayarInput" class="form-control form-control-lg text-end"
                    placeholder="0" min="0" oninput="hitungKembalian()">
+            <div class="form-text" id="bayarHint"></div>
           </div>
-          <div class="p-3 rounded-3 text-center is-113f3c0e">
+          <div class="p-3 rounded-3 text-center is-113f3c0e" id="kembalianCard">
             <div class="text-muted small">Kembalian</div>
             <div class="fs-3 fw-bold text-success" id="kembalianText">Rp 0</div>
           </div>
@@ -157,7 +158,7 @@
             <span class="text-muted">Dibayar</span>
             <span class="fw-600" id="suksesBayar"></span>
           </div>
-          <div class="d-flex justify-content-between border-top pt-2">
+          <div class="d-flex justify-content-between border-top pt-2" id="suksesKembalianRow">
             <span class="fw-700">Kembalian</span>
             <span class="fw-700 text-success fs-5" id="suksesKembalian"></span>
           </div>
@@ -241,29 +242,73 @@ function renderCart(){
 }
 
 function recalc(){
-  let sub = Object.values(cart).reduce((s,i) => s + i.harga * i.qty, 0);
-  let diskon = parseInt(document.getElementById('diskonInput').value) || 0;
-  let total = Math.max(0, sub - diskon);
+  const totals = getCartTotals();
+  let sub = totals.sub;
+  let total = totals.total;
   document.getElementById('subtotalText').textContent = fmt(sub);
   document.getElementById('totalText').textContent = fmt(total);
 }
 
+function getCartTotals(){
+  const sub = Object.values(cart).reduce((s,i) => s + i.harga * i.qty, 0);
+  const diskon = parseInt(document.getElementById('diskonInput').value) || 0;
+  const total = Math.max(0, sub - diskon);
+  return { sub, diskon, total };
+}
+
+function getSelectedMethod(){
+  return document.querySelector('input[name="metode_bayar"]:checked')?.value || 'tunai';
+}
+
+function syncMetodePembayaranUi(){
+  const method = getSelectedMethod();
+  const bayarInput = document.getElementById('bayarInput');
+  const kembalianCard = document.getElementById('kembalianCard');
+  const bayarHint = document.getElementById('bayarHint');
+  const total = getCartTotals().total;
+
+  if (method === 'tunai') {
+    bayarInput.readOnly = false;
+    bayarInput.placeholder = '0';
+    kembalianCard.style.display = '';
+    bayarHint.textContent = '';
+    hitungKembalian();
+    return;
+  }
+
+  bayarInput.readOnly = true;
+  bayarInput.value = total;
+  bayarInput.placeholder = String(total);
+  kembalianCard.style.display = 'none';
+  bayarHint.textContent = 'Pembayaran non-tunai diproses pas sebesar total transaksi.';
+  document.getElementById('kembalianText').textContent = fmt(0);
+  document.getElementById('btnProses').disabled = false;
+}
+
 function openBayar(){
-  let sub = Object.values(cart).reduce((s,i) => s + i.harga * i.qty, 0);
-  let diskon = parseInt(document.getElementById('diskonInput').value) || 0;
-  let total = Math.max(0, sub - diskon);
+  const total = getCartTotals().total;
   document.getElementById('modalTotal').textContent = fmt(total);
   document.getElementById('bayarInput').value = '';
   document.getElementById('kembalianText').textContent = fmt(0);
   document.getElementById('btnProses').disabled = true;
+  syncMetodePembayaranUi();
   new bootstrap.Modal(document.getElementById('modalBayar')).show();
 }
 
 function hitungKembalian(){
-  let sub = Object.values(cart).reduce((s,i) => s + i.harga * i.qty, 0);
-  let diskon = parseInt(document.getElementById('diskonInput').value) || 0;
-  let total = Math.max(0, sub - diskon);
+  const method = getSelectedMethod();
+  const total = getCartTotals().total;
   let bayar = parseInt(document.getElementById('bayarInput').value) || 0;
+
+  if (method !== 'tunai') {
+    bayar = total;
+    document.getElementById('bayarInput').value = bayar;
+    document.getElementById('kembalianText').textContent = fmt(0);
+    document.getElementById('kembalianText').style.color = '#16a34a';
+    document.getElementById('btnProses').disabled = false;
+    return;
+  }
+
   let kmb = bayar - total;
   document.getElementById('kembalianText').textContent = fmt(Math.max(0, kmb));
   document.getElementById('kembalianText').style.color = kmb >= 0 ? '#16a34a' : '#dc2626';
@@ -274,11 +319,16 @@ document.getElementById('checkoutForm').addEventListener('submit', function(e){ 
 
 function submitCheckout(){
   const items = Object.values(cart).map(i => ({id: i.id, qty: i.qty}));
-  const diskon = parseInt(document.getElementById('diskonInput').value) || 0;
+  const totals = getCartTotals();
+  const diskon = totals.diskon;
+  const method = getSelectedMethod();
   const form   = document.getElementById('checkoutForm');
   const data   = new FormData(form);
   data.set('items',  JSON.stringify(items));
   data.set('diskon', diskon);
+  if (method !== 'tunai') {
+    data.set('bayar', String(totals.total));
+  }
 
   const btn = document.getElementById('btnProses');
   btn.disabled = true;
@@ -300,6 +350,7 @@ function submitCheckout(){
       document.getElementById('suksesTotal').textContent = fmt(res.total);
       document.getElementById('suksesBayar').textContent = fmt(res.bayar);
       document.getElementById('suksesKembalian').textContent = fmt(res.kembalian);
+      document.getElementById('suksesKembalianRow').style.display = res.metode_bayar === 'tunai' ? '' : 'none';
       document.getElementById('btnLihatStruk').href = res.struk_url;
 
       // Tampilkan modal sukses
@@ -372,5 +423,9 @@ if (scanInput) {
     scanAndAddProduct(scanInput.value);
   });
 }
+
+document.querySelectorAll('input[name="metode_bayar"]').forEach((radio) => {
+  radio.addEventListener('change', syncMetodePembayaranUi);
+});
 </script>
 @endpush

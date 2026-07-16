@@ -2,6 +2,44 @@
 @section('judul','Laporan Penjualan')
 @section('breadcrumb')<li class="breadcrumb-item active">Laporan</li>@endsection
 
+@push('css')
+<style>
+  .supplier-toggle-btn {
+    background: transparent;
+    border: 0;
+    color: #1f2937;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.2;
+  }
+
+  .supplier-toggle-btn:hover {
+    background: #eef2f7;
+    color: #111827;
+  }
+
+  .supplier-toggle-btn:focus-visible {
+    outline: 2px solid #7aa2ff;
+    outline-offset: 1px;
+  }
+
+  .supplier-badge-items {
+    background: #475569 !important;
+    color: #fff !important;
+  }
+
+  .supplier-badge-share {
+    background: #0ea5e9 !important;
+    color: #fff !important;
+  }
+</style>
+@endpush
+
 @section('konten')
 {{-- Page Banner --}}
 <div class="dashboard-welcome mb-4 is-5d93e480">
@@ -154,6 +192,107 @@
     </div>
   </div>
 </div>
+
+<div class="row g-4 mt-1">
+  <div class="col-12">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center">
+        <h6 class="mb-0 fw-700 is-feb6723d"><i class="bi bi-building me-2 is-f571fe9b"></i>Breakdown Penjualan per Supplier</h6>
+      </div>
+      <div class="table-responsive">
+        <table class="table tabel-koperasi mb-0">
+          <thead class="is-98f358ac">
+            <tr>
+              <th>Supplier</th>
+              <th>Nama Barang</th>
+              <th class="text-center">Jumlah</th>
+              <th class="text-end">Harga Jual</th>
+              <th class="text-end">Total</th>
+              <th class="text-end">Pendapatan Supplier</th>
+              <th class="text-end">Profit</th>
+              <th class="text-end">Sudah Debet</th>
+            </tr>
+          </thead>
+          @php
+            $groupedSupplier = $supplierBreakdown->groupBy('supplier_id');
+            $grandTotal = (float) $supplierBreakdown->sum('total');
+            $grandDebet = $groupedSupplier->sum(function ($rows) {
+              return (float) ($rows->first()->total_debet ?? 0);
+            });
+          @endphp
+          @forelse($groupedSupplier as $supplierId => $rows)
+            @php
+              $supplierNama = $rows->first()->supplier_nama ?? 'Tanpa Supplier';
+              $supplierQty = (float) $rows->sum('jumlah');
+              $supplierTotal = (float) $rows->sum('total');
+              $supplierProfit = (float) $rows->sum('profit');
+              $supplierPendapatan = $supplierTotal - $supplierProfit;
+              $supplierDebet = (float) ($rows->first()->total_debet ?? 0);
+              $supplierMargin = $supplierTotal > 0 ? ($supplierProfit / $supplierTotal) * 100 : 0;
+              $supplierKontribusi = $grandTotal > 0 ? ($supplierTotal / $grandTotal) * 100 : 0;
+              $collapseId = 'supplierBreakdown' . $loop->iteration;
+            @endphp
+            <tbody>
+              <tr class="table-light fw-semibold">
+                <td colspan="2">
+                  <button
+                    class="supplier-toggle-btn"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#{{ $collapseId }}"
+                    aria-expanded="true"
+                    aria-controls="{{ $collapseId }}"
+                  >
+                    <i class="bi bi-chevron-down me-1"></i>{{ $supplierNama }}
+                  </button>
+                  <span class="badge supplier-badge-items ms-2">{{ number_format($rows->count()) }} barang</span>
+                  <span class="badge supplier-badge-share ms-1">Kontribusi {{ number_format($supplierKontribusi, 1, ',', '.') }}%</span>
+                </td>
+                <td class="text-center">{{ number_format($supplierQty) }}</td>
+                <td class="text-end">-</td>
+                <td class="text-end">Rp {{ number_format($supplierTotal, 0, ',', '.') }}</td>
+                <td class="text-end">Rp {{ number_format($supplierPendapatan, 0, ',', '.') }}</td>
+                <td class="text-end">Rp {{ number_format($supplierProfit, 0, ',', '.') }} <span class="text-muted">({{ number_format($supplierMargin, 1, ',', '.') }}%)</span></td>
+                <td class="text-end">Rp {{ number_format($supplierDebet, 0, ',', '.') }}</td>
+              </tr>
+            </tbody>
+            <tbody id="{{ $collapseId }}" class="collapse show">
+              @foreach($rows as $sb)
+              <tr>
+                <td class="text-muted">↳</td>
+                <td class="small">{{ $sb->nama_barang }}</td>
+                <td class="text-center">{{ number_format($sb->jumlah) }}</td>
+                <td class="text-end">Rp {{ number_format($sb->harga_jual, 0, ',', '.') }}</td>
+                <td class="text-end fw-600 is-feb6723d">Rp {{ number_format($sb->total, 0, ',', '.') }}</td>
+                <td class="text-end">Rp {{ number_format($sb->total - $sb->profit, 0, ',', '.') }}</td>
+                <td class="text-end">Rp {{ number_format($sb->profit, 0, ',', '.') }}</td>
+                <td class="text-end">-</td>
+              </tr>
+              @endforeach
+            </tbody>
+          @empty
+            <tbody>
+              <tr><td colspan="8" class="text-center text-muted py-3">Tidak ada data supplier pada periode ini</td></tr>
+            </tbody>
+          @endforelse
+          @if($supplierBreakdown->isNotEmpty())
+          <tbody>
+            <tr class="fw-bold">
+              <td colspan="2">Total</td>
+              <td class="text-center">{{ number_format($supplierBreakdown->sum('jumlah')) }}</td>
+              <td class="text-end">-</td>
+              <td class="text-end">Rp {{ number_format($supplierBreakdown->sum('total'), 0, ',', '.') }}</td>
+              <td class="text-end">Rp {{ number_format($supplierBreakdown->sum('total') - $supplierBreakdown->sum('profit'), 0, ',', '.') }}</td>
+              <td class="text-end">Rp {{ number_format($supplierBreakdown->sum('profit'), 0, ',', '.') }}</td>
+              <td class="text-end">Rp {{ number_format($grandDebet, 0, ',', '.') }}</td>
+            </tr>
+          </tbody>
+          @endif
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @push('js')
@@ -188,6 +327,22 @@
       this.classList.remove('btn-outline-secondary');
       this.classList.add('btn-warning','text-white','fw-semibold');
       syncCetakUrl();
+    });
+  });
+
+  document.querySelectorAll('[id^="supplierBreakdown"]').forEach(function(el) {
+    el.addEventListener('shown.bs.collapse', function() {
+      var trigger = document.querySelector('[data-bs-target="#' + el.id + '"] i.bi');
+      if (!trigger) return;
+      trigger.classList.remove('bi-chevron-right');
+      trigger.classList.add('bi-chevron-down');
+    });
+
+    el.addEventListener('hidden.bs.collapse', function() {
+      var trigger = document.querySelector('[data-bs-target="#' + el.id + '"] i.bi');
+      if (!trigger) return;
+      trigger.classList.remove('bi-chevron-down');
+      trigger.classList.add('bi-chevron-right');
     });
   });
 })();

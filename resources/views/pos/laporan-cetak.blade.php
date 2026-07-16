@@ -15,6 +15,59 @@
   <link rel="stylesheet" href="{{ asset('css/pages/cetak.css') }}">
   
   <link rel="stylesheet" href="{{ asset('css/pages/inline-extracted.css') }}">
+  <style>
+    /* Compact mode khusus tabel breakdown supplier pada cetak laporan POS */
+    .tabel-breakdown-compact {
+      font-size: 9pt;
+      table-layout: auto;
+    }
+
+    .tabel-breakdown-compact th,
+    .tabel-breakdown-compact td {
+      padding: 2px 4px;
+      line-height: 1.2;
+      vertical-align: top;
+    }
+
+    .tabel-breakdown-compact th {
+      white-space: normal;
+      word-break: break-word;
+      font-size: 8.5pt;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .tabel-breakdown-compact .td-no {
+      width: 22px;
+    }
+
+    .tabel-breakdown-compact .col-supplier {
+      width: 18%;
+    }
+
+    .tabel-breakdown-compact .col-nama {
+      width: 22%;
+      word-break: break-word;
+    }
+
+    .tabel-breakdown-compact .td-uang {
+      white-space: nowrap;
+      font-size: 8.5pt;
+    }
+
+    .tabel-breakdown-compact .supplier-summary-main {
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .tabel-breakdown-compact .supplier-summary-meta {
+      font-size: 8pt;
+      font-weight: 600;
+      line-height: 1.15;
+      margin-top: 1px;
+      color: #222;
+    }
+  </style>
 </head>
 <body>
 
@@ -59,52 +112,78 @@
   </div>
 
   {{-- RINGKASAN --}}
-  <div class="seksi">I. Ringkasan Penjualan</div>
-  <div class="summary-grid">
-    <div class="summary-box">
-      <div class="lbl">Total Transaksi</div>
-      <div class="val">{{ number_format($totalTransaksi) }}</div>
-    </div>
-    <div class="summary-box">
-      <div class="lbl">Total Omzet</div>
-      <div class="val is-b7c56e9c">Rp {{ number_format($totalOmzet, 0, ',', '.') }}</div>
-    </div>
-    <div class="summary-box">
-      <div class="lbl">Rata-rata / Periode</div>
-      <div class="val is-b7c56e9c">Rp {{ number_format($rataRata, 0, ',', '.') }}</div>
-    </div>
-  </div>
-
-  {{-- GRAFIK --}}
-  <div class="seksi">II. Grafik Omzet</div>
-  @if($harian->isEmpty())
-    <p class="is-0fde3b4c">Tidak ada data pada periode ini.</p>
-  @else
-  @php
-    $maxOmzet = $harian->max('omzet') ?: 1;
-    $fmtTgl = fn($d) => $mode === 'tahun'
-      ? \Carbon\Carbon::parse($d . '-01')->translatedFormat('M Y')
-      : \Carbon\Carbon::parse($d)->translatedFormat('d M');
-  @endphp
-  <div class="grafik-bar-wrap">
-    @foreach($harian as $h)
-    <div class="grafik-row">
-      <span class="lbl">{{ $fmtTgl($h->tanggal) }}</span>
-      <div class="bar-bg"><div class="bar is-ef1fcb97"></div></div>
-      <span class="val">{{ number_format($h->omzet, 0, ',', '.') }}</span>
-      <span class="qty">({{ $h->jumlah }})</span>
-    </div>
-    @endforeach
-  </div>
-  @endif
-
-  {{-- TOP PRODUK --}}
-  <div class="seksi">III. Top 10 Produk Terlaris</div>
-  <table class="tabel-lap">
+  <div class="seksi-judul"><span>I.</span> Ringkasan Penjualan</div>
+  <table class="tabel-laporan">
     <thead>
       <tr>
         <th class="td-no">No.</th>
-        <th class="is-200a92a0">Nama Produk</th>
+        <th>Uraian</th>
+        <th class="td-uang">Nilai</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-no">1</td>
+        <td>Total Transaksi</td>
+        <td class="td-uang">{{ number_format($totalTransaksi) }}</td>
+      </tr>
+      <tr>
+        <td class="td-no">2</td>
+        <td>Total Omzet</td>
+        <td class="td-uang">Rp {{ number_format($totalOmzet, 0, ',', '.') }}</td>
+      </tr>
+      <tr>
+        <td class="td-no">3</td>
+        <td>Rata-rata / Periode</td>
+        <td class="td-uang">Rp {{ number_format($rataRata, 0, ',', '.') }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {{-- PERKEMBANGAN OMZET --}}
+  <div class="seksi-judul"><span>II.</span> Perkembangan Omzet</div>
+  <table class="tabel-laporan">
+    <thead>
+      <tr>
+        <th class="td-no">No.</th>
+        <th>Tanggal</th>
+        <th class="td-uang">Jumlah Transaksi</th>
+        <th class="td-uang">Omzet (Rp)</th>
+      </tr>
+    </thead>
+    <tbody>
+      @forelse($harian as $h)
+      @php
+        $fmtTgl = $mode === 'tahun'
+          ? \Carbon\Carbon::parse($h->tanggal . '-01')->translatedFormat('M Y')
+          : \Carbon\Carbon::parse($h->tanggal)->translatedFormat('d M Y');
+      @endphp
+      <tr>
+        <td class="td-no">{{ $loop->iteration }}</td>
+        <td>{{ $fmtTgl }}</td>
+        <td class="td-uang">{{ number_format($h->jumlah) }}</td>
+        <td class="td-uang">{{ number_format($h->omzet, 0, ',', '.') }}</td>
+      </tr>
+      @empty
+      <tr><td colspan="4" class="is-2cef7be8">Tidak ada data pada periode ini.</td></tr>
+      @endforelse
+      @if($harian->isNotEmpty())
+      <tr class="tr-total">
+        <td colspan="2" class="is-ca22da47">Total</td>
+        <td class="td-uang">{{ number_format($harian->sum('jumlah')) }}</td>
+        <td class="td-uang">{{ number_format($harian->sum('omzet'), 0, ',', '.') }}</td>
+      </tr>
+      @endif
+    </tbody>
+  </table>
+
+  {{-- TOP PRODUK --}}
+  <div class="seksi-judul"><span>III.</span> Top 10 Produk Terlaris</div>
+  <table class="tabel-laporan">
+    <thead>
+      <tr>
+        <th class="td-no">No.</th>
+        <th>Nama Produk</th>
         <th class="is-b82fad01">Qty Terjual</th>
         <th class="is-df7d1005">Omzet (Rp)</th>
       </tr>
@@ -130,13 +209,103 @@
     </tbody>
   </table>
 
-  {{-- DETAIL TRANSAKSI --}}
-  <div class="seksi">IV. Detail Transaksi</div>
-  <table class="tabel-lap">
+  {{-- BREAKDOWN SUPPLIER --}}
+  <div class="seksi-judul"><span>IV.</span> Breakdown Penjualan per Supplier</div>
+  <table class="tabel-laporan tabel-breakdown-compact">
+    <colgroup>
+      <col class="col-no">
+      <col class="col-supplier">
+      <col class="col-nama">
+      <col>
+      <col>
+      <col>
+      <col>
+      <col>
+      <col>
+    </colgroup>
     <thead>
       <tr>
         <th class="td-no">No.</th>
-        <th>Nomor</th>
+        <th>Supplier</th>
+        <th>Nama Barang</th>
+        <th class="td-uang">Jumlah</th>
+        <th class="td-uang">Harga Jual</th>
+        <th class="td-uang">Total</th>
+        <th class="td-uang">Pendapatan</th>
+        <th class="td-uang">Profit</th>
+        <th class="td-uang">Debet</th>
+      </tr>
+    </thead>
+    <tbody>
+      @php
+        $groupedSupplier = $supplierBreakdown->groupBy('supplier_id');
+        $grandTotal = (float) $supplierBreakdown->sum('total');
+        $grandDebet = $groupedSupplier->sum(function ($rows) {
+          return (float) ($rows->first()->total_debet ?? 0);
+        });
+        $no = 1;
+      @endphp
+      @forelse($groupedSupplier as $supplierId => $rows)
+        @php
+          $supplierNama = $rows->first()->supplier_nama ?? 'Tanpa Supplier';
+          $supplierQty = (float) $rows->sum('jumlah');
+          $supplierTotal = (float) $rows->sum('total');
+          $supplierProfit = (float) $rows->sum('profit');
+          $supplierPendapatan = $supplierTotal - $supplierProfit;
+          $supplierDebet = (float) ($rows->first()->total_debet ?? 0);
+          $supplierMargin = $supplierTotal > 0 ? ($supplierProfit / $supplierTotal) * 100 : 0;
+          $supplierKontribusi = $grandTotal > 0 ? ($supplierTotal / $grandTotal) * 100 : 0;
+        @endphp
+        <tr class="tr-total">
+          <td colspan="3" class="is-ca22da47">
+            <div class="supplier-summary-main">{{ $supplierNama }}</div>
+            <div class="supplier-summary-meta">{{ number_format($rows->count()) }} barang, kontribusi {{ number_format($supplierKontribusi, 1, ',', '.') }}%</div>
+          </td>
+          <td class="td-uang">{{ number_format($supplierQty) }}</td>
+          <td class="td-uang">-</td>
+          <td class="td-uang">{{ number_format($supplierTotal, 0, ',', '.') }}</td>
+          <td class="td-uang">{{ number_format($supplierPendapatan, 0, ',', '.') }}</td>
+          <td class="td-uang">{{ number_format($supplierProfit, 0, ',', '.') }} ({{ number_format($supplierMargin, 1, ',', '.') }}%)</td>
+          <td class="td-uang">{{ number_format($supplierDebet, 0, ',', '.') }}</td>
+        </tr>
+        @foreach($rows as $sb)
+        <tr>
+          <td class="td-no">{{ $no }}</td>
+          <td>-</td>
+          <td>{{ $sb->nama_barang }}</td>
+          <td class="td-uang">{{ number_format($sb->jumlah) }}</td>
+          <td class="td-uang">{{ number_format($sb->harga_jual, 0, ',', '.') }}</td>
+          <td class="td-uang">{{ number_format($sb->total, 0, ',', '.') }}</td>
+          <td class="td-uang">{{ number_format($sb->total - $sb->profit, 0, ',', '.') }}</td>
+          <td class="td-uang">{{ number_format($sb->profit, 0, ',', '.') }}</td>
+          <td class="td-uang">-</td>
+        </tr>
+        @php $no++; @endphp
+        @endforeach
+      @empty
+      <tr><td colspan="9" class="is-2cef7be8">Tidak ada data supplier</td></tr>
+      @endforelse
+      @if($supplierBreakdown->isNotEmpty())
+      <tr class="tr-total">
+        <td colspan="3" class="is-ca22da47">Total</td>
+        <td class="td-uang">{{ number_format($supplierBreakdown->sum('jumlah')) }}</td>
+        <td class="td-uang">-</td>
+        <td class="td-uang">{{ number_format($supplierBreakdown->sum('total'), 0, ',', '.') }}</td>
+        <td class="td-uang">{{ number_format($supplierBreakdown->sum('total') - $supplierBreakdown->sum('profit'), 0, ',', '.') }}</td>
+        <td class="td-uang">{{ number_format($supplierBreakdown->sum('profit'), 0, ',', '.') }}</td>
+        <td class="td-uang">{{ number_format($grandDebet, 0, ',', '.') }}</td>
+      </tr>
+      @endif
+    </tbody>
+  </table>
+
+  {{-- DETAIL TRANSAKSI --}}
+  <div class="seksi-judul"><span>V.</span> Detail Transaksi</div>
+  <table class="tabel-laporan">
+    <thead>
+      <tr>
+        <th class="td-no">No.</th>
+        <th class="is-a0e8d5e8">Nomor</th>
         <th>Tanggal</th>
         <th>Kasir</th>
         <th>Metode</th>

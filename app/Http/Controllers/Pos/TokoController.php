@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pos\Toko;
-use App\Models\Pos\SaldoLog;
 use App\Models\Pos\Pencairan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,12 +12,29 @@ class TokoController extends Controller
 {
     public function index(Request $request)
     {
-        $allowedSort = ['nama', 'pemilik', 'saldo', 'created_at'];
+        $allowedSort = ['nama', 'pemilik', 'penjualan', 'profit', 'created_at'];
         $sortBy  = in_array($request->input('sort'), $allowedSort) ? $request->input('sort') : 'nama';
         $sortDir = $request->input('dir') === 'desc' ? 'desc' : 'asc';
         $q       = trim($request->input('q', ''));
 
-        $suppliers = Toko::withCount('produk')
+        $statPenjualan = DB::table('pos_item as i')
+            ->join('pos_produk as p', 'p.id', '=', 'i.produk_id')
+            ->selectRaw('p.supplier_id as supplier_id, SUM(i.subtotal) as penjualan, SUM(i.subtotal - (i.harga_pokok * i.qty)) as profit')
+            ->whereNotNull('p.supplier_id')
+            ->groupBy('p.supplier_id');
+
+        $suppliers = Toko::query()
+            ->leftJoinSub($statPenjualan, 'stat', function ($join) {
+                $join->on('stat.supplier_id', '=', 'pos_toko.id');
+            })
+            ->select('pos_toko.*')
+            ->selectSub(function ($query) {
+                $query->from('pos_produk')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('pos_produk.supplier_id', 'pos_toko.id');
+            }, 'produk_count')
+            ->selectRaw('COALESCE(stat.penjualan, 0) as penjualan')
+            ->selectRaw('COALESCE(stat.profit, 0) as profit')
             ->when($q, fn($query) => $query->where(function ($sub) use ($q) {
                 $sub->where('nama', 'like', "%{$q}%")
                     ->orWhere('pemilik', 'like', "%{$q}%")
@@ -58,14 +74,11 @@ class TokoController extends Controller
     {
         $toko->loadCount('produk');
 
-        $saldoLog = SaldoLog::where('toko_id', $toko->id)
-            ->with('transaksi:id,nomor,tanggal,total')
-            ->orderByDesc('created_at')
-            ->paginate(10, ['*'], 'log_page');
-
-        $pencairanList = Pencairan::where('toko_id', $toko->id)
-            ->orderByDesc('created_at')
-            ->paginate(10, ['*'], 'cair_page');
+        $produkList = $toko->produk()
+            ->select('id', 'kode', 'nama', 'stok', 'harga_beli', 'harga_jual', 'is_aktif')
+            ->orderBy('nama')
+            ->paginate(10, ['*'], 'produk_page')
+            ->withQueryString();
 
         $omzetBulanIni = $toko->saldoLog()
             ->whereMonth('created_at', now()->month)
@@ -74,9 +87,35 @@ class TokoController extends Controller
 
         $totalDicairkan = Pencairan::where('toko_id', $toko->id)->sum('jumlah');
 
+        $mutasiMasuk = DB::table('pos_item as i')
+            ->join('pos_produk as p', 'p.id', '=', 'i.produk_id')
+            ->join('pos_transaksi as trx', 'trx.id', '=', 'i.transaksi_id')
+            ->leftJoin('pos_saldo_log as sl', function ($join) use ($toko) {
+                $join->on('sl.transaksi_id', '=', 'trx.id')
+                    ->where('sl.toko_id', '=', $toko->id);
+            })
+            ->where('p.supplier_id', $toko->id)
+            ->groupBy('i.transaksi_id', 'trx.nomor', 'trx.created_at', 'sl.created_at', 'sl.saldo_sesudah')
+            ->selectRaw("COALESCE(sl.created_at, trx.created_at) as waktu, 'kredit' as tipe, SUM(i.qty * i.harga_pokok) as jumlah, COALESCE(sl.saldo_sesudah, 0) as saldo_sesudah, trx.nomor as referensi, NULL as metode, NULL as nama_penerima, NULL as nama_bank, NULL as no_rekening, CONCAT('Produk supplier: ', GROUP_CONCAT(DISTINCT p.nama ORDER BY p.nama SEPARATOR ', ')) as keterangan");
+
+        $mutasiKeluar = DB::table('pos_pencairan as pc')
+            ->where('pc.toko_id', $toko->id)
+            ->selectRaw("pc.created_at as waktu, 'debet' as tipe, pc.jumlah as jumlah, pc.saldo_sesudah as saldo_sesudah, NULL as referensi, pc.metode as metode, pc.nama_penerima as nama_penerima, pc.nama_bank as nama_bank, pc.no_rekening as no_rekening, pc.keterangan as keterangan");
+
+        $mutasiList = DB::query()
+            ->fromSub($mutasiMasuk->unionAll($mutasiKeluar), 'm')
+            ->orderByDesc('waktu')
+            ->paginate(10, ['*'], 'mutasi_page')
+            ->withQueryString();
+
+        $activeTab = request('tab');
+        if (!in_array($activeTab, ['produk', 'mutasi'], true)) {
+            $activeTab = request()->has('mutasi_page') ? 'mutasi' : 'produk';
+        }
+
         return view('pos.toko.show', compact(
-            'toko', 'saldoLog', 'pencairanList',
-            'omzetBulanIni', 'totalDicairkan'
+            'toko', 'produkList', 'mutasiList',
+            'omzetBulanIni', 'totalDicairkan', 'activeTab'
         ));
     }
 

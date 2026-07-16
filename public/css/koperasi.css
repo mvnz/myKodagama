@@ -1008,6 +1008,24 @@ section { padding: 60px 0; }
 .ts-wrapper .ts-control .item { font-size: .9rem; }
 .ts-wrapper.single .ts-control:after { border-color: #6b7280 transparent transparent transparent; }
 
+/* Jenis anggota searchable select (pengaturan simpan-pinjam) */
+.ts-wrapper.ts-jenis-anggota .ts-control {
+  min-height: 46px;
+  padding: .55rem .9rem;
+}
+.ts-wrapper.ts-jenis-anggota .ts-control .item,
+.ts-wrapper.ts-jenis-anggota .ts-control input {
+  font-size: 1rem !important;
+  line-height: 1.35;
+}
+.ts-jenis-anggota-dropdown {
+  min-width: 260px;
+}
+.ts-jenis-anggota-dropdown .option {
+  font-size: 1rem;
+  padding: .6rem .9rem;
+}
+
 /* ============ BREADCRUMB ============ */
 .page-breadcrumb {
   background: var(--light-bg);
@@ -1818,12 +1836,93 @@ section { padding: 60px 0; }
   padding: .9rem;
 }
 
+.pos-app .supplier-info-card {
+  background: #f7ecdf;
+  border-color: #e4c7a5 !important;
+  box-shadow: 0 10px 24px rgba(90, 43, 13, .14);
+}
+
+.pos-app .supplier-info-card .supplier-head {
+  border-bottom-color: #dbb892 !important;
+}
+
+.pos-app .supplier-info-card .supplier-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f5d3ab 0%, #e8ad68 100%);
+  color: #6b2b0e;
+  font-size: 1.25rem;
+  box-shadow: inset 0 0 0 1px #f2c795;
+}
+
+.pos-app .supplier-info-card .supplier-name {
+  color: #5c220d;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.pos-app .supplier-info-card .supplier-owner {
+  color: #6f4422;
+  font-size: .95rem;
+}
+
+.pos-app .supplier-info-card .supplier-meta-item {
+  display: flex;
+  gap: .7rem;
+  align-items: flex-start;
+}
+
+.pos-app .supplier-info-card .supplier-meta-icon {
+  color: #8f3d12;
+  margin-top: .1rem;
+  flex-shrink: 0;
+}
+
+.pos-app .supplier-info-card .supplier-meta-label {
+  color: #6f4422;
+  font-size: .76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  margin-bottom: .15rem;
+}
+
+.pos-app .supplier-info-card .supplier-meta-value {
+  color: #3f2618;
+  font-size: 1.04rem;
+  line-height: 1.35;
+}
+
+.pos-app .supplier-info-card .supplier-note {
+  color: #5a3a24;
+}
+
 .pos-app .tabel-koperasi tbody code {
   background: #fff7ed;
   color: #9a3412;
   border: 1px solid #fdba74;
   border-radius: 6px;
   padding: .08rem .35rem;
+}
+
+.pos-app #tabMutasi table th:nth-child(3),
+.pos-app #tabMutasi table td:nth-child(3) {
+  min-width: 180px;
+}
+
+.pos-app .mutasi-ref {
+  display: inline-block;
+  white-space: nowrap;
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fdba74;
+  border-radius: 6px;
+  padding: .12rem .45rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: .9rem;
+  font-weight: 600;
+  letter-spacing: .01em;
 }
 
 .pos-app .table-responsive {

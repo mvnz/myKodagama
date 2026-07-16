@@ -35,6 +35,41 @@ class KasirController extends Controller
         return view('pos.kasir', compact('kategoris', 'produk', 'kategoriId'));
     }
 
+    public function scan(Request $request)
+    {
+        $scan = trim((string) $request->query('q', ''));
+
+        if ($scan === '') {
+            return response()->json(['ok' => false, 'message' => 'Barcode/kode kosong.'], 422);
+        }
+
+        $produk = Produk::where('is_aktif', true)
+            ->where(function ($q) use ($scan) {
+                $q->where('barcode', $scan)
+                    ->orWhere('kode', $scan);
+            })
+            ->first(['id', 'kode', 'nama', 'harga_jual', 'stok']);
+
+        if (! $produk) {
+            return response()->json(['ok' => false, 'message' => "Barcode/kode {$scan} tidak ditemukan."], 404);
+        }
+
+        if ((int) $produk->stok <= 0) {
+            return response()->json(['ok' => false, 'message' => "Stok {$produk->nama} habis."], 422);
+        }
+
+        return response()->json([
+            'ok' => true,
+            'product' => [
+                'id' => $produk->id,
+                'kode' => $produk->kode,
+                'nama' => $produk->nama,
+                'harga' => (int) $produk->harga_jual,
+                'stok' => (int) $produk->stok,
+            ],
+        ]);
+    }
+
     public function checkout(Request $request)
     {
         $request->validate([

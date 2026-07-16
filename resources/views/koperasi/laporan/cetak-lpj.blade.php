@@ -23,7 +23,27 @@
   @endphp
   <title>LPJ {{ $namaKoperasi }} Tahun {{ $tahun }}</title>
   <link rel="stylesheet" href="{{ asset('css/pages/cetak.css') }}">
-  
+  <style>
+    .lpj-lead {
+      margin: 8px 0 12px;
+      line-height: 1.45;
+      text-align: justify;
+      font-size: 10.5pt;
+    }
+
+    .lpj-subtitle {
+      margin: 8px 0 4px;
+      font-weight: 700;
+      font-size: 10.5pt;
+    }
+
+    .lpj-date {
+      margin-top: 6px;
+      text-align: right;
+      font-size: 10pt;
+    }
+  </style>
+
   <link rel="stylesheet" href="{{ asset('css/pages/inline-extracted.css') }}">
 </head>
 <body>
@@ -70,7 +90,7 @@
 
     {{-- ════ I. PENDAHULUAN ════════════════════════════════════════ --}}
     <div class="seksi-judul"><span>I.</span> Pendahuluan</div>
-    <p class="is-479f9fe8">
+    <p class="lpj-lead">
       Pengurus {{ $namaKoperasi }} dengan ini menyampaikan Laporan Pertanggungjawaban atas
       pelaksanaan tugas dan kegiatan koperasi selama periode 1 Januari {{ $tahun }} sampai dengan
       31 Desember {{ $tahun }}. Laporan ini disusun sebagai pertanggungjawaban pengurus kepada
@@ -79,7 +99,7 @@
 
     {{-- ════ II. PERKEMBANGAN KEANGGOTAAN ════════════════════════ --}}
     <div class="seksi-judul"><span>II.</span> Perkembangan Keanggotaan</div>
-    <table class="tabel-lpj">
+    <table class="tabel-laporan">
       <thead>
         <tr><th>No.</th><th class="is-200a92a0">Keterangan</th><th class="is-729192c0">Jumlah</th></tr>
       </thead>
@@ -94,7 +114,7 @@
 
     {{-- ════ III. PERKEMBANGAN SIMPANAN ════════════════════════════ --}}
     <div class="seksi-judul"><span>III.</span> Perkembangan Permodalan & Simpanan</div>
-    <table class="tabel-lpj">
+    <table class="tabel-laporan">
       <thead>
         <tr><th>No.</th><th class="is-200a92a0">Jenis Simpanan</th><th class="is-1ac3ecac">Jumlah (Rp)</th></tr>
       </thead>
@@ -103,15 +123,15 @@
         <tr><td class="td-no">2</td><td>Simpanan Wajib</td><td class="td-uang">{{ $rp($simpananWajib) }}</td></tr>
         <tr><td class="td-no">3</td><td>Simpanan Sukarela</td><td class="td-uang">{{ $rp($simpananSukarela) }}</td></tr>
         <tr class="tr-total"><td></td><td class="td-bold">Jumlah Simpanan Tahun {{ $tahun }}</td><td class="td-uang">{{ $rp($totalSimpananTahun) }}</td></tr>
-        <tr class="tr-pos"><td></td><td class="td-bold">Total Simpanan Kumulatif (s.d. 31 Des {{ $tahun }})</td><td class="td-uang">{{ $rp($totalSimpananKumulatif) }}</td></tr>
+        <tr class="tr-surplus"><td></td><td class="td-bold">Total Simpanan Kumulatif (s.d. 31 Des {{ $tahun }})</td><td class="td-uang">{{ $rp($totalSimpananKumulatif) }}</td></tr>
       </tbody>
     </table>
 
     {{-- ════ IV. PERKEMBANGAN PINJAMAN ════════════════════════════ --}}
     <div class="seksi-judul"><span>IV.</span> Perkembangan Usaha Simpan Pinjam</div>
 
-    <p class="is-789ea1b2">A. Pinjaman</p>
-    <table class="tabel-lpj">
+    <p class="lpj-subtitle">A. Pinjaman</p>
+    <table class="tabel-laporan">
       <thead>
         <tr><th>No.</th><th class="is-200a92a0">Keterangan</th><th class="is-729192c0">Jumlah</th><th class="is-1ac3ecac">Nilai (Rp)</th></tr>
       </thead>
@@ -122,8 +142,8 @@
       </tbody>
     </table>
 
-    <p class="is-99457d26">B. Angsuran Diterima Tahun {{ $tahun }}</p>
-    <table class="tabel-lpj">
+    <p class="lpj-subtitle">B. Angsuran Diterima Tahun {{ $tahun }}</p>
+    <table class="tabel-laporan">
       <thead>
         <tr><th>No.</th><th class="is-200a92a0">Keterangan</th><th class="is-c981ed17">Jumlah (Rp)</th></tr>
       </thead>
@@ -137,21 +157,21 @@
 
     {{-- ════ V. LAPORAN ARUS KAS ════════════════════════════════════ --}}
     <div class="seksi-judul"><span>V.</span> Laporan Arus Kas Tahun {{ $tahun }}</div>
-    <table class="tabel-lpj">
+    <table class="tabel-laporan">
       <thead>
         <tr><th>No.</th><th class="is-200a92a0">Uraian</th><th class="is-c981ed17">Jumlah (Rp)</th></tr>
       </thead>
       <tbody>
-        <tr class="tr-sub"><td></td><td colspan="2">A. Penerimaan</td></tr>
+        <tr class="tr-sub"><th></th><th colspan="2">A. Penerimaan</th></tr>
         <tr><td class="td-no">1</td><td class="indent">Simpanan Anggota</td><td class="td-uang">{{ $rp($totalSimpananTahun) }}</td></tr>
         <tr><td class="td-no">2</td><td class="indent">Angsuran Pinjaman</td><td class="td-uang">{{ $rp($totalAngsuranDiterima) }}</td></tr>
         <tr class="tr-total"><td></td><td>Jumlah Penerimaan</td><td class="td-uang">{{ $rp($totalPemasukan) }}</td></tr>
 
-        <tr class="tr-sub"><td></td><td colspan="2">B. Pengeluaran</td></tr>
+        <tr class="tr-sub"><th></th><th colspan="2">B. Pengeluaran</th></tr>
         <tr><td class="td-no">1</td><td class="indent">Pencairan Pinjaman Anggota</td><td class="td-uang">{{ $rp($totalPengeluaran) }}</td></tr>
         <tr class="tr-total"><td></td><td>Jumlah Pengeluaran</td><td class="td-uang">{{ $rp($totalPengeluaran) }}</td></tr>
 
-        <tr class="{{ $arusKasBersih >= 0 ? 'tr-pos' : 'tr-neg' }}">
+        <tr class="{{ $arusKasBersih >= 0 ? 'tr-surplus' : 'tr-defisit' }}">
           <td></td>
           <td>{{ $arusKasBersih >= 0 ? 'SURPLUS' : 'DEFISIT' }} ARUS KAS</td>
           <td class="td-uang">
@@ -163,20 +183,20 @@
 
     {{-- ════ VI. LABA RUGI & SHU ══════════════════════════════════ --}}
     <div class="seksi-judul"><span>VI.</span> Laporan Laba Rugi & Sisa Hasil Usaha Tahun {{ $tahun }}</div>
-    <table class="tabel-lpj">
+    <table class="tabel-laporan">
       <thead>
         <tr><th>No.</th><th class="is-200a92a0">Uraian</th><th class="is-c981ed17">Jumlah (Rp)</th></tr>
       </thead>
       <tbody>
-        <tr class="tr-sub"><td></td><td colspan="2">A. Pendapatan</td></tr>
+        <tr class="tr-sub"><th></th><th colspan="2">A. Pendapatan</th></tr>
         <tr><td class="td-no">1</td><td class="indent">Pendapatan Bunga Pinjaman</td><td class="td-uang">{{ $rp($bungaMasuk) }}</td></tr>
         <tr><td class="td-no">2</td><td class="indent">Pendapatan Lainnya</td><td class="td-uang">{{ $rp($pendapatanLain) }}</td></tr>
         <tr class="tr-total"><td></td><td>Jumlah Pendapatan</td><td class="td-uang">{{ $rp($totalPendapatan) }}</td></tr>
 
-        <tr class="tr-sub"><td></td><td colspan="2">B. Biaya Operasional</td></tr>
+        <tr class="tr-sub"><th></th><th colspan="2">B. Biaya Operasional</th></tr>
         <tr class="tr-total"><td></td><td>Jumlah Biaya</td><td class="td-uang">{{ $rp($totalBiayaOps) }}</td></tr>
 
-        <tr class="{{ $shuBersih >= 0 ? 'tr-pos' : 'tr-neg' }}">
+        <tr class="{{ $shuBersih >= 0 ? 'tr-surplus' : 'tr-defisit' }}">
           <td></td>
           <td>SISA HASIL USAHA (SHU)</td>
           <td class="td-uang">
@@ -196,7 +216,7 @@
 
     {{-- ════ VII. PENUTUP ══════════════════════════════════════════ --}}
     <div class="seksi-judul"><span>VII.</span> Penutup</div>
-    <p class="is-641d8aaf">
+    <p class="lpj-lead">
       Demikian Laporan Pertanggungjawaban Pengurus {{ $namaKoperasi }} untuk periode
       Tahun {{ $tahun }} ini kami sampaikan. Semoga laporan ini dapat memberikan gambaran
       yang jelas mengenai perkembangan dan kondisi koperasi, serta menjadi bahan evaluasi
@@ -204,7 +224,7 @@
     </p>
 
     {{-- TANDA TANGAN --}}
-    <div class="is-60012b3c">
+    <div class="lpj-date">
       <div class="is-a4cec079">
         @php $kota = $alamat ? trim(substr($alamat, strrpos($alamat, ',') + 1)) : ''; @endphp
         {{ $kota ? $kota . ', ' : '' }}{{ now()->translatedFormat('d F Y') }}

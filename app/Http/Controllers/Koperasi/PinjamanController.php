@@ -7,18 +7,24 @@ use App\Http\Controllers\Controller;
 use App\Models\Koperasi\Pinjaman;
 use App\Models\Koperasi\Anggota;
 use App\Models\Koperasi\Angsuran;
+use App\Models\Koperasi\Pengaturan;
 use App\Http\Controllers\Concerns\CatatAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class PinjamanController extends Controller
 {
     use CatatAktivitas;
+
     public function index(Request $request)
     {
         $cari   = $request->input('cari');
         $status = $request->input('status');
+        $allowedSort = ['created_at', 'nomor_pinjaman', 'jumlah_pinjaman', 'jangka_waktu', 'status', 'tanggal_pengajuan'];
+        $sortBy  = in_array($request->input('sort'), $allowedSort, true) ? $request->input('sort') : 'created_at';
+        $sortDir = $request->input('dir') === 'asc' ? 'asc' : 'desc';
         $user   = Auth::user();
         $anggotaId = $user->roleModel?->slug === 'anggota' ? $user->anggota_id : null;
 
@@ -29,7 +35,7 @@ class PinjamanController extends Controller
                     ->orWhereHas('anggota', fn($aq) => $aq->where('nama', 'like', "%$cari%"));
             })
             ->when($status, fn($q) => $q->where('status', $status))
-            ->latest()
+            ->orderBy($sortBy, $sortDir)
             ->paginate(15)
             ->withQueryString();
 
@@ -40,15 +46,16 @@ class PinjamanController extends Controller
             'nilai_aktif'=> Pinjaman::when($anggotaId, fn($q) => $q->where('anggota_id', $anggotaId))->where('status', 'disetujui')->sum('jumlah_pinjaman'),
         ];
 
-        return view('koperasi.pinjaman.index', compact('pinjaman', 'cari', 'status', 'statsPinjaman'));
+        return view('koperasi.pinjaman.index', compact('pinjaman', 'cari', 'status', 'statsPinjaman', 'sortBy', 'sortDir'));
     }
 
     public function create()
     {
         $user = Auth::user();
         $anggotaSaya = null;
+        $anggotaJenisAktif = '';
 
-        if ($user->roleModel?->slug === 'anggota') {
+        if ($this->isAnggotaUser($user)) {
             $dataAnggota = Anggota::where('id', $user->anggota_id)->where('status', 'aktif')->first();
 
             if (!$dataAnggota) {
@@ -66,27 +73,44 @@ class PinjamanController extends Controller
             }
 
             $anggotaSaya = $dataAnggota;
+            $anggotaJenisAktif = (string) ($dataAnggota->jenis_anggota ?? '');
             $anggota = collect();
         } else {
             $anggota = Anggota::where('status', 'aktif')
                 ->whereDoesntHave('pinjaman', fn($q) => $q->where('status', 'disetujui'))
                 ->orderBy('nama')
                 ->get();
+
+            $anggotaJenisAktif = (string) old('anggota_jenis_aktif', request('anggota_jenis_aktif', ''));
         }
 
-        $jenisPinjaman = collect(json_decode(
-            \App\Models\Koperasi\Pengaturan::get('sp_jenis_pinjaman', '[]'),
-            true
-        ) ?: []);
+        $jenisPinjamanMaster = collect(json_decode(Pengaturan::get('sp_jenis_pinjaman', '[]'), true) ?: [])
+            ->map(function ($jp) {
+                return [
+                    'jenis_anggota' => (string) ($jp['jenis_anggota'] ?? ''),
+                    'nama' => (string) ($jp['nama'] ?? ''),
+                    'bunga' => (float) ($jp['bunga'] ?? 0),
+                    'min_pinjaman' => (int) ($jp['min_pinjaman'] ?? 0),
+                    'maks_pinjaman' => (int) ($jp['maks_pinjaman'] ?? 0),
+                    'min_jangka' => (int) ($jp['min_jangka'] ?? 1),
+                    'maks_jangka' => (int) ($jp['maks_jangka'] ?? 60),
+                ];
+            })
+            ->filter(fn($jp) => $jp['nama'] !== '')
+            ->values();
 
-        return view('koperasi.pinjaman.tambah', compact('anggota', 'jenisPinjaman', 'anggotaSaya'));
+        $jenisPinjaman = $jenisPinjamanMaster
+            ->filter(fn($jp) => $jp['jenis_anggota'] === '' || $jp['jenis_anggota'] === $anggotaJenisAktif)
+            ->values();
+
+        return view('koperasi.pinjaman.tambah', compact('anggota', 'jenisPinjaman', 'anggotaSaya', 'jenisPinjamanMaster', 'anggotaJenisAktif'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'anggota_id'     => 'required|exists:anggota,id',
-            'jenis_pinjaman' => 'nullable|string|max:100',
+            'jenis_pinjaman' => 'nullable|string|max:220',
             'jumlah_pinjaman'=> 'required|numeric|min:100000',
             'jangka_waktu'   => 'required|integer|min:1|max:60',
             'bunga'          => 'required|numeric|min:0|max:30',
@@ -99,6 +123,68 @@ class PinjamanController extends Controller
             'bunga.required'           => 'Bunga wajib diisi.',
             'tujuan.required'          => 'Tujuan pinjaman wajib diisi.',
         ]);
+
+        $anggota = Anggota::findOrFail((int) $validated['anggota_id']);
+        $aturanJenis = collect(json_decode(Pengaturan::get('sp_jenis_pinjaman', '[]'), true) ?: []);
+
+        if (!empty($validated['jenis_pinjaman'])) {
+            [$namaJenisDipilih, $jenisAnggotaDipilih] = array_pad(explode('||', (string) $validated['jenis_pinjaman'], 2), 2, '');
+
+            $jenisDipilih = $aturanJenis->first(function ($jp) use ($namaJenisDipilih, $jenisAnggotaDipilih) {
+                $nama = (string) ($jp['nama'] ?? '');
+                $jenisAnggotaAturan = (string) ($jp['jenis_anggota'] ?? '');
+
+                return $nama === $namaJenisDipilih && $jenisAnggotaAturan === $jenisAnggotaDipilih;
+            });
+
+            if (!$jenisDipilih) {
+                $jenisDipilih = $aturanJenis->first(function ($jp) use ($namaJenisDipilih, $anggota) {
+                    $nama = (string) ($jp['nama'] ?? '');
+                    $jenisAnggotaAturan = (string) ($jp['jenis_anggota'] ?? '');
+
+                    return $nama === $namaJenisDipilih
+                        && ($jenisAnggotaAturan === '' || $jenisAnggotaAturan === (string) $anggota->jenis_anggota);
+                });
+            }
+
+            if (!$jenisDipilih) {
+                throw ValidationException::withMessages([
+                    'jenis_pinjaman' => 'Jenis pinjaman tidak tersedia untuk jenis anggota ini.',
+                ]);
+            }
+
+            $validated['jenis_pinjaman'] = $namaJenisDipilih;
+
+            $minPinjaman = (int) ($jenisDipilih['min_pinjaman'] ?? 0);
+            $maksPinjaman = (int) ($jenisDipilih['maks_pinjaman'] ?? 0);
+            $minJangka = (int) ($jenisDipilih['min_jangka'] ?? 1);
+            $maksJangka = (int) ($jenisDipilih['maks_jangka'] ?? 60);
+            $bungaAturan = (float) ($jenisDipilih['bunga'] ?? 0);
+
+            if ($validated['jumlah_pinjaman'] < $minPinjaman) {
+                throw ValidationException::withMessages([
+                    'jumlah_pinjaman' => 'Jumlah pinjaman di bawah minimum jenis pinjaman untuk anggota ini.',
+                ]);
+            }
+
+            if ($maksPinjaman > 0 && $validated['jumlah_pinjaman'] > $maksPinjaman) {
+                throw ValidationException::withMessages([
+                    'jumlah_pinjaman' => 'Jumlah pinjaman melebihi maksimum jenis pinjaman untuk anggota ini.',
+                ]);
+            }
+
+            if ($validated['jangka_waktu'] < $minJangka || $validated['jangka_waktu'] > $maksJangka) {
+                throw ValidationException::withMessages([
+                    'jangka_waktu' => 'Jangka waktu tidak sesuai batas jenis pinjaman untuk anggota ini.',
+                ]);
+            }
+
+            if (abs(((float) $validated['bunga']) - $bungaAturan) > 0.0001) {
+                throw ValidationException::withMessages([
+                    'bunga' => 'Bunga tidak sesuai ketentuan jenis pinjaman untuk anggota ini.',
+                ]);
+            }
+        }
 
         $validated['nomor_pinjaman']   = $this->generateNomor();
         $validated['tanggal_pengajuan'] = today();
@@ -120,6 +206,11 @@ class PinjamanController extends Controller
 
         return redirect()->route('pinjaman.index')
             ->with('sukses', 'Pengajuan pinjaman berhasil disimpan.');
+    }
+
+    private function isAnggotaUser($user): bool
+    {
+        return ($user->roleModel?->slug ?? $user->role) === 'anggota';
     }
 
     public function show(Pinjaman $pinjaman)
@@ -171,7 +262,7 @@ class PinjamanController extends Controller
             ->with('sukses', 'Status pinjaman berhasil diperbarui.');
     }
 
-    /** Aksi cepat: verifikasi pinjaman (diajukan GåÆ diverifikasi) */
+    /** Aksi cepat: verifikasi pinjaman (diajukan Gï¿½ï¿½ diverifikasi) */
     public function verifikasi(Pinjaman $pinjaman)
     {
         if ($pinjaman->status !== 'diajukan') {
@@ -195,7 +286,7 @@ class PinjamanController extends Controller
             ->with('sukses', 'Pinjaman berhasil diverifikasi dan siap untuk disetujui.');
     }
 
-    /** Aksi cepat: setujui pinjaman (diverifikasi GåÆ disetujui) */
+    /** Aksi cepat: setujui pinjaman (diverifikasi Gï¿½ï¿½ disetujui) */
     public function setujui(Request $request, Pinjaman $pinjaman)
     {
         if ($pinjaman->status !== 'diverifikasi') {

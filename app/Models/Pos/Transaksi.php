@@ -12,13 +12,21 @@ class Transaksi extends Model
 
     protected $casts = ['tanggal' => 'date'];
 
-    public static function generateNomor(): string
+    public static function generateNomor(string $tanggal = null): string
     {
-        $hari = now()->format('Ymd');
+        $hari = $tanggal
+            ? \Illuminate\Support\Carbon::parse($tanggal)->format('Ymd')
+            : now()->format('Ymd');
+
         $prefix = 'TRX-' . $hari . '-';
-        $max = static::where('nomor', 'like', $prefix . '%')
-            ->selectRaw('MAX(CAST(SUBSTRING(nomor, ' . (strlen($prefix) + 1) . ') AS UNSIGNED)) as maks')
-            ->value('maks');
+
+        $max = static::query()
+            ->where('nomor', 'like', $prefix . '%')
+            ->pluck('nomor')
+            ->filter(fn($nomor) => preg_match('/^' . preg_quote($prefix, '/') . '\\d+$/', (string) $nomor) === 1)
+            ->map(fn($nomor) => (int) substr((string) $nomor, strlen($prefix)))
+            ->max();
+
         return $prefix . str_pad(($max ?? 0) + 1, 4, '0', STR_PAD_LEFT);
     }
 

@@ -103,13 +103,7 @@ class PosSeeder extends Seeder
 
         for ($i = 0; $i < $jumlahTrx; $i++) {
             $tanggal = Carbon::now()->subDays(rand(0, 29))->format('Y-m-d');
-            $prefix  = 'TRX-' . str_replace('-', '', $tanggal) . '-';
-
-            // Hitung nomor urut untuk tanggal ini
-            $existing = Transaksi::where('nomor', 'like', $prefix . '%')
-                ->selectRaw('MAX(CAST(SUBSTRING(nomor, ' . (strlen($prefix) + 1) . ') AS UNSIGNED)) as maks')
-                ->value('maks');
-            $nomor = $prefix . str_pad(($existing ?? 0) + 1, 4, '0', STR_PAD_LEFT);
+            $nomor = Transaksi::generateNomor($tanggal);
 
             // Pilih 1-4 produk acak
             $pilihanProduk = $produkAll->random(rand(1, 4));

@@ -7,6 +7,10 @@
 @endsection
 
 @section('konten')
+@php
+  $sortBy = $sortBy ?? request('sort', 'created_at');
+  $sortDir = $sortDir ?? request('dir', 'desc');
+@endphp
 <div class="row justify-content-center">
   <div class="col-xl-10">
 

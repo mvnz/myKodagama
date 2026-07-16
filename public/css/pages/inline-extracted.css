@@ -332,7 +332,7 @@
       --heading-font: 'Montserrat', sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    html, body { height: 100%; overflow: hidden; margin: 0; font-family: 'Roboto', sans-serif; color: #3c4049; }
+    html, body { margin: 0; font-family: 'Roboto', sans-serif; color: #3c4049; }
 
     /* TOPBAR */
     .topbar {
@@ -714,14 +714,8 @@
   color: #1e3a6e;
 }
 
-/* â”€â”€ Reset & Base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: "Times New Roman", Times, serif;
-      font-size: 11pt;
-      color: #000;
-      background: #fff;
-    }
+/* Reset & Base */
+    .page { font-family: "Times New Roman", Times, serif; font-size: 11pt; color: #000; background: #fff; }
     .page {
       width: 210mm;
       min-height: 297mm;
@@ -729,7 +723,7 @@
       padding: 20mm 20mm 25mm 25mm;
     }
 
-    /* â”€â”€ Kop Surat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* GöÇGöÇ Kop Surat GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
     .kop {
       display: flex;
       align-items: center;
@@ -780,7 +774,7 @@
       margin-top: 2px;
     }
 
-    /* â”€â”€ Judul Dokumen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* GöÇGöÇ Judul Dokumen GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
     .judul-dokumen {
       text-align: center;
       margin: 14px 0 4px;
@@ -797,7 +791,7 @@
       margin-top: 3px;
     }
 
-    /* â”€â”€ Info Dokumen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* GöÇGöÇ Info Dokumen GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
     .info-dokumen {
       margin: 12px 0 16px;
       font-size: 10pt;
@@ -807,7 +801,7 @@
     .info-dokumen td:first-child { width: 140px; }
     .info-dokumen td:nth-child(2) { padding: 0 8px; }
 
-    /* â”€â”€ Tabel Laporan â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* GöÇGöÇ Tabel Laporan GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
     .tabel-laporan {
       width: 100%;
       border-collapse: collapse;
@@ -855,7 +849,7 @@
     .tabel-laporan .indent { padding-left: 24px; }
     .tabel-laporan .indent2 { padding-left: 40px; }
 
-    /* â”€â”€ Seksi Judul â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* GöÇGöÇ Seksi Judul GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
     .seksi-judul {
       font-size: 10.5pt;
       font-weight: 700;
@@ -869,7 +863,7 @@
       width: 24px;
     }
 
-    /* â”€â”€ Tanda Tangan â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* GöÇGöÇ Tanda Tangan GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
     .ttd-area {
       margin-top: 30px;
       display: flex;
@@ -886,12 +880,12 @@
       font-weight: 700;
     }
 
-    /* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* GöÇGöÇ Footer GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
     .footer-cetak {
       display: none;
     }
 
-    /* â”€â”€ Tombol layar (disembunyikan saat print) â”€â”€ */
+    /* GöÇGöÇ Tombol layar (disembunyikan saat print) GöÇGöÇ */
     .no-print {
       font-family: Arial, sans-serif;
       padding: 10px 20px;
@@ -1024,7 +1018,7 @@
   background: #fff; color: #374151;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Stat Cards Log Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Stat Cards Log +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .log-stat-card {
   background: #fff;
   border-radius: 16px;
@@ -1058,7 +1052,7 @@
 .log-stat-label { font-size: .77rem; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
 .log-stat-value { font-size: 1.75rem; font-weight: 700; color: #112344; line-height: 1.2; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Filter Card Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Filter Card +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .filter-card {
   background: #fff;
   border-radius: 16px;
@@ -1082,7 +1076,7 @@
   box-shadow: 0 0 0 3px rgba(23,92,221,.1);
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Log Table Card Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Log Table Card +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .log-table-card {
   background: #fff;
   border-radius: 16px;
@@ -1102,7 +1096,7 @@
   display: flex; align-items: center; gap: .5rem;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Aksi Pills Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Aksi Pills +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .aksi-pill {
   display: inline-flex; align-items: center; gap: .3rem;
   padding: .3rem .75rem; border-radius: 50px;
@@ -1115,7 +1109,7 @@
 .aksi-setujui { background:#ede9fe; color:#5b21b6; }
 .aksi-tolak   { background:#f3f4f6; color:#374151; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Modul Chip Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Modul Chip +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .modul-chip {
   padding: .25rem .65rem; border-radius: 8px;
   font-size: .73rem; font-weight: 600;
@@ -1123,7 +1117,7 @@
   border: 1px solid #dbe8ff; white-space: nowrap;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Avatar Initials Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Avatar Initials +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
   background: linear-gradient(135deg,#175cdd,#8b5cf6);
@@ -1132,7 +1126,7 @@
   flex-shrink: 0; text-transform: uppercase;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Tabel Row Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Tabel Row +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .log-tabel thead th {
   background: #f5f8ff; color: #112344;
   font-weight: 700; font-size: .75rem;
@@ -1147,7 +1141,7 @@
 .log-tabel tbody tr:last-child td { border-bottom: none; }
 .log-tabel tbody tr:hover { background: #f8fbff; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Detail Btn Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Detail Btn +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .btn-log-detail {
   width: 30px; height: 30px; border-radius: 8px;
   border: 1.5px solid #e5e7eb; background: #fff; color: #6b7280;
@@ -1156,7 +1150,7 @@
 }
 .btn-log-detail:hover { border-color: #175cdd; color: #175cdd; background: #f0f4ff; }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬ Empty State Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Empty State +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
 .log-empty { padding: 3.5rem 1rem; text-align: center; color: #9ca3af; }
 .log-empty i { font-size: 2.8rem; display: block; margin-bottom: .75rem; opacity: .4; }
 
@@ -1196,8 +1190,8 @@
 .print-row-lunas td { background: #f0fdf4; color: #166534; }
 .print-row-telat td { background: #fff1f2; }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: "Times New Roman", Times, serif; font-size: 11pt; color: #000; background: #fff; }
+.page, .page * { box-sizing:border-box; }
+    .page { font-family: "Times New Roman", Times, serif; font-size: 11pt; color: #000; background: #fff; }
     .page { width:210mm; min-height:297mm; margin:0 auto; padding:20mm 20mm 25mm 25mm; }
     .kop { display:flex; align-items:center; gap:14px; padding-bottom:8px; }
     .kop-logo { width:65px; height:65px; border:3px solid #000; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22pt; font-weight:900; flex-shrink:0; }

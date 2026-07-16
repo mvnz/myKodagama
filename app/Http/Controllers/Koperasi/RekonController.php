@@ -90,10 +90,14 @@ class RekonController extends Controller
             ->get();
 
         // Load simpanan yang sudah ada (untuk cek duplikat per anggota+jenis+bulan)
-        $simpananAda = Simpanan::selectRaw('anggota_id, jenis_simpanan, YEAR(tanggal) as thn, MONTH(tanggal) as bln')
-            ->groupBy('anggota_id', 'jenis_simpanan', 'thn', 'bln')
+        $simpananAda = Simpanan::select('anggota_id', 'jenis_simpanan', 'tanggal')
             ->get()
-            ->map(fn($s) => $s->anggota_id . '|' . $s->jenis_simpanan . '|' . $s->thn . '-' . $s->bln)
+            ->map(function ($s) {
+                $thn = (int) date('Y', strtotime((string) $s->tanggal));
+                $bln = (int) date('n', strtotime((string) $s->tanggal));
+
+                return $s->anggota_id . '|' . $s->jenis_simpanan . '|' . $thn . '-' . $bln;
+            })
             ->flip();
 
         $hasil = [];

@@ -17,21 +17,22 @@
         </div>
       </div>
 
-      <form action="{{ route('pinjaman.store') }}" method="POST" id="formPinjaman">
+      <form action="{{ route('pinjaman.store') }}" method="POST" id="formPinjaman" data-anggota-jenis-aktif="{{ $anggotaJenisAktif ?? '' }}">
         @csrf
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label">Anggota <span class="text-danger">*</span></label>
             @if($anggotaSaya)
               <input type="hidden" name="anggota_id" value="{{ $anggotaSaya->id }}">
+              <input type="hidden" name="anggota_jenis_aktif" value="{{ $anggotaSaya->jenis_anggota ?? '' }}">
               <input type="text" class="form-control" value="{{ $anggotaSaya->nomor_anggota }} — {{ $anggotaSaya->nama }}" readonly>
             @else
               <select name="anggota_id" class="form-select @error('anggota_id') is-invalid @enderror">
                 <option value="">-- Pilih Anggota --</option>
                 @foreach($anggota as $a)
-                  <option value="{{ $a->id }}"
+                  <option value="{{ $a->id }}" data-jenis-anggota="{{ $a->jenis_anggota ?? '' }}"
                     {{ old('anggota_id', request('anggota_id')) == $a->id ? 'selected' : '' }}>
-                    {{ $a->nomor_anggota }} — {{ $a->nama }}
+                    {{ $a->nomor_anggota }} — {{ $a->nama }}{{ !empty($a->jenis_anggota) ? ' (' . $a->jenis_anggota . ')' : '' }}
                   </option>
                 @endforeach
               </select>
@@ -46,19 +47,21 @@
             <select name="jenis_pinjaman" id="jenisPinjamanSelect"
               class="form-select @error('jenis_pinjaman') is-invalid @enderror">
               <option value="">-- Pilih jenis (opsional) --</option>
-              @foreach($jenisPinjaman as $jp)
-                <option value="{{ $jp['nama'] }}"
+              @foreach(($jenisPinjamanMaster ?? $jenisPinjaman) as $jp)
+                @php $jpValue = ($jp['nama'] ?? '') . '||' . ($jp['jenis_anggota'] ?? ''); @endphp
+                <option value="{{ $jpValue }}"
+                  data-jenis-anggota="{{ $jp['jenis_anggota'] ?? '' }}"
                   data-bunga="{{ $jp['bunga'] }}"
                   data-min-pinjaman="{{ $jp['min_pinjaman'] }}"
                   data-maks-pinjaman="{{ $jp['maks_pinjaman'] }}"
                   data-min-jangka="{{ $jp['min_jangka'] }}"
                   data-maks-jangka="{{ $jp['maks_jangka'] }}"
-                  {{ old('jenis_pinjaman') == $jp['nama'] ? 'selected' : '' }}>
-                  {{ $jp['nama'] }}
+                  {{ old('jenis_pinjaman') == $jpValue || old('jenis_pinjaman') == ($jp['nama'] ?? '') ? 'selected' : '' }}>
+                  {{ $jp['nama'] }}{{ !empty($jp['jenis_anggota']) ? ' - ' . $jp['jenis_anggota'] : ' - Semua Anggota' }}
                 </option>
               @endforeach
             </select>
-            <div class="form-text">Pilih jenis untuk mengisi bunga &amp; batas otomatis.</div>
+            <div class="form-text">Pilih jenis untuk mengisi bunga &amp; batas otomatis sesuai jenis anggota.</div>
             @error('jenis_pinjaman')<div class="invalid-feedback">{{ $message }}</div>@enderror
 
             {{-- Info box jenis yang dipilih --}}

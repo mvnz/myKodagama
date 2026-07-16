@@ -4,6 +4,11 @@
 
 @section('konten')
 
+@php
+  $sortBy = $sortBy ?? request('sort', 'created_at');
+  $sortDir = $sortDir ?? request('dir', 'desc');
+@endphp
+
 {{-- Page Banner --}}
 <div class="dashboard-welcome mb-4">
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -147,25 +152,25 @@
     <table class="koperasi-table mb-0">
       <thead>
         @php
-          function sortUrl($kolom, $sortBy, $sortDir) {
+          $sortUrl = function ($kolom, $sortBy, $sortDir) {
             $dir = ($sortBy === $kolom && $sortDir === 'asc') ? 'desc' : 'asc';
             return request()->fullUrlWithQuery(['sort' => $kolom, 'dir' => $dir]);
-          }
-          function sortIcon($kolom, $sortBy, $sortDir) {
+          };
+          $sortIcon = function ($kolom, $sortBy, $sortDir) {
             if ($sortBy !== $kolom) return '<i class="bi bi-arrow-down-up text-muted opacity-50 ms-1 is-bc9efe64"></i>';
             return $sortDir === 'asc'
               ? '<i class="bi bi-sort-up ms-1 is-0a789cad"></i>'
               : '<i class="bi bi-sort-down ms-1 is-0a789cad"></i>';
-          }
+          };
         @endphp
         <tr>
           <th>#</th>
-          <th><a href="{{ sortUrl('nomor_anggota', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">No. Anggota {!! sortIcon('nomor_anggota', $sortBy, $sortDir) !!}</a></th>
-          <th><a href="{{ sortUrl('nama', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">Nama {!! sortIcon('nama', $sortBy, $sortDir) !!}</a></th>
+          <th><a href="{{ $sortUrl('nomor_anggota', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">No. Anggota {!! $sortIcon('nomor_anggota', $sortBy, $sortDir) !!}</a></th>
+          <th><a href="{{ $sortUrl('nama', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">Nama {!! $sortIcon('nama', $sortBy, $sortDir) !!}</a></th>
           <th>NIK</th>
           <th>Telepon</th>
-          <th><a href="{{ sortUrl('tanggal_bergabung', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">Bergabung {!! sortIcon('tanggal_bergabung', $sortBy, $sortDir) !!}</a></th>
-          <th><a href="{{ sortUrl('status', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">Status {!! sortIcon('status', $sortBy, $sortDir) !!}</a></th>
+          <th><a href="{{ $sortUrl('tanggal_bergabung', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">Bergabung {!! $sortIcon('tanggal_bergabung', $sortBy, $sortDir) !!}</a></th>
+          <th><a href="{{ $sortUrl('status', $sortBy, $sortDir) }}" class="text-decoration-none text-reset d-inline-flex align-items-center">Status {!! $sortIcon('status', $sortBy, $sortDir) !!}</a></th>
           <th class="text-center">Akun Login</th>
           <th class="text-center">Aksi</th>
         </tr>

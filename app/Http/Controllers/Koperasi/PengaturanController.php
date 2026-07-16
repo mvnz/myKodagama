@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Koperasi;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Role;
+use App\Models\Koperasi\Anggota;
 use App\Models\Koperasi\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -53,7 +55,17 @@ class PengaturanController extends Controller
             true
         ) ?: [];
 
-        return view('koperasi.pengaturan.simpan-pinjam', compact('pengaturan', 'wajibPerJenis', 'jenisPinjaman'));
+        $opsiJenisAnggota = Anggota::query()
+            ->whereNotNull('jenis_anggota')
+            ->where('jenis_anggota', '!=', '')
+            ->select('jenis_anggota')
+            ->distinct()
+            ->orderBy('jenis_anggota')
+            ->pluck('jenis_anggota')
+            ->values()
+            ->toArray();
+
+        return view('koperasi.pengaturan.simpan-pinjam', compact('pengaturan', 'wajibPerJenis', 'jenisPinjaman', 'opsiJenisAnggota'));
     }
 
     public function updateSimpanPinjam(Request $request): RedirectResponse
@@ -65,6 +77,7 @@ class PengaturanController extends Controller
             'wajib_per_jenis.*.jenis'          => ['nullable', 'string', 'max:100'],
             'wajib_per_jenis.*.nominal'        => ['nullable', 'numeric', 'min:0'],
             'jenis_pinjaman'                   => ['nullable', 'array'],
+            'jenis_pinjaman.*.jenis_anggota'   => ['nullable', 'string', 'max:100'],
             'jenis_pinjaman.*.nama'            => ['nullable', 'string', 'max:100'],
             'jenis_pinjaman.*.bunga'           => ['nullable', 'numeric', 'min:0', 'max:100'],
             'jenis_pinjaman.*.min_pinjaman'    => ['nullable', 'numeric', 'min:0'],
@@ -93,6 +106,7 @@ class PengaturanController extends Controller
         $jenisPinjaman = collect($request->input('jenis_pinjaman', []))
             ->filter(fn($r) => !empty($r['nama']))
             ->map(fn($r) => [
+                'jenis_anggota' => trim((string) ($r['jenis_anggota'] ?? '')),
                 'nama'         => trim($r['nama']),
                 'bunga'        => (float) ($r['bunga'] ?? 0),
                 'min_pinjaman' => (int) ($r['min_pinjaman'] ?? 0),
@@ -107,6 +121,38 @@ class PengaturanController extends Controller
 
         return redirect()->route('pengaturan.simpan-pinjam')
             ->with('sukses', 'Pengaturan simpan pinjam berhasil disimpan.');
+    }
+
+    public function alurPinjaman(): View
+    {
+        $this->authorize('pengaturan.aplikasi');
+
+        $roles = Role::query()
+            ->orderBy('nama')
+            ->get(['id', 'nama', 'slug', 'deskripsi']);
+
+        $verifikatorRole = Pengaturan::get('sp_verifikator_role', '');
+        $approverRole = Pengaturan::get('sp_approver_role', '');
+
+        return view('koperasi.pengaturan.alur-pinjaman', compact('roles', 'verifikatorRole', 'approverRole'));
+    }
+
+    public function updateAlurPinjaman(Request $request): RedirectResponse
+    {
+        $this->authorize('pengaturan.aplikasi');
+
+        $request->validate([
+            'verifikator_role' => ['nullable', 'string', 'exists:roles,slug'],
+            'approver_role' => ['nullable', 'string', 'exists:roles,slug', 'different:verifikator_role'],
+        ], [
+            'approver_role.different' => 'Role approver harus berbeda dengan role verifikator.',
+        ]);
+
+        Pengaturan::set('sp_verifikator_role', (string) $request->input('verifikator_role', ''), 'simpan_pinjam');
+        Pengaturan::set('sp_approver_role', (string) $request->input('approver_role', ''), 'simpan_pinjam');
+
+        return redirect()->route('pengaturan.alur-pinjaman')
+            ->with('sukses', 'Konfigurasi alur persetujuan pinjaman berhasil disimpan.');
     }
 
     public function pengurus(): View
@@ -210,7 +256,7 @@ class PengaturanController extends Controller
             'wa_template_pinjaman_ditolak', 'wa_template_angsuran_jatuh_tempo',
         ];
 
-        // Toggle fields (checkbox) GÇö jika tidak ada di request berarti off
+        // Toggle fields (checkbox) Gï¿½ï¿½ jika tidak ada di request berarti off
         $toggleFields = [
             'wa_aktif', 'wa_notif_pinjaman_diajukan', 'wa_notif_pinjaman_disetujui',
             'wa_notif_pinjaman_ditolak', 'wa_notif_angsuran_jatuh_tempo',

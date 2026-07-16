@@ -64,7 +64,16 @@ return new class extends Migration
 
     private function hasIndex(string $table, string $name): bool
     {
+        $driver = DB::getDriverName();
+
+        if ($driver === 'sqlite') {
+            return collect(DB::select("PRAGMA index_list('{$table}')"))
+                ->pluck('name')
+                ->contains($name);
+        }
+
         return collect(DB::select("SHOW INDEX FROM `{$table}`"))
-            ->pluck('Key_name')->contains($name);
+            ->pluck('Key_name')
+            ->contains($name);
     }
 };

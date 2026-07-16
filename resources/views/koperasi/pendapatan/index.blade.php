@@ -8,6 +8,11 @@
 
 @section('konten')
 
+@php
+  $sortBy = $sortBy ?? request('sort', 'created_at');
+  $sortDir = $sortDir ?? request('dir', 'desc');
+@endphp
+
 @if(session('sukses'))
   <div class="alert alert-success alert-dismissible fade show py-2">{{ session('sukses') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>

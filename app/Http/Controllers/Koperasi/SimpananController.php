@@ -17,8 +17,11 @@ class SimpananController extends Controller
 	{
 		$cari = $request->input('cari');
 		$jenis = $request->input('jenis');
+		$allowedSort = ['created_at', 'jenis_simpanan', 'jumlah', 'tanggal'];
+		$sortBy  = in_array($request->input('sort'), $allowedSort, true) ? $request->input('sort') : 'created_at';
+		$sortDir = $request->input('dir') === 'asc' ? 'asc' : 'desc';
 		$user = Auth::user();
-		$anggotaId = $user->roleModel?->slug === 'anggota' ? $user->anggota_id : null;
+		$anggotaId = $this->isAnggotaUser($user) ? $user->anggota_id : null;
 
 		$simpanan = Simpanan::with('anggota')
 			->when($anggotaId, fn ($q) => $q->where('anggota_id', $anggotaId))
@@ -27,7 +30,7 @@ class SimpananController extends Controller
 					->orWhere('nomor_anggota', 'like', "%$cari%"));
 			})
 			->when($jenis, fn ($q) => $q->where('jenis_simpanan', $jenis))
-			->latest()
+			->orderBy($sortBy, $sortDir)
 			->paginate(15)
 			->withQueryString();
 
@@ -43,7 +46,7 @@ class SimpananController extends Controller
 			->whereYear('tanggal', now()->year)
 			->count();
 
-		return view('koperasi.simpanan.index', compact('simpanan', 'cari', 'jenis', 'totalPerJenis', 'totalSimpanan', 'jumlahTransaksi', 'transaksiBuilanIni'));
+		return view('koperasi.simpanan.index', compact('simpanan', 'cari', 'jenis', 'totalPerJenis', 'totalSimpanan', 'jumlahTransaksi', 'transaksiBuilanIni', 'sortBy', 'sortDir'));
 	}
 
 	public function create()
@@ -72,6 +75,8 @@ class SimpananController extends Controller
 		]);
 
 		$validated['user_id'] = Auth::id();
+		$anggota = Anggota::findOrFail((int) $validated['anggota_id']);
+		$validated['jenis_anggota'] = $anggota->jenis_anggota;
 		$simpanan = Simpanan::create($validated);
 		$simpanan->load('anggota');
 
@@ -92,7 +97,7 @@ class SimpananController extends Controller
 	public function show(Simpanan $simpanan)
 	{
 		$user = Auth::user();
-		if ($user->role === 'anggota' && $user->anggota_id !== $simpanan->anggota_id) {
+		if ($this->isAnggotaUser($user) && $user->anggota_id !== $simpanan->anggota_id) {
 			abort(403);
 		}
 
@@ -103,6 +108,11 @@ class SimpananController extends Controller
 
 	public function edit(Simpanan $simpanan)
 	{
+		$user = Auth::user();
+		if ($this->isAnggotaUser($user) && $user->anggota_id !== $simpanan->anggota_id) {
+			abort(403);
+		}
+
 		$anggota = Anggota::where('status', 'aktif')->orderBy('nama')->get();
 
 		return view('koperasi.simpanan.ubah', compact('simpanan', 'anggota'));
@@ -110,6 +120,11 @@ class SimpananController extends Controller
 
 	public function update(Request $request, Simpanan $simpanan)
 	{
+		$user = Auth::user();
+		if ($this->isAnggotaUser($user) && $user->anggota_id !== $simpanan->anggota_id) {
+			abort(403);
+		}
+
 		$validated = $request->validate([
 			'anggota_id' => 'required|exists:anggota,id',
 			'jenis_simpanan' => 'required|in:pokok,wajib,sukarela',
@@ -117,6 +132,11 @@ class SimpananController extends Controller
 			'tanggal' => 'required|date',
 			'keterangan' => 'nullable|string|max:255',
 		]);
+
+		if (empty($simpanan->jenis_anggota)) {
+			$anggota = Anggota::findOrFail((int) $validated['anggota_id']);
+			$validated['jenis_anggota'] = $anggota->jenis_anggota;
+		}
 
 		$dataLama = $simpanan->toArray();
 		$simpanan->update($validated);
@@ -138,6 +158,11 @@ class SimpananController extends Controller
 
 	public function destroy(Simpanan $simpanan)
 	{
+		$user = Auth::user();
+		if ($this->isAnggotaUser($user) && $user->anggota_id !== $simpanan->anggota_id) {
+			abort(403);
+		}
+
 		$simpanan->load('anggota');
 		$dataLama = $simpanan->toArray();
 		$label = $simpanan->anggota->nama ?? '-';
@@ -155,5 +180,10 @@ class SimpananController extends Controller
 
 		return redirect()->route('simpanan.index')
 			->with('sukses', 'Data simpanan berhasil dihapus.');
+	}
+
+	private function isAnggotaUser($user): bool
+	{
+		return ($user->roleModel?->slug ?? $user->role) === 'anggota';
 	}
 }

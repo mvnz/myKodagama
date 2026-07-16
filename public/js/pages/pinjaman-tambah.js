@@ -5,6 +5,42 @@ const fmtShort = v => {
     return 'Rp ' + v;
 };
 
+function jenisAnggotaAktif() {
+    const form = document.getElementById('formPinjaman');
+    const preset = form?.dataset?.anggotaJenisAktif || '';
+    if (preset) return preset;
+
+    const anggotaSelect = document.querySelector('select[name="anggota_id"]');
+    if (!anggotaSelect) return '';
+    return anggotaSelect.options[anggotaSelect.selectedIndex]?.dataset?.jenisAnggota || '';
+}
+
+function sinkronkanPilihanJenisPinjaman() {
+    const selJenis = document.getElementById('jenisPinjamanSelect');
+    if (!selJenis) return;
+
+    const jenisAktif = jenisAnggotaAktif();
+    let selectedMasihValid = false;
+
+    Array.from(selJenis.options).forEach((opt, idx) => {
+        if (idx === 0) return;
+        const jenisUntuk = opt.dataset.jenisAnggota || '';
+        const cocok = jenisUntuk === '' || jenisUntuk === jenisAktif;
+        opt.hidden = !cocok;
+        opt.disabled = !cocok;
+
+        if (cocok && opt.selected) {
+            selectedMasihValid = true;
+        }
+    });
+
+    if (!selectedMasihValid) {
+        selJenis.value = '';
+    }
+
+    selJenis.dispatchEvent(new Event('change'));
+}
+
 // Sesuaikan kolom dari jenis pinjaman
 const selJenis = document.getElementById('jenisPinjamanSelect');
 if (selJenis) {
@@ -80,7 +116,16 @@ if (selJenis) {
         terapkanJenis(this.options[this.selectedIndex]);
     });
 
-    if (selJenis.value) terapkanJenis(selJenis.options[selJenis.selectedIndex]);
+    const anggotaSelect = document.querySelector('select[name="anggota_id"]');
+    if (anggotaSelect) {
+        anggotaSelect.addEventListener('change', sinkronkanPilihanJenisPinjaman);
+    }
+
+    sinkronkanPilihanJenisPinjaman();
+
+    if (selJenis.value) {
+        terapkanJenis(selJenis.options[selJenis.selectedIndex]);
+    }
 }
 
 // Kalkulator cicilan

@@ -8,6 +8,11 @@
 
 @section('konten')
 
+@php
+  $sortBy = $sortBy ?? request('sort', 'created_at');
+  $sortDir = $sortDir ?? request('dir', 'desc');
+@endphp
+
 {{-- Page Banner --}}
 <div class="dashboard-welcome mb-4">
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">

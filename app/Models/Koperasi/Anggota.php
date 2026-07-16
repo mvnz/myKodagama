@@ -29,9 +29,12 @@ class Anggota extends Model
         $prefix = 'KOP-' . $tahun . '-';
 
         // Urutan belakang bersifat global (tidak reset per tahun).
-        $last = static::whereRaw('nomor_anggota REGEXP ?', ['^KOP-[0-9]{4}-[0-9]{4}$'])
-            ->orderByRaw('CAST(SUBSTRING(nomor_anggota, 10, 4) AS UNSIGNED) DESC')
-            ->value('nomor_anggota');
+        $last = static::query()
+            ->whereNotNull('nomor_anggota')
+            ->pluck('nomor_anggota')
+            ->filter(fn($nomor) => preg_match('/^KOP-\d{4}-\d{4}$/', (string) $nomor) === 1)
+            ->sortByDesc(fn($nomor) => (int) substr((string) $nomor, -4))
+            ->first();
 
         $urutan = 1;
         if ($last) {

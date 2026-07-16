@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Koperasi;
 use App\Http\Controllers\Controller;
 
 use App\Models\Koperasi\Angsuran;
-use App\Models\Koperasi\Pinjaman;
 use App\Http\Controllers\Concerns\CatatAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +16,9 @@ class AngsuranController extends Controller
     {
         $cari   = $request->input('cari');
         $status = $request->input('status');
+        $allowedSort = ['created_at', 'ke', 'tanggal_jatuh_tempo', 'tanggal_bayar', 'status'];
+        $sortBy  = in_array($request->input('sort'), $allowedSort, true) ? $request->input('sort') : 'created_at';
+        $sortDir = $request->input('dir') === 'asc' ? 'asc' : 'desc';
         $user   = Auth::user();
         $anggotaId = $user->roleModel?->slug === 'anggota' ? $user->anggota_id : null;
 
@@ -29,7 +31,7 @@ class AngsuranController extends Controller
                 });
             })
             ->when($status, fn($q) => $q->where('status', $status))
-            ->orderBy('tanggal_jatuh_tempo')
+            ->orderBy($sortBy, $sortDir)
             ->paginate(15)
             ->withQueryString();
 
@@ -40,7 +42,7 @@ class AngsuranController extends Controller
             'terlambat' => Angsuran::when($anggotaId, fn($q) => $q->whereHas('pinjaman', fn($pq) => $pq->where('anggota_id', $anggotaId)))->where('status', 'belum')->where('tanggal_jatuh_tempo', '<', today())->count(),
         ];
 
-        return view('koperasi.angsuran.index', compact('angsuran', 'cari', 'status', 'statsAngsuran'));
+        return view('koperasi.angsuran.index', compact('angsuran', 'cari', 'status', 'statsAngsuran', 'sortBy', 'sortDir'));
     }
 
     public function show(Angsuran $angsuran)

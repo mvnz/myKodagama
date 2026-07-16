@@ -1,3 +1,69 @@
+@once
+  @push('css')
+  <style>
+    .user-form-modern {
+      --uf-border: #dbe5f4;
+      --uf-border-strong: #bdd0ea;
+      --uf-soft: #f5f9ff;
+      --uf-text: #112344;
+    }
+
+    .user-form-modern .form-label {
+      font-weight: 700;
+      color: var(--uf-text);
+      margin-bottom: .45rem;
+    }
+
+    .user-form-modern .form-control,
+    .user-form-modern .form-select,
+    .user-form-modern .input-group-text {
+      border-color: var(--uf-border);
+      border-radius: 10px;
+      min-height: 46px;
+    }
+
+    .user-form-modern .input-group-text {
+      background: var(--uf-soft);
+      color: #47638d;
+      border-right: 0;
+    }
+
+    .user-form-modern .input-group .form-control {
+      border-left: 0;
+    }
+
+    .user-form-modern .input-group .btn {
+      border-color: var(--uf-border);
+      border-left: 0;
+      color: #4d6a98;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .user-form-modern .form-control:focus,
+    .user-form-modern .form-select:focus,
+    .user-form-modern .input-group .btn:focus {
+      border-color: var(--uf-border-strong);
+      box-shadow: 0 0 0 .22rem rgba(23, 92, 221, .14);
+    }
+
+    .user-form-modern .form-text {
+      color: #6b7f9d;
+      font-size: .8rem;
+    }
+
+    .user-form-modern .invalid-feedback {
+      font-size: .78rem;
+    }
+
+    .user-form-modern .form-hint {
+      font-size: .82rem;
+      color: #6b7f9d;
+      font-weight: 600;
+    }
+  </style>
+  @endpush
+@endonce
+
 @if($errors->any())
   <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ $errors->first() }}
@@ -5,7 +71,7 @@
   </div>
 @endif
 
-<div class="row g-3">
+<div class="row g-3 user-form-modern">
 
   {{-- Nama Lengkap --}}
   <div class="col-md-6">
@@ -92,7 +158,7 @@
   <div class="col-md-6">
     <label class="form-label">
       Kata Sandi {{ $isEdit ? '' : '<span class="text-danger">*</span>' }}
-      {!! $isEdit ? '<span class="text-muted is-bb0425a5">(kosongkan jika tidak diubah)</span>' : '' !!}
+      {!! $isEdit ? '<span class="form-hint">(kosongkan jika tidak diubah)</span>' : '' !!}
     </label>
     <div class="input-group">
       <span class="input-group-text"><i class="bi bi-lock"></i></span>
@@ -104,6 +170,7 @@
       </button>
       @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
+    <div class="form-text">Password default sistem: <strong>kodagamaPassword!35</strong></div>
   </div>
 
   {{-- Konfirmasi Password --}}

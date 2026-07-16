@@ -57,6 +57,39 @@
     const kosong  = document.getElementById('kosongJenisPinjaman');
     if (!tbodyJP) return;
 
+  function initJenisAnggotaSelect(scope) {
+    if (typeof TomSelect === 'undefined') return;
+
+    const root = scope || document;
+    root.querySelectorAll('select.js-jenis-anggota-select').forEach(el => {
+      if (el.tomselect) return;
+      try {
+        new TomSelect(el, {
+          allowEmptyOption: true,
+          placeholder: el.dataset.placeholder || 'Semua Jenis Anggota',
+        });
+      } catch (_) {}
+    });
+  }
+
+  let jenisAnggotaList = [];
+  try {
+    jenisAnggotaList = JSON.parse(tbodyJP.dataset.jenisAnggota || '[]');
+  } catch (_) {
+    jenisAnggotaList = [];
+  }
+
+  const escapeHtml = (str) => String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+  const jenisAnggotaOptions = ['<option value="">Semua Jenis Anggota</option>']
+    .concat(jenisAnggotaList.map(j => `<option value="${escapeHtml(j)}">${escapeHtml(j)}</option>`))
+    .join('');
+
     function reindexJP() {
         tbodyJP.querySelectorAll('tr').forEach((tr, i) => {
             tr.querySelectorAll('[name]').forEach(el => {
@@ -68,6 +101,7 @@
     function buatBarisJP(idx) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
+      <td><select class="form-select form-select-sm js-jenis-anggota-select" name="jenis_pinjaman[${idx}][jenis_anggota]" data-placeholder="Semua Jenis Anggota">${jenisAnggotaOptions}</select></td>
       <td><input type="text" class="form-control form-control-sm" name="jenis_pinjaman[${idx}][nama]" placeholder="cth: Pinjaman Reguler" required></td>
       <td><div class="input-group input-group-sm">
         <input type="number" class="form-control" name="jenis_pinjaman[${idx}][bunga]" min="0" max="100" step="0.1" placeholder="1.5">
@@ -102,7 +136,8 @@
         const idx = tbodyJP.querySelectorAll('tr').length;
         const tr  = buatBarisJP(idx);
         tbodyJP.appendChild(tr);
-        tr.querySelector('input[type=text]').focus();
+      initJenisAnggotaSelect(tr);
+        tr.querySelector('input[type=text]')?.focus();
     });
 
     tbodyJP.addEventListener('click', e => {
@@ -112,4 +147,6 @@
         reindexJP();
         if (kosong && tbodyJP.querySelectorAll('tr').length === 0) kosong.style.display = '';
     });
+
+      initJenisAnggotaSelect(document);
 })();

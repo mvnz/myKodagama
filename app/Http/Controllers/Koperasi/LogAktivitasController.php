@@ -16,6 +16,9 @@ class LogAktivitasController extends Controller
         $aksi   = $request->input('aksi');
         $dari   = $request->input('dari');
         $sampai = $request->input('sampai');
+        $allowedSort = ['created_at', 'aksi', 'modul'];
+        $sortBy  = in_array($request->input('sort'), $allowedSort, true) ? $request->input('sort') : 'created_at';
+        $sortDir = $request->input('dir') === 'asc' ? 'asc' : 'desc';
 
         $log = LogAktivitas::with('pengguna')
             ->when($cari, fn($q) => $q->where('label', 'like', "%$cari%")
@@ -24,7 +27,7 @@ class LogAktivitasController extends Controller
             ->when($aksi,  fn($q) => $q->where('aksi', $aksi))
             ->when($dari,  fn($q) => $q->whereDate('created_at', '>=', $dari))
             ->when($sampai, fn($q) => $q->whereDate('created_at', '<=', $sampai))
-            ->orderByDesc('created_at')
+            ->orderBy($sortBy, $sortDir)
             ->paginate(25)
             ->withQueryString();
 
@@ -41,7 +44,8 @@ class LogAktivitasController extends Controller
         return view('koperasi.log.index', compact(
             'log', 'cari', 'modul', 'aksi', 'dari', 'sampai',
             'modulList', 'aksiList',
-            'statHariIni', 'statMingguIni', 'statTotal', 'statPerAksi'
+            'statHariIni', 'statMingguIni', 'statTotal', 'statPerAksi',
+            'sortBy', 'sortDir'
         ));
     }
 

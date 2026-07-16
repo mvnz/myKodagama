@@ -8,6 +8,11 @@
 
 @section('konten')
 
+@php
+  $sortBy = $sortBy ?? request('sort', 'created_at');
+  $sortDir = $sortDir ?? request('dir', 'desc');
+@endphp
+
 {{-- Stat cards --}}
 <div class="row g-3 mb-4">
   <div class="col-sm-6 col-lg-3">

@@ -4,6 +4,11 @@
 
 @section('konten')
 
+@php
+  $bisaVerifikasi = $bisaVerifikasi ?? false;
+  $bisaSetujui = $bisaSetujui ?? false;
+@endphp
+
 {{-- Header cetak (hanya muncul saat print) --}}
 <div class="d-none d-print-block mb-4 pb-3 is-8f03c7c6">
   <div class="d-flex align-items-start justify-content-between">

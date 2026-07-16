@@ -9,7 +9,6 @@ use App\Models\Koperasi\Pengaturan;
 use App\Models\Koperasi\UnitKerja;
 use App\Http\Controllers\Concerns\CatatAktivitas;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class AnggotaController extends Controller
@@ -20,6 +19,9 @@ class AnggotaController extends Controller
         $this->authorize('anggota.lihat');
         $cari   = $request->input('cari');
         $status = $request->input('status');
+        $allowedSort = ['created_at', 'nomor_anggota', 'nama', 'tanggal_bergabung', 'status'];
+        $sortBy  = in_array($request->input('sort'), $allowedSort, true) ? $request->input('sort') : 'created_at';
+        $sortDir = $request->input('dir') === 'asc' ? 'asc' : 'desc';
 
         $anggota = Anggota::query()
             ->with(['unitKerja', 'user'])
@@ -27,7 +29,7 @@ class AnggotaController extends Controller
                 ->orWhere('nomor_anggota', 'like', "%$cari%")
                 ->orWhere('nik', 'like', "%$cari%"))
             ->when($status, fn($q) => $q->where('status', $status))
-            ->latest()
+            ->orderBy($sortBy, $sortDir)
             ->paginate(15)
             ->withQueryString();
 
@@ -40,7 +42,7 @@ class AnggotaController extends Controller
                 ->whereYear('tanggal_bergabung', now()->year)->count(),
         ];
 
-        return view('koperasi.anggota.index', compact('anggota', 'cari', 'status', 'statsAnggota'));
+        return view('koperasi.anggota.index', compact('anggota', 'cari', 'status', 'statsAnggota', 'sortBy', 'sortDir'));
     }
 
     public function create()
@@ -122,6 +124,20 @@ class AnggotaController extends Controller
 
         return view('koperasi.anggota.rekap', compact(
             'anggota', 'simpananRekap', 'pinjamanAktif', 'angsuranMendatang', 'wajibPerJenis'
+        ));
+    }
+
+    public function kartu(Anggota $anggota)
+    {
+        $anggota->load(['simpanan', 'pinjaman.angsuran', 'unitKerja']);
+
+        $totalPokok   = $anggota->simpanan->where('jenis_simpanan', 'pokok')->sum('jumlah');
+        $totalWajib   = $anggota->simpanan->where('jenis_simpanan', 'wajib')->sum('jumlah');
+        $totalSukarel = $anggota->simpanan->where('jenis_simpanan', 'sukarela')->sum('jumlah');
+        $pinjamanAktif = $anggota->pinjaman->whereIn('status', ['disetujui', 'diajukan']);
+
+        return view('koperasi.anggota.kartu', compact(
+            'anggota', 'totalPokok', 'totalWajib', 'totalSukarel', 'pinjamanAktif'
         ));
     }
 

@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
     // Pengaturan Aplikasi
     Route::get('/pengaturan/aplikasi', [PengaturanController::class, 'index'])->name('pengaturan.aplikasi');
     Route::put('/pengaturan/aplikasi', [PengaturanController::class, 'update'])->name('pengaturan.aplikasi.update');
+    Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
 
     // Pengaturan Simpan Pinjam
     Route::get('/pengaturan/simpan-pinjam', [PengaturanController::class, 'simpanPinjam'])->name('pengaturan.simpan-pinjam');
@@ -122,6 +123,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/keuangan', [LaporanController::class, 'index'])->name('laporan.keuangan');
     Route::get('/laporan/keuangan/cetak', [LaporanController::class, 'cetak'])->name('laporan.keuangan.cetak');
     Route::get('/laporan/laba-rugi', [LaporanController::class, 'labaRugi'])->name('laporan.laba-rugi');
+    Route::get('/laporan/laba-rugi/cetak', [LaporanController::class, 'cetakLabaRugi'])->name('laporan.laba-rugi.cetak');
     Route::get('/laporan/lpj', [LaporanController::class, 'lpj'])->name('laporan.lpj');
     Route::get('/laporan/lpj/cetak', [LaporanController::class, 'cetakLpj'])->name('laporan.lpj.cetak');
 
@@ -182,6 +184,7 @@ Route::middleware('auth')->group(function () {
         // Kasir
         Route::middleware('can:pos.kasir')->group(function () {
             Route::get('/',          [KasirController::class, 'index'])->name('kasir');
+            Route::get('/scan',      [KasirController::class, 'scan'])->name('kasir.scan');
             Route::post('/checkout', [KasirController::class, 'checkout'])->name('checkout');
         });
 

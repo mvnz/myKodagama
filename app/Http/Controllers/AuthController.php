@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function tampilMasuk()
     {
         if (Auth::check()) {
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
         return view('auth.masuk');
     }
@@ -51,7 +51,7 @@ class AuthController extends Controller
             }
 
             $roleNama = $user->roleModel?->nama ?? 'Pengguna';
-            return redirect()->intended(route('home'))
+            return redirect()->intended(route('dashboard'))
                 ->with('sukses', 'Selamat datang, ' . $user->name . '! (' . $roleNama . ')');
         }
 

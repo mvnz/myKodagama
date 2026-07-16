@@ -6,6 +6,54 @@
   <li class="breadcrumb-item active">Pengaturan Role</li>
 @endsection
 
+@push('css')
+<style>
+  .role-card {
+    border: 1px solid #dbe6f8;
+    box-shadow: 0 8px 20px rgba(17, 35, 68, .08);
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  }
+
+  .role-card:hover {
+    transform: translateY(-2px);
+    border-color: #c8d9f6;
+    box-shadow: 0 12px 24px rgba(17, 35, 68, .14);
+  }
+
+  .role-icon-wrap {
+    width: 36px;
+    height: 36px;
+    background: rgba(23, 92, 221, .1);
+  }
+
+  .role-icon {
+    color: #175cdd;
+    font-size: .95rem;
+  }
+
+  .role-name {
+    font-size: 1.05rem;
+    color: #112344;
+  }
+
+  .role-admin-badge {
+    background: #eef2ff;
+    color: #3b5bdb;
+    border: 1px solid #e0e7ff;
+    font-size: .72rem;
+    font-weight: 700;
+  }
+
+  .role-footer {
+    border-top: 1px dashed #e2e8f0;
+  }
+
+  .role-acl {
+    color: #175cdd;
+  }
+</style>
+@endpush
+
 @section('konten')
 <div class="row justify-content-center">
   <div class="col-xl-10">
@@ -50,19 +98,19 @@
     <div class="row g-3">
       @foreach($roles as $role)
       <div class="col-lg-4 col-md-6">
-        <div class="h-100 d-flex flex-column rounded-3 p-3 bg-white is-f90a5b32"
+        <div class="h-100 d-flex flex-column rounded-3 p-3 bg-white role-card"
             >
 
           <div class="d-flex align-items-start justify-content-between mb-3">
             <div class="d-flex align-items-center gap-3">
-              <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 is-3ca5af72"
+              <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 role-icon-wrap"
                   >
-                <i class="bi bi-shield-fill-check is-09cb687d"></i>
+                <i class="bi bi-shield-fill-check role-icon"></i>
               </div>
               <div>
-                <div class="fw-700 is-9bd992ef">{{ $role->nama }}</div>
+                <div class="fw-700 role-name">{{ $role->nama }}</div>
                 @if($role->slug === 'admin')
-                  <span class="badge mt-1 is-d524294b">
+                  <span class="badge mt-1 role-admin-badge">
                     <i class="bi bi-star-fill me-1"></i>Super Admin
                   </span>
                 @endif
@@ -98,9 +146,9 @@
             <p class="small text-muted fst-italic mb-3">Tidak ada deskripsi</p>
           @endif
 
-          <div class="mt-auto d-flex align-items-center justify-content-between pt-2 is-c1ea3bca"
+          <div class="mt-auto d-flex align-items-center justify-content-between pt-2 role-footer"
               >
-            <span class="small fw-600 is-bc519fd0">
+            <span class="small fw-600 role-acl">
               <i class="bi bi-key-fill me-1"></i>{{ $role->permissions_count }} hak akses
             </span>
             <a href="{{ route('role.edit', $role) }}" class="btn btn-sm btn-outline-primary">

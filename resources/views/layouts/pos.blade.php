@@ -16,7 +16,7 @@
   
   @stack('css')
 </head>
-<body>
+<body class="pos-app">
 
   <!-- Sidebar (struktur identik dengan koperasi) -->
   <aside class="sidebar" id="sidebar">

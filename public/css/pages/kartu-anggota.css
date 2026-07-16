@@ -177,8 +177,8 @@
 
 @media print {
     @page {
-        size: 85.6mm 54mm;
-        margin: 0;
+        size: A4 portrait;
+        margin: 10mm;
     }
 
     .sidebar,
@@ -199,17 +199,17 @@
     }
 
     .content-area {
-        width: 85.6mm !important;
-        height: 54mm !important;
-        min-height: 54mm !important;
-        overflow: hidden !important;
+        width: auto !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
     }
 
     html,
     body {
         background: #ffffff !important;
-        width: 85.6mm !important;
-        height: 54mm !important;
+        width: auto !important;
+        height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
         -webkit-print-color-adjust: exact;
@@ -217,31 +217,21 @@
     }
 
     .kartu-wrapper {
-        width: 85.6mm !important;
-        height: 54mm !important;
         max-width: none;
         margin: 0;
-        min-height: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .member-card-preview {
-        width: 85.6mm !important;
-        height: 54mm !important;
+        justify-content: flex-start;
         padding: 0 !important;
-        margin: 0 !important;
     }
 
     .member-card {
-        width: 85.6mm !important;
-        height: 54mm !important;
         box-shadow: none;
         border: 1px solid #b9c6d8;
-        border-radius: 0;
-        margin: 0 !important;
         break-inside: avoid;
         page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }

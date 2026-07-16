@@ -18,12 +18,15 @@ class UserController extends Controller
 	public function index(Request $request)
 	{
 		$q = $request->input('q');
+		$allowedSort = ['created_at', 'name', 'email'];
+		$sortBy  = in_array($request->input('sort'), $allowedSort, true) ? $request->input('sort') : 'created_at';
+		$sortDir = $request->input('dir') === 'asc' ? 'asc' : 'desc';
 		$users = User::with(['roleModel', 'anggota'])
 			->when($q, fn ($query) => $query
 				->where('name', 'like', "%$q%")
 				->orWhere('email', 'like', "%$q%")
 				->orWhere('username', 'like', "%$q%"))
-			->latest()
+			->orderBy($sortBy, $sortDir)
 			->paginate(15)
 			->withQueryString();
 
@@ -34,7 +37,7 @@ class UserController extends Controller
 			'anggota' => User::where('role', 'anggota')->count(),
 		];
 
-		return view('koperasi.user.index', compact('users', 'q', 'statsUser'));
+		return view('koperasi.user.index', compact('users', 'q', 'statsUser', 'sortBy', 'sortDir'));
 	}
 
 	public function create()

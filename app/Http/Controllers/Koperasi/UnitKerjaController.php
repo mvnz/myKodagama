@@ -14,12 +14,15 @@ class UnitKerjaController extends Controller
 	public function index(Request $request)
 	{
 		$cari = $request->input('cari');
+		$allowedSort = ['created_at', 'kode', 'nama', 'singkatan', 'aktif'];
+		$sortBy  = in_array($request->input('sort'), $allowedSort, true) ? $request->input('sort') : 'created_at';
+		$sortDir = $request->input('dir') === 'asc' ? 'asc' : 'desc';
 
 		$unitKerja = UnitKerja::query()
 			->when($cari, fn ($q) => $q->where('nama', 'like', "%$cari%")
 				->orWhere('kode', 'like', "%$cari%")
 				->orWhere('singkatan', 'like', "%$cari%"))
-			->orderBy('nama')
+			->orderBy($sortBy, $sortDir)
 			->paginate(20)
 			->withQueryString();
 
@@ -31,7 +34,7 @@ class UnitKerjaController extends Controller
 				->whereYear('created_at', now()->year)->count(),
 		];
 
-		return view('koperasi.unit-kerja.index', compact('unitKerja', 'cari', 'statsUnitKerja'));
+		return view('koperasi.unit-kerja.index', compact('unitKerja', 'cari', 'statsUnitKerja', 'sortBy', 'sortDir'));
 	}
 
 	public function create()

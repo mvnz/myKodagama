@@ -13,9 +13,13 @@ class Produk extends Model
 
     public static function generateKode(): string
     {
-        $max = static::where('kode', 'regexp', '^PRD-[0-9]+$')
-            ->selectRaw('MAX(CAST(SUBSTRING(kode,5) AS UNSIGNED)) as maks')
-            ->value('maks');
+        $max = static::query()
+            ->whereNotNull('kode')
+            ->pluck('kode')
+            ->filter(fn($kode) => preg_match('/^PRD-\d+$/', (string) $kode) === 1)
+            ->map(fn($kode) => (int) substr((string) $kode, 4))
+            ->max();
+
         return 'PRD-' . str_pad(($max ?? 0) + 1, 4, '0', STR_PAD_LEFT);
     }
 

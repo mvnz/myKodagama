@@ -29,19 +29,19 @@
       </div>
       <input type="hidden" name="mode" id="modeInput" value="{{ $mode }}">
     </div>
-    <div class="col-md-4 is-d493c44c" id="inputHari">
+    <div class="col-md-4" id="inputHari" style="{{ $mode === 'hari' ? '' : 'display:none;' }}">
       <label class="form-label">Tanggal</label>
       <input type="date" name="tanggal" value="{{ $tanggal }}" class="form-control">
     </div>
-    <div class="col-md-4 is-9cf8f19d" id="inputMinggu">
+    <div class="col-md-4" id="inputMinggu" style="{{ $mode === 'minggu' ? '' : 'display:none;' }}">
       <label class="form-label">Minggu</label>
       <input type="week" name="minggu" value="{{ $minggu }}" class="form-control">
     </div>
-    <div class="col-md-4 is-f83e7552" id="inputBulan">
+    <div class="col-md-4" id="inputBulan" style="{{ $mode === 'bulan' ? '' : 'display:none;' }}">
       <label class="form-label">Bulan</label>
       <input type="month" name="bulan" value="{{ $bulan }}" class="form-control">
     </div>
-    <div class="col-md-4 is-e2d30749" id="inputTahun">
+    <div class="col-md-4" id="inputTahun" style="{{ $mode === 'tahun' ? '' : 'display:none;' }}">
       <label class="form-label">Tahun</label>
       <select name="tahun" class="form-select">
         @for($y = now()->year; $y >= now()->year - 5; $y--)
@@ -102,8 +102,8 @@
         @if($harian->isEmpty())
         <div class="text-center text-muted py-4"><i class="bi bi-inbox is-a4ea9cc4"></i><div class="mt-2">Tidak ada data transaksi bulan ini</div></div>
         @else
-        <div class="is-df74e8d8">
-          <div class="is-09dc4c8b">
+        <div class="pos-chart-scroll">
+          <div class="pos-chart-list">
           @php
             $maxOmzet = $harian->max('omzet') ?: 1;
             $fmtTgl = fn($d) => $mode === 'tahun'
@@ -112,12 +112,12 @@
           @endphp
             @foreach($harian as $h)
             <div class="d-flex align-items-center gap-2 mb-2">
-              <span class="is-d75de943">{{ $fmtTgl($h->tanggal) }}</span>
-              <div class="flex-fill is-6b6cdda5">
-                <div class="is-3201758a"></div>
+              <span class="pos-chart-date">{{ $fmtTgl($h->tanggal) }}</span>
+              <div class="flex-fill pos-chart-bar-bg">
+                <div class="pos-chart-bar-fill" style="width: {{ round(($h->omzet / $maxOmzet) * 100, 2) }}%"></div>
               </div>
-              <span class="is-e96dfed1">{{ number_format($h->omzet,0,',','.') }}</span>
-              <span class="is-cfedd835">({{ $h->jumlah }})</span>
+              <span class="pos-chart-omzet">{{ number_format($h->omzet,0,',','.') }}</span>
+              <span class="pos-chart-count">({{ $h->jumlah }})</span>
             </div>
             @endforeach
           </div>

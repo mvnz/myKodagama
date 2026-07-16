@@ -62,9 +62,9 @@
     </div>
 
     <div class="col-md-2">
-      <button type="button" onclick="window.print()" class="btn btn-outline-success w-100">
+      <a href="{{ route('laporan.laba-rugi.cetak', ['tahun' => $tahun, 'bulan' => $bulan]) }}" target="_blank" class="btn btn-outline-success w-100">
         <i class="bi bi-printer me-1"></i> Cetak
-      </button>
+      </a>
     </div>
 
   </form>

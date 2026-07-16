@@ -260,6 +260,7 @@
               <table class="koperasi-table mb-0" id="tabelJenisPinjaman">
                 <thead>
                   <tr>
+                    <th class="is-a629a35a">Jenis Anggota</th>
                     <th class="is-a629a35a">Nama Jenis</th>
                     <th class="is-e5a6788e">Bunga (% / bln)</th>
                     <th class="is-bd123a7f">Min. Pinjaman (Rp)</th>
@@ -269,9 +270,19 @@
                     <th class="is-9ab095ba"></th>
                   </tr>
                 </thead>
-                <tbody id="bodyJenisPinjaman">
+                <tbody id="bodyJenisPinjaman" data-jenis-anggota='@json($opsiJenisAnggota ?? [])'>
                   @foreach($jenisPinjaman as $i => $jp)
                     <tr>
+                      <td>
+                        <select class="form-select form-select-sm js-jenis-anggota-select" name="jenis_pinjaman[{{ $i }}][jenis_anggota]" data-placeholder="Semua Jenis Anggota">
+                          <option value="">Semua Jenis Anggota</option>
+                          @foreach(($opsiJenisAnggota ?? []) as $jenisAnggota)
+                            <option value="{{ $jenisAnggota }}" {{ ($jp['jenis_anggota'] ?? '') === $jenisAnggota ? 'selected' : '' }}>
+                              {{ $jenisAnggota }}
+                            </option>
+                          @endforeach
+                        </select>
+                      </td>
                       <td>
                         <input type="text" class="form-control form-control-sm"
                           name="jenis_pinjaman[{{ $i }}][nama]"

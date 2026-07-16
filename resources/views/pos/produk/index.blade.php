@@ -116,7 +116,6 @@
         <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
         <input type="text" id="scanBarcodeInput" name="barcode" class="form-control" placeholder="Arahkan scanner lalu Enter" autofocus required>
       </div>
-      <div class="form-text">Mendukung scanner USB (keyboard wedge). Jika barcode kosong, bisa scan kode produk.</div>
     </div>
     <div class="col-md-2">
       <label class="form-label">Qty Masuk</label>
@@ -128,6 +127,7 @@
       </button>
     </div>
   </form>
+  <div class="form-text mt-1">Mendukung scanner USB (keyboard wedge). Jika barcode kosong, bisa scan kode produk.</div>
   <div class="d-flex flex-wrap gap-2 mt-3">
     <a href="{{ route('pos.produk.create', old('barcode') ? ['barcode' => old('barcode')] : []) }}" class="btn btn-sm btn-outline-primary">
       <i class="bi bi-plus-circle me-1"></i>Tambah Produk Baru

@@ -15,7 +15,7 @@
         <div class="d-flex gap-2 mb-2">
           <div class="input-group input-group-sm flex-fill">
             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
-            <input type="text" name="q" value="{{ request('q') }}" class="form-control border-start-0" placeholder="Cari produk / kode...">
+            <input type="text" id="kasirScanInput" name="q" value="{{ request('q') }}" class="form-control border-start-0" placeholder="Scan barcode / cari produk..." autocomplete="off">
           </div>
           @if(request('q') || request('kategori'))
           <a href="{{ route('pos.kasir') }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x"></i></a>
@@ -180,6 +180,7 @@
 @push('js')
 <script>
 let cart = {};
+let scanBusy = false;
 
 function fmt(n){ return 'Rp ' + Number(n).toLocaleString('id-ID'); }
 
@@ -224,13 +225,13 @@ function renderCart(){
     const item = cart[id];
     html += `<div class="cart-item">
       <div class="flex-fill">
-        <div class="item-name">${item.nama}</div>
-        <div class="item-price">${fmt(item.harga)} × ${item.qty} = ${fmt(item.harga * item.qty)}</div>
+        <div class="item-nama">${item.nama}</div>
+        <div class="item-harga">${fmt(item.harga)} × ${item.qty} = ${fmt(item.harga * item.qty)}</div>
       </div>
-      <div class="cart-qty">
-        <button onclick="changeQty(${id},-1)"><i class="bi bi-dash"></i></button>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(${id},-1)"><i class="bi bi-dash"></i></button>
         <span class="qty-num">${item.qty}</span>
-        <button onclick="changeQty(${id},1)"><i class="bi bi-plus"></i></button>
+        <button class="qty-btn" onclick="changeQty(${id},1)"><i class="bi bi-plus"></i></button>
       </div>
     </div>`;
   });
@@ -325,6 +326,51 @@ function transaksiBaruDanTutup(){
   const btn = document.getElementById('btnProses');
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Proses';
+}
+
+const scanInput = document.getElementById('kasirScanInput');
+const filterForm = document.getElementById('filterForm');
+
+async function scanAndAddProduct(rawValue) {
+  const code = (rawValue || '').trim();
+  if (!code || scanBusy) return;
+
+  scanBusy = true;
+
+  try {
+    const res = await fetch(`{{ route('pos.kasir.scan') }}?q=${encodeURIComponent(code)}`, {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.ok && data.product) {
+      const p = data.product;
+      addToCart(p.id, p.kode, p.nama, p.harga, p.stok);
+      scanInput.value = '';
+      scanInput.focus();
+      return;
+    }
+
+    if (res.status === 404) {
+      filterForm.submit();
+      return;
+    }
+
+    alert(data.message || 'Produk tidak dapat diproses.');
+  } catch (e) {
+    alert('Gagal terhubung ke server scanner kasir.');
+  } finally {
+    scanBusy = false;
+  }
+}
+
+if (scanInput) {
+  scanInput.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    scanAndAddProduct(scanInput.value);
+  });
 }
 </script>
 @endpush

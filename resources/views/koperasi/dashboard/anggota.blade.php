@@ -25,15 +25,6 @@
 {{-- Stat Cards --}}
 <div class="row g-4 mb-4">
   <div class="col-xl col-sm-6">
-    <div class="kstat-card kstat-blue">
-      <div class="kstat-deco"></div><div class="kstat-deco2"></div>
-      <div class="kstat-icon"><i class="bi bi-bank2"></i></div>
-      <div class="kstat-value kstat-value-sm">Rp {{ number_format($totalSimpananKoperasi, 0, ',', '.') }}</div>
-      <div class="kstat-label">Total Simpanan Koperasi</div>
-      <div class="kstat-trend"><i class="bi bi-people-fill me-1"></i> {{ number_format($totalAnggotaAktif) }} anggota aktif</div>
-    </div>
-  </div>
-  <div class="col-xl col-sm-6">
     <div class="kstat-card kstat-green">
       <div class="kstat-deco"></div><div class="kstat-deco2"></div>
       <div class="kstat-icon"><i class="bi bi-piggy-bank-fill"></i></div>

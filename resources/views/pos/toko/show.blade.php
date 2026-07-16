@@ -85,16 +85,16 @@
         </div>
         <div class="d-flex flex-column gap-2 is-a7560b14">
           @if($toko->telepon)
-          <div class="d-flex gap-2 align-items-start"><i class="bi bi-telephone text-muted mt-1 flex-shrink-0"></i><span>{{ $toko->telepon }}</span></div>
+          <div class="d-flex gap-2 align-items-start"><i class="bi bi-telephone text-muted mt-1" style="flex-shrink:0;"></i><span>{{ $toko->telepon }}</span></div>
           @endif
           @if($toko->email)
-          <div class="d-flex gap-2 align-items-start"><i class="bi bi-envelope text-muted mt-1 flex-shrink-0"></i><span class="text-break">{{ $toko->email }}</span></div>
+          <div class="d-flex gap-2 align-items-start"><i class="bi bi-envelope text-muted mt-1" style="flex-shrink:0;"></i><span class="text-break">{{ $toko->email }}</span></div>
           @endif
           @if($toko->alamat || $toko->kota)
-          <div class="d-flex gap-2 align-items-start"><i class="bi bi-geo-alt text-muted mt-1 flex-shrink-0"></i><span>{{ $toko->alamat }}{{ $toko->kota ? ', '.$toko->kota : '' }}</span></div>
+          <div class="d-flex gap-2 align-items-start"><i class="bi bi-geo-alt text-muted mt-1" style="flex-shrink:0;"></i><span>{{ $toko->alamat }}{{ $toko->kota ? ', '.$toko->kota : '' }}</span></div>
           @endif
           @if($toko->deskripsi)
-          <div class="d-flex gap-2 align-items-start mt-1"><i class="bi bi-info-circle text-muted mt-1 flex-shrink-0"></i><span class="text-muted">{{ $toko->deskripsi }}</span></div>
+          <div class="d-flex gap-2 align-items-start mt-1"><i class="bi bi-info-circle text-muted mt-1" style="flex-shrink:0;"></i><span class="text-muted">{{ $toko->deskripsi }}</span></div>
           @endif
         </div>
       </div>
@@ -300,12 +300,23 @@
 
 @push('js')
 <script>
-  document.querySelectorAll('[name=metode]').forEach(el => {
-    el.addEventListener('change', () => {
-      document.getElementById('fieldTransfer').style.display =
-        el.value === 'transfer' && el.checked ? '' : 'none';
-    });
+  const fieldTransfer = document.getElementById('fieldTransfer');
+  const metodeInputs = document.querySelectorAll('[name=metode]');
+
+  function syncTransferField() {
+    const selected = document.querySelector('[name=metode]:checked');
+    if (!fieldTransfer || !selected) return;
+    fieldTransfer.style.display = selected.value === 'transfer' ? '' : 'none';
+  }
+
+  metodeInputs.forEach(el => {
+    el.addEventListener('change', syncTransferField);
   });
+
+  syncTransferField();
+
+  document.getElementById('modalCairkan')?.addEventListener('shown.bs.modal', syncTransferField);
+
   @if($errors->any())
     new bootstrap.Modal(document.getElementById('modalCairkan')).show();
   @endif

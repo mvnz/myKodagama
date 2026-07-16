@@ -33,7 +33,29 @@
       <div class="logo-sub">{{ $pengaturan['sub_nama'] ?? 'Koperasi Simpan Pinjam' }}</div>
     </div>
   </a>
-  <nav class="site-nav"></nav>
+  @php
+    $menu = [
+      [
+        'label' => $pengaturan['nav_tentang_label'] ?? 'Tentang',
+        'url' => $pengaturan['nav_tentang_url'] ?? '#tentang',
+      ],
+      [
+        'label' => $pengaturan['nav_layanan_label'] ?? 'Layanan',
+        'url' => $pengaturan['nav_layanan_url'] ?? '#layanan',
+      ],
+      [
+        'label' => $pengaturan['nav_kontak_label'] ?? 'Kontak',
+        'url' => $pengaturan['nav_kontak_url'] ?? '#kontak',
+      ],
+    ];
+  @endphp
+  <nav class="site-nav">
+    @foreach($menu as $item)
+      @if(!empty($item['label']) && !empty($item['url']))
+        <a href="{{ $item['url'] }}">{{ $item['label'] }}</a>
+      @endif
+    @endforeach
+  </nav>
 </header>
 
 <!-- HERO -->

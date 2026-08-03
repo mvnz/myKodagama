@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Koperasi\Anggota;
-use App\Models\User;
+use App\Models\Koperasi\Pengaturan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 
 class AuthController extends Controller
@@ -16,7 +15,8 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect()->route('dashboard');
         }
-        return view('auth.masuk');
+        $pengaturan = Pengaturan::semuaNilai();
+        return view('auth.masuk', compact('pengaturan'));
     }
 
     public function masuk(Request $request)
@@ -101,7 +101,7 @@ class AuthController extends Controller
             'tanggal_bergabung'=> Carbon::today(),
         ]);
 
-        return redirect()->route('daftar')
-            ->with('sukses', 'Pendaftaran berhasil! Silakan tunggu konfirmasi dari petugas koperasi.');
+        return redirect()->route('masuk')
+            ->with('status', 'Pendaftaran berhasil! Silakan tunggu konfirmasi dari petugas koperasi.');
     }
 }

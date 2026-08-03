@@ -328,11 +328,11 @@
 :root {
       --accent: #175cdd;
       --heading: #112344;
-      --nav-font: 'Lato', sans-serif;
-      --heading-font: 'Montserrat', sans-serif;
+      --nav-font: 'Plus Jakarta Sans', sans-serif;
+      --heading-font: 'Sora', 'Plus Jakarta Sans', sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; font-family: 'Roboto', sans-serif; color: #3c4049; }
+    html, body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; color: #3c4049; }
 
     /* TOPBAR */
     .topbar {
@@ -723,7 +723,7 @@
       padding: 20mm 20mm 25mm 25mm;
     }
 
-    /* GöÇGöÇ Kop Surat GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Kop Surat Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½ */
     .kop {
       display: flex;
       align-items: center;
@@ -774,7 +774,7 @@
       margin-top: 2px;
     }
 
-    /* GöÇGöÇ Judul Dokumen GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Judul Dokumen Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½ */
     .judul-dokumen {
       text-align: center;
       margin: 14px 0 4px;
@@ -791,7 +791,7 @@
       margin-top: 3px;
     }
 
-    /* GöÇGöÇ Info Dokumen GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Info Dokumen Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½ */
     .info-dokumen {
       margin: 12px 0 16px;
       font-size: 10pt;
@@ -801,7 +801,7 @@
     .info-dokumen td:first-child { width: 140px; }
     .info-dokumen td:nth-child(2) { padding: 0 8px; }
 
-    /* GöÇGöÇ Tabel Laporan GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Tabel Laporan Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½ */
     .tabel-laporan {
       width: 100%;
       border-collapse: collapse;
@@ -849,7 +849,7 @@
     .tabel-laporan .indent { padding-left: 24px; }
     .tabel-laporan .indent2 { padding-left: 40px; }
 
-    /* GöÇGöÇ Seksi Judul GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Seksi Judul Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½ */
     .seksi-judul {
       font-size: 10.5pt;
       font-weight: 700;
@@ -863,7 +863,7 @@
       width: 24px;
     }
 
-    /* GöÇGöÇ Tanda Tangan GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Tanda Tangan Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½ */
     .ttd-area {
       margin-top: 30px;
       display: flex;
@@ -880,12 +880,12 @@
       font-weight: 700;
     }
 
-    /* GöÇGöÇ Footer GöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Footer Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½Gï¿½ï¿½ */
     .footer-cetak {
       display: none;
     }
 
-    /* GöÇGöÇ Tombol layar (disembunyikan saat print) GöÇGöÇ */
+    /* Gï¿½ï¿½Gï¿½ï¿½ Tombol layar (disembunyikan saat print) Gï¿½ï¿½Gï¿½ï¿½ */
     .no-print {
       font-family: Arial, sans-serif;
       padding: 10px 20px;
@@ -970,7 +970,7 @@
   display: flex; align-items: center; gap: .75rem;
 }
 .detail-log-header h6 {
-  margin: 0; font-family: 'Montserrat', sans-serif;
+  margin: 0; font-family: 'Sora', 'Plus Jakarta Sans', sans-serif;
   font-weight: 700; font-size: 1rem; color: #112344;
 }
 .detail-log-body { padding: 1.6rem; }
@@ -1018,7 +1018,7 @@
   background: #fff; color: #374151;
 }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Stat Cards Log +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Stat Cards Log +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .log-stat-card {
   background: #fff;
   border-radius: 16px;
@@ -1052,7 +1052,7 @@
 .log-stat-label { font-size: .77rem; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
 .log-stat-value { font-size: 1.75rem; font-weight: 700; color: #112344; line-height: 1.2; }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Filter Card +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Filter Card +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .filter-card {
   background: #fff;
   border-radius: 16px;
@@ -1076,7 +1076,7 @@
   box-shadow: 0 0 0 3px rgba(23,92,221,.1);
 }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Log Table Card +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Log Table Card +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .log-table-card {
   background: #fff;
   border-radius: 16px;
@@ -1091,12 +1091,12 @@
   background: #fafbff;
 }
 .log-table-title {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Sora', 'Plus Jakarta Sans', sans-serif;
   font-weight: 700; font-size: 1rem; color: #112344;
   display: flex; align-items: center; gap: .5rem;
 }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Aksi Pills +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Aksi Pills +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .aksi-pill {
   display: inline-flex; align-items: center; gap: .3rem;
   padding: .3rem .75rem; border-radius: 50px;
@@ -1109,7 +1109,7 @@
 .aksi-setujui { background:#ede9fe; color:#5b21b6; }
 .aksi-tolak   { background:#f3f4f6; color:#374151; }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Modul Chip +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Modul Chip +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .modul-chip {
   padding: .25rem .65rem; border-radius: 8px;
   font-size: .73rem; font-weight: 600;
@@ -1117,7 +1117,7 @@
   border: 1px solid #dbe8ff; white-space: nowrap;
 }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Avatar Initials +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Avatar Initials +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
   background: linear-gradient(135deg,#175cdd,#8b5cf6);
@@ -1126,7 +1126,7 @@
   flex-shrink: 0; text-transform: uppercase;
 }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Tabel Row +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Tabel Row +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .log-tabel thead th {
   background: #f5f8ff; color: #112344;
   font-weight: 700; font-size: .75rem;
@@ -1141,7 +1141,7 @@
 .log-tabel tbody tr:last-child td { border-bottom: none; }
 .log-tabel tbody tr:hover { background: #f8fbff; }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Detail Btn +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Detail Btn +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .btn-log-detail {
   width: 30px; height: 30px; border-radius: 8px;
   border: 1.5px solid #e5e7eb; background: #fff; color: #6b7280;
@@ -1150,7 +1150,7 @@
 }
 .btn-log-detail:hover { border-color: #175cdd; color: #175cdd; background: #f0f4ff; }
 
-/* +óGÇ¥Gé¼+óGÇ¥Gé¼ Empty State +óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼+óGÇ¥Gé¼ */
+/* +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ Empty State +ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½+ï¿½GÇ¥Gï¿½ */
 .log-empty { padding: 3.5rem 1rem; text-align: center; color: #9ca3af; }
 .log-empty i { font-size: 2.8rem; display: block; margin-bottom: .75rem; opacity: .4; }
 

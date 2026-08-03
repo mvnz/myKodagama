@@ -13,9 +13,9 @@
   --light-bg:          #f4f8ff;
   --nav-color:         #3c4049;
   --nav-hover-color:   #175cdd;
-  --default-font:      "Roboto", system-ui, sans-serif;
-  --heading-font:      "Montserrat", sans-serif;
-  --nav-font:          "Lato", sans-serif;
+  --default-font:      "Plus Jakarta Sans", system-ui, sans-serif;
+  --heading-font:      "Sora", "Plus Jakarta Sans", sans-serif;
+  --nav-font:          "Plus Jakarta Sans", sans-serif;
 }
 
 * { box-sizing: border-box; }

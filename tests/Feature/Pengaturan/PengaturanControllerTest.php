@@ -142,15 +142,15 @@ class PengaturanControllerTest extends TestCase
         $this->assertEquals('Produk', Pengaturan::get('nav_layanan_label'));
     }
 
-    public function test_beranda_menampilkan_label_navigasi_yang_diubah(): void
+    public function test_beranda_tidak_menampilkan_label_navigasi(): void
     {
         Pengaturan::where('kunci', 'nav_tentang_label')->update(['nilai' => 'Profil']);
         Pengaturan::where('kunci', 'nav_tentang_url')->update(['nilai' => '/tentang']);
 
         $response = $this->get(route('beranda'));
 
-        $response->assertSee('Profil');
-        $response->assertSee('/tentang');
+        $response->assertDontSee('Profil');
+        $response->assertDontSee('/tentang');
     }
 
     public function test_update_menolak_nilai_terlalu_panjang(): void

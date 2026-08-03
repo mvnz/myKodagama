@@ -10,6 +10,7 @@ use App\Models\Koperasi\UnitKerja;
 use App\Http\Controllers\Concerns\CatatAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AnggotaController extends Controller
 {
@@ -223,8 +224,10 @@ class AnggotaController extends Controller
         if ($buatAkunBaru) {
             $roleObj = \App\Models\Role::find($request->login_role_id)
                 ?? \App\Models\Role::where('slug', 'anggota')->first();
+            $username = $this->uniqueUsernameFromEmail((string) $request->login_email);
             $user = \App\Models\User::create([
                 'name'       => $anggota->nama,
+                'username'   => $username,
                 'email'      => $request->login_email,
                 'password'   => \Illuminate\Support\Facades\Hash::make($request->password_baru),
                 'role'       => $roleObj?->slug ?? 'anggota',
@@ -309,5 +312,28 @@ class AnggotaController extends Controller
             'foto.image'             => 'File harus berupa gambar.',
             'foto.max'               => 'Ukuran foto maksimal 2MB.',
         ];
+    }
+
+    private function uniqueUsernameFromEmail(string $email): string
+    {
+        $base = Str::before(Str::lower($email), '@');
+        $base = preg_replace('/[^a-z0-9_-]+/', '_', $base) ?? '';
+        $base = trim($base, '_-');
+
+        if ($base === '') {
+            $base = 'user';
+        }
+
+        $base = Str::limit($base, 50, '');
+        $counter = 0;
+        $candidate = $base;
+
+        while (\App\Models\User::where('username', $candidate)->exists()) {
+            $counter++;
+            $suffix = '_' . $counter;
+            $candidate = Str::limit($base, 50 - strlen($suffix), '') . $suffix;
+        }
+
+        return $candidate;
     }
 }

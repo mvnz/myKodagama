@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -50,9 +51,11 @@ class UserController extends Controller
 
 	public function store(Request $request)
 	{
+		$this->ensureUsernameFromEmail($request);
+
 		$request->validate([
 			'name' => ['required', 'string', 'max:100'],
-			'username' => ['required', 'string', 'max:50', 'alpha_dash', 'unique:users,username'],
+			'username' => ['nullable', 'string', 'max:50', 'alpha_dash', 'unique:users,username'],
 			'no_wa' => ['nullable', 'string', 'max:20'],
 			'email' => ['required', 'email', 'max:150', 'unique:users,email'],
 			'role_id' => ['required', 'exists:roles,id'],
@@ -60,7 +63,6 @@ class UserController extends Controller
 			'password' => ['required', Password::min(8), 'confirmed'],
 		], [
 			'name.required' => 'Nama wajib diisi.',
-			'username.required' => 'Username wajib diisi.',
 			'username.unique' => 'Username sudah digunakan.',
 			'email.required' => 'Email wajib diisi.',
 			'email.unique' => 'Email sudah terdaftar.',
@@ -100,9 +102,11 @@ class UserController extends Controller
 
 	public function update(Request $request, User $user)
 	{
+		$this->ensureUsernameFromEmail($request, $user->id);
+
 		$request->validate([
 			'name' => ['required', 'string', 'max:100'],
-			'username' => ['required', 'string', 'max:50', 'alpha_dash', 'unique:users,username,' . $user->id],
+			'username' => ['nullable', 'string', 'max:50', 'alpha_dash', 'unique:users,username,' . $user->id],
 			'no_wa' => ['nullable', 'string', 'max:20'],
 			'email' => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
 			'role_id' => ['required', 'exists:roles,id'],
@@ -110,7 +114,6 @@ class UserController extends Controller
 			'password' => ['nullable', Password::min(8), 'confirmed'],
 		], [
 			'name.required' => 'Nama wajib diisi.',
-			'username.required' => 'Username wajib diisi.',
 			'username.unique' => 'Username sudah digunakan.',
 			'email.required' => 'Email wajib diisi.',
 			'email.unique' => 'Email sudah terdaftar.',
@@ -151,5 +154,55 @@ class UserController extends Controller
 
 		return redirect()->route('user.index')
 			->with('sukses', 'User "' . $nama . '" berhasil dihapus.');
+	}
+
+	private function ensureUsernameFromEmail(Request $request, ?int $ignoreUserId = null): void
+	{
+		$username = trim((string) $request->input('username', ''));
+		$email = trim((string) $request->input('email', ''));
+
+		if ($username !== '' || $email === '') {
+			return;
+		}
+
+		$base = $this->buildUsernameBase($email);
+		$request->merge([
+			'username' => $this->buildUniqueUsername($base, $ignoreUserId),
+		]);
+	}
+
+	private function buildUsernameBase(string $email): string
+	{
+		$localPart = Str::before(Str::lower($email), '@');
+		$slug = preg_replace('/[^a-z0-9_-]+/', '_', $localPart) ?? '';
+		$slug = trim($slug, '_-');
+
+		if ($slug === '') {
+			$slug = 'user';
+		}
+
+		return Str::limit($slug, 50, '');
+	}
+
+	private function buildUniqueUsername(string $base, ?int $ignoreUserId = null): string
+	{
+		$counter = 0;
+		$candidate = $base;
+
+		while ($this->usernameExists($candidate, $ignoreUserId)) {
+			$counter++;
+			$suffix = '_' . $counter;
+			$candidate = Str::limit($base, 50 - strlen($suffix), '') . $suffix;
+		}
+
+		return $candidate;
+	}
+
+	private function usernameExists(string $username, ?int $ignoreUserId = null): bool
+	{
+		return User::query()
+			->where('username', $username)
+			->when($ignoreUserId, fn($q) => $q->where('id', '!=', $ignoreUserId))
+			->exists();
 	}
 }

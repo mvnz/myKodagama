@@ -20,16 +20,30 @@
     font-size: 1.25rem; font-weight: 800; color: #fff; z-index: 1;
 }
 .help-step-card {
-    background: #fff; border: 1px solid #e2e8f0;
-    border-radius: 14px; padding: 18px 22px;
-    box-shadow: 0 1px 4px rgba(23,92,221,.06);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    border: 1px solid #dbe7ff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: 0 10px 24px rgba(17,35,68,.08);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.help-step-card h5 { font-weight: 700; color: #112344; margin-bottom: 6px; }
-.help-step-card p  { color: #4b5563; margin-bottom: 0; font-size: .92rem; line-height: 1.65; }
+.help-step-card:hover {
+    transform: translateY(-1px);
+    border-color: #bfd6ff;
+    box-shadow: 0 14px 28px rgba(17,35,68,.12);
+}
+.help-step-card h5 {
+    font-weight: 700;
+    color: #0f254a;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+    letter-spacing: -.01em;
+}
+.help-step-card p  { color: #475569; margin-bottom: 0; font-size: .93rem; line-height: 1.7; }
 
 /* ── Sub list ── */
 .help-sub-list { margin-top: 10px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; }
-.help-sub-list li { display: flex; align-items: flex-start; gap: 10px; font-size: .9rem; color: #1f2937; line-height: 1.5; }
+.help-sub-list li { display: flex; align-items: flex-start; gap: 10px; font-size: .9rem; color: #1f2937; line-height: 1.55; }
 .help-sub-list li .bi { color: #175cdd; font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
 
 /* ── Tip / Warn ── */
@@ -45,8 +59,42 @@
 }
 
 /* ── Misc ── */
-.help-badge { font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; letter-spacing: .3px; }
-.help-section-title { font-size: .7rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 14px; }
+.help-badge {
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 99px;
+    letter-spacing: .3px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.22);
+}
+.help-section-title {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    color: #6f86ad;
+    margin-bottom: 14px;
+}
+
+.help-section-title::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #2b67df;
+    box-shadow: 0 0 0 4px rgba(43,103,223,.14);
+    flex-shrink: 0;
+}
+
+.help-section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(43,103,223,.32) 0%, rgba(43,103,223,.08) 40%, rgba(43,103,223,0) 100%);
+}
 .help-role-card { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; }
 .help-role-card h6 { font-weight: 700; color: #112344; margin-bottom: 8px; }
 .help-role-card ul { padding-left: 18px; margin: 0; font-size: .85rem; color: #4b5563; }

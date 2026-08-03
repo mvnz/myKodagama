@@ -1,11 +1,11 @@
 ﻿:root {
     --accent: #175cdd;
     --heading: #112344;
-    --nav-font: 'Lato', sans-serif;
-    --heading-font: 'Montserrat', sans-serif;
+    --nav-font: 'Plus Jakarta Sans', sans-serif;
+    --heading-font: 'Sora', 'Plus Jakarta Sans', sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; }
-html, body { height: 100%; overflow: hidden; margin: 0; font-family: 'Roboto', sans-serif; color: #3c4049; }
+html, body { height: 100%; overflow: hidden; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; color: #3c4049; }
 
 /* TOPBAR */
 .topbar {

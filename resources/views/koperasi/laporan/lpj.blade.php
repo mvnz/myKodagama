@@ -7,6 +7,72 @@
   <li class="breadcrumb-item active">LPJ</li>
 @endsection
 
+@push('css')
+<style>
+  .lpj-page {
+    font-size: .98rem;
+  }
+
+  .lpj-page .form-card {
+    border-radius: 16px;
+  }
+
+  .lpj-page .lpj-section-title {
+    font-size: 1.18rem;
+    color: #0f2f66;
+    letter-spacing: -.01em;
+  }
+
+  .lpj-page .lpj-subtitle {
+    font-size: .98rem;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .lpj-page .lpj-table {
+    font-size: .95rem;
+  }
+
+  .lpj-page .lpj-table th,
+  .lpj-page .lpj-table td {
+    padding: .5rem .65rem;
+    vertical-align: middle;
+  }
+
+  .lpj-page .lpj-table thead th {
+    background: #f4f8ff;
+    font-weight: 700;
+    color: #1e3a64;
+  }
+
+  .lpj-page .lpj-table tbody tr.table-primary td {
+    background-color: #dce9ff;
+  }
+
+  .lpj-page .lpj-table tbody tr.table-success td {
+    background-color: #d9f0e6;
+  }
+
+  .lpj-page .lpj-table tbody tr.table-secondary td {
+    background-color: #eef3f9;
+  }
+
+  @media (max-width: 768px) {
+    .lpj-page {
+      font-size: .94rem;
+    }
+
+    .lpj-page .lpj-section-title {
+      font-size: 1.08rem;
+    }
+
+    .lpj-page .lpj-table {
+      font-size: .9rem;
+    }
+  }
+</style>
+@endpush
+
 @section('konten')
 @php
   $rp = fn($v) => 'Rp ' . number_format($v, 0, ',', '.');
@@ -27,7 +93,7 @@
                  + (int)$cekSimpanan + (int)$cekPinjaman + (int)$cekKeuangan + (int)$cekShu;
 @endphp
 
-<div class="row justify-content-center">
+<div class="row justify-content-center lpj-page">
 <div class="col-12">
 
 {{-- Banner --}}
@@ -116,11 +182,11 @@
 
 {{-- ══ SECTION I: KEANGGOTAAN ════════════════════════════════════════ --}}
 <div class="form-card mb-4">
-  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0">
+  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0 lpj-section-title">
     <i class="bi bi-people-fill"></i> I. Perkembangan Keanggotaan
   </h6>
   <div class="table-responsive">
-    <table class="table table-bordered table-sm mb-0">
+    <table class="table table-bordered mb-0 lpj-table">
       <thead class="table-light">
         <tr><th>Keterangan</th><th class="text-end is-2f01efdd">Jumlah</th></tr>
       </thead>
@@ -137,11 +203,11 @@
 
 {{-- ══ SECTION II: SIMPANAN ══════════════════════════════════════════ --}}
 <div class="form-card mb-4">
-  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0">
+  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0 lpj-section-title">
     <i class="bi bi-piggy-bank-fill"></i> II. Perkembangan Simpanan Tahun {{ $tahun }}
   </h6>
   <div class="table-responsive">
-    <table class="table table-bordered table-sm mb-0">
+    <table class="table table-bordered mb-0 lpj-table">
       <thead class="table-light">
         <tr><th>Jenis Simpanan</th><th class="text-end is-8f77872c">Jumlah Diterima (Rp)</th></tr>
       </thead>
@@ -158,14 +224,14 @@
 
 {{-- ══ SECTION III: PINJAMAN ═════════════════════════════════════════ --}}
 <div class="form-card mb-4">
-  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0">
+  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0 lpj-section-title">
     <i class="bi bi-cash-coin"></i> III. Perkembangan Pinjaman & Angsuran Tahun {{ $tahun }}
   </h6>
   <div class="row g-4">
     <div class="col-md-6">
-      <div class="fw-600 mb-2 text-muted is-1e28117f">PINJAMAN</div>
+      <div class="fw-600 mb-2 text-muted is-1e28117f lpj-subtitle">PINJAMAN</div>
       <div class="table-responsive">
-        <table class="table table-bordered table-sm mb-0">
+        <table class="table table-bordered mb-0 lpj-table">
           <tbody>
             <tr><td>Pinjaman diajukan</td><td class="text-end fw-600">{{ $jumlahPinjamanDiajukan }}</td></tr>
             <tr><td>Pinjaman disetujui & dicairkan</td><td class="text-end fw-600">{{ $jumlahPinjamanDisetujui }}</td></tr>
@@ -177,9 +243,9 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="fw-600 mb-2 text-muted is-1e28117f">ANGSURAN</div>
+      <div class="fw-600 mb-2 text-muted is-1e28117f lpj-subtitle">ANGSURAN</div>
       <div class="table-responsive">
-        <table class="table table-bordered table-sm mb-0">
+        <table class="table table-bordered mb-0 lpj-table">
           <tbody>
             <tr><td>Angsuran pokok diterima</td><td class="text-end fw-600">{{ number_format($totalPokokDiterima, 0, ',', '.') }}</td></tr>
             <tr><td>Pendapatan bunga diterima</td><td class="text-end fw-600">{{ number_format($totalBungaDiterima, 0, ',', '.') }}</td></tr>
@@ -194,11 +260,11 @@
 
 {{-- ══ SECTION IV: ARUS KAS ══════════════════════════════════════════ --}}
 <div class="form-card mb-4">
-  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0">
+  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0 lpj-section-title">
     <i class="bi bi-arrow-left-right"></i> IV. Ringkasan Arus Kas Tahun {{ $tahun }}
   </h6>
   <div class="table-responsive">
-    <table class="table table-bordered table-sm mb-0">
+    <table class="table table-bordered mb-0 lpj-table">
       <thead class="table-light">
         <tr><th>Uraian</th><th class="text-end is-69e6838d">Jumlah (Rp)</th></tr>
       </thead>
@@ -223,11 +289,11 @@
 
 {{-- ══ SECTION V: LABA RUGI & SHU ═══════════════════════════════════ --}}
 <div class="form-card mb-4">
-  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0">
+  <h6 class="fw-700 mb-4 d-flex align-items-center gap-2 is-bc519fd0 lpj-section-title">
     <i class="bi bi-bar-chart-fill"></i> V. Laba Rugi & Sisa Hasil Usaha Tahun {{ $tahun }}
   </h6>
   <div class="table-responsive">
-    <table class="table table-bordered table-sm mb-0">
+    <table class="table table-bordered mb-0 lpj-table">
       <thead class="table-light">
         <tr><th>Uraian</th><th class="text-end is-69e6838d">Jumlah (Rp)</th></tr>
       </thead>

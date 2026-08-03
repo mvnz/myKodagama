@@ -14,7 +14,7 @@
     display: flex; align-items: center; gap: .75rem;
 }
 .detail-log-header h6 {
-    margin: 0; font-family: 'Montserrat', sans-serif;
+    margin: 0; font-family: 'Sora', 'Plus Jakarta Sans', sans-serif;
     font-weight: 700; font-size: 1rem; color: #112344;
 }
 .detail-log-body { padding: 1.6rem; }

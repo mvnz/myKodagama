@@ -12,14 +12,14 @@
   {{-- Kartu info user --}}
   <div class="col-lg-4">
     <div class="form-card text-center">
-      <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3 is-61ae4609"
-          >
+      <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3"
+           style="width:96px;height:96px;">
         <span class="text-white fw-700 fs-3">{{ strtoupper(substr($user->name,0,1)) }}</span>
       </div>
       <div class="fw-700 fs-5 is-5ca88772">{{ $user->name }}</div>
       <div class="text-muted small">{{ $user->email }}</div>
       <div class="mt-2">
-        <span class="badge bg-primary rounded-pill">{{ $user->roleModel?->nama ?? $user->role }}</span>
+        <span class="badge bg-primary rounded-pill d-inline-block">{{ $user->roleModel?->nama ?? $user->role }}</span>
       </div>
       @if($user->anggota)
         <div class="mt-3">

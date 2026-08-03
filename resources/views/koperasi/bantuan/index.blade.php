@@ -39,6 +39,7 @@
     <div class="help-section-title">Navigasi Cepat</div>
     <div class="row g-1">
       @foreach([
+        ['#setup-awal',   'bi-list-check',             'Checklist Setup Awal'],
         ['#alur-utama',    'bi-arrow-repeat',          'Alur Simpan Pinjam'],
         ['#modul-anggota', 'bi-people-fill',            'Anggota'],
         ['#modul-simpanan','bi-piggy-bank-fill',        'Simpanan & Penarikan'],
@@ -56,6 +57,111 @@
         </a>
       </div>
       @endforeach
+    </div>
+  </div>
+
+  {{-- ══ CHECKLIST SETUP AWAL ══ --}}
+  <div class="form-card mb-4" id="setup-awal">
+    <div class="help-section-title">Checklist Setup Awal sampai LPJ</div>
+    <p class="mb-3 text-muted is-0de4e77b">
+      Urutan ini direkomendasikan untuk mulai dari data nol sampai siap cetak LPJ akhir tahun.
+    </p>
+
+    <div class="help-step-wrap">
+      <div class="help-step-line"></div>
+      <div class="help-step-num is-537baf89">1</div>
+      <div class="help-step-card">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <h5 class="mb-0">Isi Profil Koperasi</h5>
+          <span class="help-badge bg-primary text-white">Wajib</span>
+        </div>
+        <ul class="help-sub-list">
+          <li><i class="bi bi-arrow-right-circle-fill"></i> Menu <strong>Pengaturan Aplikasi</strong></li>
+          <li><i class="bi bi-dot"></i> Nama koperasi, sub nama, alamat, telepon, email</li>
+          <li><i class="bi bi-dot"></i> Data pengurus utama (minimal ketua) untuk kebutuhan dokumen LPJ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="help-step-wrap">
+      <div class="help-step-line"></div>
+      <div class="help-step-num is-d92dada5">2</div>
+      <div class="help-step-card">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <h5 class="mb-0">Set Pengaturan Simpan Pinjam</h5>
+          <span class="help-badge bg-warning text-dark">Wajib</span>
+        </div>
+        <ul class="help-sub-list">
+          <li><i class="bi bi-arrow-right-circle-fill"></i> Menu <strong>Pengaturan → Simpan Pinjam</strong></li>
+          <li><i class="bi bi-dot"></i> Jenis anggota dan simpanan wajib per jenis</li>
+          <li><i class="bi bi-dot"></i> Bunga pinjaman, tenor, denda, dan batas pinjaman</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="help-step-wrap">
+      <div class="help-step-line"></div>
+      <div class="help-step-num is-cc9199f8">3</div>
+      <div class="help-step-card">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <h5 class="mb-0">Buat Role & Pengguna Internal</h5>
+          <span class="help-badge bg-info text-dark">Wajib</span>
+        </div>
+        <ul class="help-sub-list">
+          <li><i class="bi bi-arrow-right-circle-fill"></i> Buat akun <strong>Admin / Ketua / Petugas</strong></li>
+          <li><i class="bi bi-dot"></i> Pastikan permission modul sudah sesuai tugas masing-masing</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="help-step-wrap">
+      <div class="help-step-line"></div>
+      <div class="help-step-num is-16bb0564">4</div>
+      <div class="help-step-card">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <h5 class="mb-0">Input Data Anggota</h5>
+          <span class="help-badge bg-success text-white">Wajib</span>
+        </div>
+        <ul class="help-sub-list">
+          <li><i class="bi bi-dot"></i> Isi NIK, nama, tanggal lahir, alamat, telepon, unit kerja, tanggal bergabung</li>
+          <li><i class="bi bi-dot"></i> Jika perlu, buat akun login anggota sekaligus</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="help-step-wrap">
+      <div class="help-step-line"></div>
+      <div class="help-step-num is-4b626ec7">5</div>
+      <div class="help-step-card">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <h5 class="mb-0">Mulai Input Transaksi Rutin</h5>
+          <span class="help-badge is-43d991b1">Operasional</span>
+        </div>
+        <ul class="help-sub-list">
+          <li><i class="bi bi-dot"></i> Simpanan pokok/wajib/sukarela</li>
+          <li><i class="bi bi-dot"></i> Pinjaman diajukan → diverifikasi → disetujui</li>
+          <li><i class="bi bi-dot"></i> Angsuran dibayar sesuai jadwal</li>
+          <li><i class="bi bi-dot"></i> Pendapatan dan pengeluaran operasional dicatat rutin</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="help-step-wrap">
+      <div class="help-step-num is-d010e822">6</div>
+      <div class="help-step-card">
+        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+          <h5 class="mb-0">Tutup Tahun: SHU lalu LPJ</h5>
+          <span class="help-badge is-42eb32be">Akhir Tahun</span>
+        </div>
+        <ul class="help-sub-list">
+          <li><i class="bi bi-dot"></i> Cek kelengkapan data di Laporan Keuangan, Neraca, dan Laba Rugi</li>
+          <li><i class="bi bi-dot"></i> Hitung SHU dan finalisasi jika sudah valid</li>
+          <li><i class="bi bi-dot"></i> Buka <strong>Laporan → LPJ</strong>, pilih tahun, lalu cetak LPJ formal</li>
+        </ul>
+        <div class="help-tip"><i class="bi bi-lightbulb-fill me-1"></i>
+          Rumus praktis: <strong>Isi master dulu</strong> → <strong>catat transaksi rutin</strong> → <strong>rekap keuangan</strong> → <strong>final SHU</strong> → <strong>cetak LPJ</strong>.
+        </div>
+      </div>
     </div>
   </div>
 

@@ -37,8 +37,6 @@ Route::get('/', function () {
 Route::get('/masuk', [AuthController::class, 'tampilMasuk'])->name('masuk');
 Route::post('/masuk', [AuthController::class, 'masuk'])->name('masuk.proses');
 Route::post('/keluar', [AuthController::class, 'keluar'])->name('keluar');
-Route::get('/daftar', [AuthController::class, 'tampilDaftar'])->name('daftar');
-Route::post('/daftar', [AuthController::class, 'daftar'])->name('daftar.proses');
 
 // Halaman yang membutuhkan login
 Route::middleware('auth')->group(function () {

@@ -1,20 +1,53 @@
 // _isEdit dideklarasikan inline di blade:
 // <script>var _isEdit = {{ $isEdit ? 'true' : 'false' }};</script>
 
-if (!window._isEdit) {
-    const nameField     = document.getElementById('nameField');
-    const usernameField = document.getElementById('usernameField');
-    if (nameField && usernameField) {
-        nameField.addEventListener('input', function () {
-            if (!usernameField.dataset.manual) {
-                usernameField.value = this.value.toLowerCase().trim()
-                    .replace(/\s+/g, '_').replace(/[^a-z0-9_\-]/g, '');
-            }
-        });
-        usernameField.addEventListener('input', function () {
-            this.dataset.manual = this.value ? '1' : '';
-        });
+const nameField = document.getElementById('nameField');
+const emailField = document.querySelector('input[name="email"]');
+const usernameField = document.getElementById('usernameField');
+
+function normalizeToUsername(text) {
+    return (text || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9_\-]+/g, '_')
+        .replace(/^[_-]+|[_-]+$/g, '')
+        .slice(0, 50);
+}
+
+function usernameFromEmail(email) {
+    const localPart = (email || '').split('@')[0] || '';
+    return normalizeToUsername(localPart);
+}
+
+function usernameFromName(name) {
+    return normalizeToUsername((name || '').replace(/\s+/g, '_'));
+}
+
+function syncUsernameAuto() {
+    if (!usernameField || usernameField.dataset.manual) {
+        return;
     }
+
+    const byEmail = usernameFromEmail(emailField?.value || '');
+    const byName = usernameFromName(nameField?.value || '');
+    usernameField.value = byEmail || byName;
+}
+
+if (usernameField) {
+    if (usernameField.value.trim() !== '') {
+        usernameField.dataset.manual = '1';
+    }
+
+    usernameField.addEventListener('input', function () {
+        this.dataset.manual = this.value.trim() ? '1' : '';
+        if (!this.dataset.manual) {
+            syncUsernameAuto();
+        }
+    });
+
+    emailField?.addEventListener('input', syncUsernameAuto);
+    nameField?.addEventListener('input', syncUsernameAuto);
+    syncUsernameAuto();
 }
 
 function toggleVis(btnId, inputId) {

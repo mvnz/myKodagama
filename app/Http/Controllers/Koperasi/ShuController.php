@@ -9,6 +9,7 @@ use App\Models\Koperasi\ShuAnggota;
 use App\Models\Koperasi\Anggota;
 use App\Models\Koperasi\Simpanan;
 use App\Models\Koperasi\Pinjaman;
+use App\Models\Koperasi\Pengeluaran;
 use App\Models\Koperasi\Pengaturan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,7 @@ class ShuController extends Controller
 
         $tahunList = range(now()->year, 2020);
         $tahun     = $request->integer('tahun', now()->year);
+        $qNama     = trim((string) $request->input('q_nama', ''));
 
         // Sudah ada SHU untuk tahun ini?
         $existing = Shu::where('tahun', $tahun)->first();
@@ -42,35 +44,60 @@ class ShuController extends Controller
         $totalPinjaman = Pinjaman::where('status', 'disetujui')
             ->whereYear('tanggal_pengajuan', $tahun)
             ->sum('jumlah_pinjaman');
+        $totalPengeluaran = Pengeluaran::whereYear('tanggal', $tahun)
+            ->sum('jumlah');
 
-        // Simpanan per anggota
+        // Simpanan per anggota (aggregate)
         $simpananPerAnggota = Simpanan::whereYear('tanggal', $tahun)
             ->select('anggota_id', DB::raw('SUM(jumlah) as total'))
             ->groupBy('anggota_id')
             ->pluck('total', 'anggota_id');
 
-        // Pinjaman per anggota
+        // Pinjaman per anggota (aggregate)
         $pinjamanPerAnggota = Pinjaman::where('status', 'disetujui')
             ->whereYear('tanggal_pengajuan', $tahun)
             ->select('anggota_id', DB::raw('SUM(jumlah_pinjaman) as total'))
             ->groupBy('anggota_id')
             ->pluck('total', 'anggota_id');
 
-        // Gabungkan anggota yang terlibat
+        // Gabungkan anggota yang terlibat untuk proses hitung SHU
         $anggotaIds = $simpananPerAnggota->keys()
             ->merge($pinjamanPerAnggota->keys())
             ->unique();
 
-        $anggotaList = Anggota::whereIn('id', $anggotaIds)
-            ->orderBy('nama')
-            ->get()
-            ->keyBy('id');
+        // Query preview (dengan search + paging)
+        $simpananAgg = Simpanan::whereYear('tanggal', $tahun)
+            ->select('anggota_id', DB::raw('SUM(jumlah) as total_simpanan'))
+            ->groupBy('anggota_id');
+
+        $pinjamanAgg = Pinjaman::where('status', 'disetujui')
+            ->whereYear('tanggal_pengajuan', $tahun)
+            ->select('anggota_id', DB::raw('SUM(jumlah_pinjaman) as total_pinjaman'))
+            ->groupBy('anggota_id');
+
+        $anggotaList = Anggota::query()
+            ->leftJoinSub($simpananAgg, 'simp', fn($j) => $j->on('simp.anggota_id', '=', 'anggota.id'))
+            ->leftJoinSub($pinjamanAgg, 'pinj', fn($j) => $j->on('pinj.anggota_id', '=', 'anggota.id'))
+            ->where(function ($q) {
+                $q->whereNotNull('simp.anggota_id')
+                  ->orWhereNotNull('pinj.anggota_id');
+            })
+            ->when($qNama !== '', fn($q) => $q->where('anggota.nama', 'like', '%' . $qNama . '%'))
+            ->orderBy('anggota.nama')
+            ->select([
+                'anggota.id',
+                'anggota.nama',
+                DB::raw('COALESCE(simp.total_simpanan, 0) as total_simpanan'),
+                DB::raw('COALESCE(pinj.total_pinjaman, 0) as total_pinjaman'),
+            ])
+            ->paginate(25)
+            ->withQueryString();
 
         return view('koperasi.shu.hitung', compact(
             'tahun', 'tahunList', 'existing',
-            'totalSimpanan', 'totalPinjaman',
+            'totalSimpanan', 'totalPinjaman', 'totalPengeluaran',
             'simpananPerAnggota', 'pinjamanPerAnggota',
-            'anggotaList'
+            'anggotaList', 'qNama'
         ));
     }
 

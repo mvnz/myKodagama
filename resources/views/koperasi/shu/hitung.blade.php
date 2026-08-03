@@ -7,7 +7,74 @@
   <li class="breadcrumb-item active">Hitung SHU</li>
 @endsection
 
+@push('css')
+<style>
+  .shu-searchbar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: nowrap;
+  }
+
+  .shu-searchbar .shu-search-input {
+    width: clamp(280px, 34vw, 460px);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .shu-searchbar .input-group-text {
+    background: #f8fafc;
+    border-color: #dbe5f4;
+    color: #4b6690;
+  }
+
+  .shu-searchbar .form-control {
+    border-color: #dbe5f4;
+    min-height: 42px;
+  }
+
+  .shu-searchbar .form-control:focus {
+    border-color: #9ec1ff;
+    box-shadow: 0 0 0 .16rem rgba(23, 92, 221, .12);
+  }
+
+  .shu-searchbar .shu-search-input .btn {
+    min-height: 42px;
+    border-color: #175cdd;
+    border-radius: 0;
+    padding-inline: .9rem;
+    white-space: nowrap;
+  }
+
+  .shu-searchbar .btn {
+    min-height: 42px;
+    border-radius: 10px;
+    padding-inline: .85rem;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .shu-searchbar {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .shu-searchbar .shu-search-input {
+      width: 100%;
+    }
+
+    .shu-searchbar .btn {
+      min-height: 40px;
+    }
+  }
+</style>
+@endpush
+
 @section('konten')
+
+@php
+  $totalPengeluaran = $totalPengeluaran ?? 0;
+@endphp
 
 <div class="dashboard-welcome mb-4">
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -183,17 +250,38 @@
 {{-- Preview Anggota (jika ada data) --}}
 @if($anggotaList->count())
 <div class="form-card p-0 overflow-hidden">
-  <div class="p-4 border-bottom">
+  <div class="p-4 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3">
     <h6 class="mb-0 fw-700 is-5ca88772">
       <i class="bi bi-people me-2 is-bc519fd0"></i>
       Preview Anggota Tahun {{ $tahun }}
-      <span class="badge bg-primary ms-2">{{ $anggotaList->count() }}</span>
+      <span class="badge bg-primary ms-2">{{ $anggotaList->total() }}</span>
     </h6>
+    <form method="GET" action="{{ route('shu.hitung') }}" class="shu-searchbar">
+      <input type="hidden" name="tahun" value="{{ $tahun }}">
+      <div class="input-group input-group-sm shu-search-input">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input
+          type="text"
+          name="q_nama"
+          class="form-control"
+          placeholder="Cari nama anggota..."
+          value="{{ $qNama ?? '' }}">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-search me-1"></i>Cari
+        </button>
+      </div>
+      @if(!empty($qNama))
+        <a href="{{ route('shu.hitung', ['tahun' => $tahun]) }}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+        </a>
+      @endif
+    </form>
   </div>
   <div class="table-responsive">
     <table class="table koperasi-table mb-0">
       <thead>
         <tr>
+          <th class="text-center" style="width:72px;">No</th>
           <th>Nama Anggota</th>
           <th class="text-end">Total Simpanan</th>
           <th class="text-end">Total Pinjaman</th>
@@ -202,14 +290,20 @@
       <tbody>
         @foreach($anggotaList as $anggota)
           <tr>
+            <td class="text-center text-muted">{{ $anggotaList->firstItem() + $loop->index }}</td>
             <td>{{ $anggota->nama }}</td>
-            <td class="text-end">Rp {{ number_format($simpananPerAnggota[$anggota->id] ?? 0, 0, ',', '.') }}</td>
-            <td class="text-end">Rp {{ number_format($pinjamanPerAnggota[$anggota->id] ?? 0, 0, ',', '.') }}</td>
+            <td class="text-end">Rp {{ number_format($anggota->total_simpanan ?? 0, 0, ',', '.') }}</td>
+            <td class="text-end">Rp {{ number_format($anggota->total_pinjaman ?? 0, 0, ',', '.') }}</td>
           </tr>
         @endforeach
       </tbody>
     </table>
   </div>
+  @if($anggotaList->hasPages())
+    <div class="p-3 border-top bg-white">
+      {{ $anggotaList->links() }}
+    </div>
+  @endif
 </div>
 @endif
 

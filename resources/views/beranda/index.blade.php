@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ $pengaturan['nama_koperasi'] ?? 'Koda+' }} &ndash; {{ $pengaturan['sub_nama'] ?? 'Simpan Pinjam Terpercaya' }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Montserrat:wght@300;400;600;700&family=Lato:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="{{ asset('css/koperasi.css') }}">
@@ -33,29 +33,6 @@
       <div class="logo-sub">{{ $pengaturan['sub_nama'] ?? 'Koperasi Simpan Pinjam' }}</div>
     </div>
   </a>
-  @php
-    $menu = [
-      [
-        'label' => $pengaturan['nav_tentang_label'] ?? 'Tentang',
-        'url' => $pengaturan['nav_tentang_url'] ?? '#tentang',
-      ],
-      [
-        'label' => $pengaturan['nav_layanan_label'] ?? 'Layanan',
-        'url' => $pengaturan['nav_layanan_url'] ?? '#layanan',
-      ],
-      [
-        'label' => $pengaturan['nav_kontak_label'] ?? 'Kontak',
-        'url' => $pengaturan['nav_kontak_url'] ?? '#kontak',
-      ],
-    ];
-  @endphp
-  <nav class="site-nav">
-    @foreach($menu as $item)
-      @if(!empty($item['label']) && !empty($item['url']))
-        <a href="{{ $item['url'] }}">{{ $item['label'] }}</a>
-      @endif
-    @endforeach
-  </nav>
 </header>
 
 <!-- HERO -->
@@ -196,10 +173,6 @@
         </button>
       </form>
 
-      <div class="mt-3 text-center is-0b45f350">
-        Belum punya akun?
-        <a href="{{ route('daftar') }}" class="is-eea4a817">Daftar di sini</a>
-      </div>
     </div>
     @endauth
 

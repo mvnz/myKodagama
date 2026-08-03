@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="{{ asset('css/pages/inline-extracted.css') }}">
@@ -17,7 +17,7 @@
     html, body {
       min-height: 100%;
       margin: 0;
-      font-family: 'Montserrat', sans-serif !important;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
       background: linear-gradient(135deg, #0d1b3e 0%, #112344 50%, #1a2f5a 100%);
     }
 
@@ -143,7 +143,7 @@
       padding: .45rem 1.4rem;
       font-size: .88rem;
       cursor: pointer;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       transition: background .15s, color .15s, border-color .15s;
     }
 

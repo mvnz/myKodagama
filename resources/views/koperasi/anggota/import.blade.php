@@ -93,8 +93,8 @@
           <tbody>
             <tr>
               <td><code>nomor_anggota</code></td>
-              <td><span class="badge bg-secondary">Opsional</span></td>
-              <td>Jika diisi: format <code>KOP-YYYY-0001</code> dan harus sesuai <code>tanggal_bergabung</code>. Jika kosong: nomor otomatis lanjut urutan terakhir.</td>
+              <td><span class="badge bg-danger">Wajib</span></td>
+              <td>Diisi apa adanya dari file (format bebas, harus unik). Header <code>no_anggota</code> juga diterima.</td>
               <td><code>KOP-2026-0001</code></td>
             </tr>
             <tr>
@@ -170,8 +170,7 @@
       <div class="alert alert-info d-flex gap-2 mb-0" role="alert">
         <i class="bi bi-lightbulb-fill flex-shrink-0 mt-1"></i>
         <div class="small">
-          <strong>Nomor anggota</strong> bisa diisi manual dengan format <code>KOP-YYYY-0001</code>.
-          Jika kolom <code>nomor_anggota</code> kosong, sistem otomatis melanjutkan urutan nomor terakhir.
+          <strong>Nomor anggota</strong> wajib diisi di file CSV dan dipakai apa adanya (tidak dibuat otomatis).
           Anggota yang NIK-nya sudah terdaftar akan <strong>dilewati</strong>, bukan error.
         </div>
       </div>

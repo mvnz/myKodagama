@@ -182,6 +182,153 @@ class SimpananController extends Controller
 			->with('sukses', 'Data simpanan berhasil dihapus.');
 	}
 
+	public function importForm()
+	{
+		return view('koperasi.simpanan.import');
+	}
+
+	public function import(Request $request)
+	{
+		$request->validate([
+			'file' => 'required|file|mimes:csv,txt|max:5120',
+		], [
+			'file.required' => 'File CSV wajib diunggah.',
+			'file.mimes' => 'File harus berformat CSV.',
+			'file.max' => 'Ukuran file maksimal 5 MB.',
+		]);
+
+		$file = $request->file('file');
+		$content = file_get_contents($file->getRealPath());
+
+		$delimiters = [';', ','];
+		$detectedDelimiter = null;
+		foreach ($delimiters as $delim) {
+			if (strpos($content, $delim) !== false) {
+				$detectedDelimiter = $delim;
+				break;
+			}
+		}
+		$delimiter = $detectedDelimiter ?? ',';
+
+		$lines = array_filter(preg_split('/\r?\n/', trim($content)));
+		if (empty($lines)) {
+			return redirect()->back()->with('error', 'File CSV kosong.');
+		}
+
+		$headers = str_getcsv(array_shift($lines), $delimiter);
+		$headers = array_map('trim', $headers);
+
+		$berhasil = [];
+		$dilewati = [];
+		$error = [];
+		$baris = 2;
+
+		foreach ($lines as $line) {
+			if (empty(trim($line))) {
+				continue;
+			}
+
+			$row = str_getcsv($line, $delimiter);
+			$row = array_map('trim', $row);
+
+			if (count($row) !== count($headers)) {
+				$row = array_pad($row, count($headers), '');
+			}
+
+			$data = array_combine($headers, array_slice($row, 0, count($headers)));
+
+			$nomorAnggota = $data['nomor_anggota'] ?? null;
+			$jenisSimpanan = $data['jenis_simpanan'] ?? null;
+			$jumlah = $data['jumlah'] ?? null;
+			$tanggal = $data['tanggal'] ?? null;
+			$keterangan = $data['keterangan'] ?? null;
+
+			try {
+				$anggota = Anggota::where('nomor_anggota', $nomorAnggota)->first();
+				if (!$anggota) {
+					$dilewati[] = [
+						'baris' => $baris,
+						'nomor' => $nomorAnggota ?? '-',
+						'alasan' => 'Anggota tidak ditemukan.',
+					];
+					$baris++;
+					continue;
+				}
+
+				$validator = \Illuminate\Support\Facades\Validator::make([
+					'jenis_simpanan' => $jenisSimpanan,
+					'jumlah' => $jumlah,
+					'tanggal' => $tanggal,
+				], [
+					'jenis_simpanan' => 'required|in:pokok,wajib,sukarela',
+					'jumlah' => 'required|numeric|min:1000',
+					'tanggal' => 'required|date_format:Y-m-d',
+				], [
+					'jenis_simpanan.required' => 'Jenis simpanan wajib diisi.',
+					'jenis_simpanan.in' => 'Jenis simpanan tidak valid (pokok/wajib/sukarela).',
+					'jumlah.required' => 'Jumlah wajib diisi.',
+					'jumlah.numeric' => 'Jumlah harus berupa angka.',
+					'jumlah.min' => 'Jumlah minimal 1000.',
+					'tanggal.required' => 'Tanggal wajib diisi.',
+					'tanggal.date_format' => 'Format tanggal harus YYYY-MM-DD.',
+				]);
+
+				if ($validator->fails()) {
+					$error[] = [
+						'baris' => $baris,
+						'nomor' => $nomorAnggota ?? '-',
+						'pesan' => implode('; ', $validator->errors()->all()),
+					];
+					$baris++;
+					continue;
+				}
+
+				$simpanan = Simpanan::create([
+					'anggota_id' => $anggota->id,
+					'jenis_simpanan' => $jenisSimpanan,
+					'jumlah' => (int) $jumlah,
+					'tanggal' => $tanggal,
+					'keterangan' => $keterangan ?: null,
+					'user_id' => Auth::id(),
+					'jenis_anggota' => $anggota->jenis_anggota,
+				]);
+
+				$berhasil[] = [
+					'baris' => $baris,
+					'nama' => $anggota->nama,
+					'jenis' => $jenisSimpanan,
+					'jumlah' => (int) $jumlah,
+				];
+
+				$this->catatLog(
+					'tambah',
+					'Simpanan',
+					$simpanan->id,
+					$anggota->nama,
+					'Simpanan ' . $jenisSimpanan . ' Rp ' . number_format($jumlah, 0, ',', '.') . ' diimport',
+					null,
+					$simpanan->toArray()
+				);
+			} catch (\Exception $e) {
+				$error[] = [
+					'baris' => $baris,
+					'nomor' => $nomorAnggota ?? '-',
+					'pesan' => $e->getMessage(),
+				];
+			}
+
+			$baris++;
+		}
+
+		if ($error === []) {
+			$request->session()->forget('import_errors.simpanan');
+		} else {
+			$request->session()->put('import_errors.simpanan', $error);
+		}
+
+		return view('koperasi.simpanan.import-hasil', compact('berhasil', 'dilewati', 'error'));
+	}
+
 	private function isAnggotaUser($user): bool
 	{
 		return ($user->roleModel?->slug ?? $user->role) === 'anggota';

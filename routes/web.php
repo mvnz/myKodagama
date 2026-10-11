@@ -29,6 +29,10 @@ use App\Http\Controllers\Pos\TokoController as PosTokoController;
 
 // Halaman publik
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('home');
+    }
+
     $pengaturan = \App\Models\Koperasi\Pengaturan::semuaNilai();
     return view('beranda.index', compact('pengaturan'));
 })->name('beranda');
@@ -148,6 +152,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/import/unit-kerja',           [UnitKerjaController::class, 'importForm'])->name('import.unit-kerja.form');
     Route::post('/import/unit-kerja',          [UnitKerjaController::class, 'import'])->name('import.unit-kerja');
     Route::get('/export/template-unit-kerja',  [ExportController::class, 'templateUnitKerja'])->name('export.template.unit-kerja');
+    Route::get('/import/{jenis}/error-csv', [ExportController::class, 'importErrors'])
+        ->whereIn('jenis', ['anggota', 'simpanan', 'unit-kerja'])
+        ->name('import.errors.csv');
 
     // Pengeluaran
     Route::get('/pengeluaran/cetak', [PengeluaranController::class, 'cetak'])->name('pengeluaran.cetak');

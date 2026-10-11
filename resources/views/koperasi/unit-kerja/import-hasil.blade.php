@@ -115,9 +115,14 @@
 {{-- Error --}}
 @if(count($error))
 <div class="form-card mb-4">
-  <h6 class="fw-700 mb-3 text-danger">
-    <i class="bi bi-x-circle-fill me-2"></i>{{ count($error) }} Baris Gagal Diproses
-  </h6>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h6 class="fw-700 mb-0 text-danger">
+      <i class="bi bi-x-circle-fill me-2"></i>{{ count($error) }} Baris Gagal Diproses
+    </h6>
+    <a href="{{ route('import.errors.csv', ['jenis' => 'unit-kerja']) }}" class="btn btn-sm btn-outline-danger">
+      <i class="bi bi-download me-1"></i> Export Error CSV
+    </a>
+  </div>
   <div class="table-responsive">
     <table class="koperasi-table table">
       <thead>

@@ -161,4 +161,49 @@ class ExportController extends Controller
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
+
+    public function importErrors(Request $request, string $jenis): StreamedResponse
+    {
+        $field = match ($jenis) {
+            'anggota' => 'nama',
+            'simpanan' => 'nomor',
+            'unit-kerja' => 'kode',
+        };
+
+        $identityFields = $jenis === 'anggota' ? ['nomor', 'nama'] : [$field];
+        $errors = $request->session()->pull('import_errors.' . $jenis);
+        abort_if (! is_array($errors) || $errors === [], 404);
+
+        $headers = [
+            'anggota' => ['Baris', 'Nomor Anggota', 'Nama', 'Pesan Error'],
+            'simpanan' => ['Baris', 'Nomor Anggota', 'Pesan Error'],
+            'unit-kerja' => ['Baris', 'Kode Unit Kerja', 'Pesan Error'],
+        ][$jenis];
+
+        return response()->streamDownload(function () use ($errors, $identityFields, $headers) {
+            $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, $headers);
+
+            foreach ($errors as $row) {
+                $values = [$row['baris'] ?? ''];
+                foreach ($identityFields as $field) {
+                    $values[] = $row[$field] ?? '';
+                }
+                $values[] = $row['pesan'] ?? '';
+
+                $values = array_map(static function ($value) {
+                    $value = (string) $value;
+
+                    return preg_match('/^[\s]*[=+\-@]/u', $value) ? "'" . $value : $value;
+                }, $values);
+
+                fputcsv($handle, $values);
+            }
+
+            fclose($handle);
+        }, 'error_import_' . $jenis . '_' . now()->format('Ymd_His') . '.csv', [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
 }

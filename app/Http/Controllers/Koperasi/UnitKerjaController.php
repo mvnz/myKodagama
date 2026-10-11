@@ -125,4 +125,138 @@ class UnitKerjaController extends Controller
 		return redirect()->route('unit-kerja.index')
 			->with('sukses', 'Unit kerja berhasil dihapus.');
 	}
+
+	public function importForm()
+	{
+		return view('koperasi.unit-kerja.import');
+	}
+
+	public function import(Request $request)
+	{
+		$request->validate([
+			'file' => 'required|file|mimes:csv,txt|max:2048',
+		], [
+			'file.required' => 'File CSV wajib diunggah.',
+			'file.mimes' => 'File harus berformat CSV.',
+			'file.max' => 'Ukuran file maksimal 2 MB.',
+		]);
+
+		$file = $request->file('file');
+		$content = file_get_contents($file->getRealPath());
+
+		$delimiters = [';', ','];
+		$detectedDelimiter = null;
+		foreach ($delimiters as $delim) {
+			if (strpos($content, $delim) !== false) {
+				$detectedDelimiter = $delim;
+				break;
+			}
+		}
+		$delimiter = $detectedDelimiter ?? ',';
+
+		$lines = array_filter(preg_split('/\r?\n/', trim($content)));
+		if (empty($lines)) {
+			return redirect()->back()->with('error', 'File CSV kosong.');
+		}
+
+		$headers = str_getcsv(array_shift($lines), $delimiter);
+		$headers = array_map('trim', $headers);
+
+		$berhasil = [];
+		$dilewati = [];
+		$error = [];
+		$baris = 2;
+
+		foreach ($lines as $line) {
+			if (empty(trim($line))) {
+				continue;
+			}
+
+			$row = str_getcsv($line, $delimiter);
+			$row = array_map('trim', $row);
+
+			if (count($row) !== count($headers)) {
+				$row = array_pad($row, count($headers), '');
+			}
+
+			$data = array_combine($headers, array_slice($row, 0, count($headers)));
+
+			$kode = $data['kode'] ?? null;
+			$nama = $data['nama'] ?? null;
+			$singkatan = $data['singkatan'] ?? null;
+			$keterangan = $data['keterangan'] ?? null;
+
+			try {
+				$validator = \Illuminate\Support\Facades\Validator::make($data, [
+					'kode' => 'required|string|max:20',
+					'nama' => 'required|string|max:255',
+					'singkatan' => 'nullable|string|max:20',
+				], [
+					'kode.required' => 'Kode unit kerja wajib diisi.',
+					'nama.required' => 'Nama unit kerja wajib diisi.',
+				]);
+
+				if ($validator->fails()) {
+					$error[] = [
+						'baris' => $baris,
+						'kode' => $kode ?? '-',
+						'pesan' => implode('; ', $validator->errors()->all()),
+					];
+					$baris++;
+					continue;
+				}
+
+				if (UnitKerja::where('kode', $kode)->exists()) {
+					$dilewati[] = [
+						'baris' => $baris,
+						'kode' => $kode,
+						'nama' => $nama,
+						'alasan' => 'Kode unit kerja sudah terdaftar.',
+					];
+					$baris++;
+					continue;
+				}
+
+				$unitKerja = UnitKerja::create([
+					'kode' => $kode,
+					'nama' => $nama,
+					'singkatan' => $singkatan ?: null,
+					'keterangan' => $keterangan ?: null,
+					'aktif' => true,
+				]);
+
+				$berhasil[] = [
+					'baris' => $baris,
+					'nama' => $nama,
+					'kode' => $kode,
+				];
+
+				$this->catatLog(
+					'tambah',
+					'Unit Kerja',
+					$unitKerja->id,
+					$unitKerja->nama,
+					'Unit kerja diimport dari CSV: ' . $kode,
+					null,
+					$unitKerja->toArray()
+				);
+			} catch (\Exception $e) {
+				$error[] = [
+					'baris' => $baris,
+					'kode' => $kode ?? '-',
+					'pesan' => $e->getMessage(),
+				];
+			}
+
+			$baris++;
+		}
+
+		if ($error === []) {
+			$request->session()->forget('import_errors.unit-kerja');
+		} else {
+			$request->session()->put('import_errors.unit-kerja', $error);
+		}
+
+		return view('koperasi.unit-kerja.import-hasil', compact('berhasil', 'dilewati', 'error'));
+	}
 }

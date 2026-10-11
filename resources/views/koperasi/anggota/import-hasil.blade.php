@@ -113,14 +113,20 @@
 {{-- Error --}}
 @if(count($error))
 <div class="form-card mb-4">
-  <h6 class="fw-700 mb-3 text-danger">
-    <i class="bi bi-x-circle-fill me-2"></i>{{ count($error) }} Baris Gagal Diproses
-  </h6>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h6 class="fw-700 mb-0 text-danger">
+      <i class="bi bi-x-circle-fill me-2"></i>{{ count($error) }} Baris Gagal Diproses
+    </h6>
+    <a href="{{ route('import.errors.csv', ['jenis' => 'anggota']) }}" class="btn btn-sm btn-outline-danger">
+      <i class="bi bi-download me-1"></i> Export Error CSV
+    </a>
+  </div>
   <div class="table-responsive">
     <table class="koperasi-table table">
       <thead>
         <tr>
           <th width="60">Baris</th>
+          <th>Nomor Anggota</th>
           <th>Nama</th>
           <th>Pesan Error</th>
         </tr>
@@ -129,6 +135,7 @@
         @foreach($error as $row)
         <tr>
           <td class="text-muted">{{ $row['baris'] }}</td>
+          <td><code>{{ $row['nomor'] ?? '-' }}</code></td>
           <td>{{ $row['nama'] }}</td>
           <td><span class="text-danger small">{{ $row['pesan'] }}</span></td>
         </tr>

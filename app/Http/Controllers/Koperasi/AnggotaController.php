@@ -290,6 +290,220 @@ class AnggotaController extends Controller
             ->with('sukses', 'Pendaftaran ' . $label . ' telah ditolak.');
     }
 
+    public function importForm()
+    {
+        return view('koperasi.anggota.import');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:2048',
+        ], [
+            'file.required' => 'File CSV wajib diunggah.',
+            'file.mimes' => 'File harus berformat CSV.',
+            'file.max' => 'Ukuran file maksimal 2 MB.',
+        ]);
+
+        $file = $request->file('file');
+        $content = file_get_contents($file->getRealPath());
+
+        $delimiters = [';', ','];
+        $detectedDelimiter = null;
+        foreach ($delimiters as $delim) {
+            if (strpos($content, $delim) !== false) {
+                $detectedDelimiter = $delim;
+                break;
+            }
+        }
+        $delimiter = $detectedDelimiter ?? ',';
+
+        $lines = array_filter(preg_split('/\r?\n/', trim($content)));
+        if (empty($lines)) {
+            return redirect()->back()->with('error', 'File CSV kosong.');
+        }
+
+        $headers = str_getcsv(array_shift($lines), $delimiter);
+        $aliasKolom = [
+            'no_anggota' => 'nomor_anggota',
+            'nomor' => 'nomor_anggota',
+            'no_induk' => 'nomor_anggota',
+        ];
+        $headers = array_map(function ($h) use ($aliasKolom) {
+            $h = strtolower(trim(preg_replace('/^\xEF\xBB\xBF/', '', $h)));
+            $h = preg_replace('/[\s\-]+/', '_', $h);
+
+            return $aliasKolom[$h] ?? $h;
+        }, $headers);
+
+        $berhasil = [];
+        $dilewati = [];
+        $error = [];
+        $baris = 2;
+
+        foreach ($lines as $line) {
+            if (empty(trim($line))) {
+                continue;
+            }
+
+            $row = str_getcsv($line, $delimiter);
+            $row = array_map('trim', $row);
+
+            if (count($row) !== count($headers)) {
+                $row = array_pad($row, count($headers), '');
+            }
+
+            $data = array_combine($headers, array_slice($row, 0, count($headers)));
+
+            // Toleran terhadap huruf besar/kecil, mis. "Aktif" atau "laki-laki"
+            if (isset($data['status'])) {
+                $data['status'] = strtolower(preg_replace('/[\s\-]+/', '_', $data['status']));
+            }
+            if (isset($data['jenis_kelamin'])) {
+                $data['jenis_kelamin'] = match (strtolower($data['jenis_kelamin'])) {
+                    'laki-laki', 'laki laki', 'l' => 'Laki-laki',
+                    'perempuan', 'p' => 'Perempuan',
+                    default => $data['jenis_kelamin'],
+                };
+            }
+            $nomorAnggota = $data['nomor_anggota'] ?? null;
+            $nama = $data['nama'] ?? null;
+            $nik = $data['nik'] ?? null;
+            $jenisKelamin = $data['jenis_kelamin'] ?? null;
+            $tempatLahir = $data['tempat_lahir'] ?? null;
+            $tanggalLahir = $data['tanggal_lahir'] ?? null;
+            $alamat = $data['alamat'] ?? null;
+            $telepon = $data['telepon'] ?? null;
+            $tanggalBergabung = $data['tanggal_bergabung'] ?? null;
+            $jenisAnggota = $data['jenis_anggota'] ?? null;
+            $email = $data['email'] ?? null;
+            $status = $data['status'] ?? 'aktif';
+
+            try {
+                $validator = \Illuminate\Support\Facades\Validator::make($data, [
+                    'nomor_anggota' => 'required|string|max:50',
+                    'nama' => 'required|string|max:255',
+                    'nik' => 'required|string|size:16',
+                    'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+                    'tempat_lahir' => 'required|string|max:100',
+                    'tanggal_lahir' => 'required|date_format:Y-m-d|before:today',
+                    'alamat' => 'required|string',
+                    'telepon' => 'required|string|max:20',
+                    'tanggal_bergabung' => 'required|date_format:Y-m-d',
+                    'email' => 'nullable|email',
+                    'status' => 'nullable|in:aktif,tidak_aktif',
+                ], [
+                    'nomor_anggota.required' => 'Nomor anggota wajib diisi di file CSV (kolom nomor_anggota atau no_anggota).',
+                    'nama.required' => 'Nama wajib diisi.',
+                    'nik.required' => 'NIK wajib diisi.',
+                    'nik.size' => 'NIK harus 16 digit.',
+                    'jenis_kelamin.required' => 'Jenis kelamin wajib diisi.',
+                    'jenis_kelamin.in' => 'Jenis kelamin harus "Laki-laki" atau "Perempuan".',
+                    'tempat_lahir.required' => 'Tempat lahir wajib diisi.',
+                    'tanggal_lahir.required' => 'Tanggal lahir wajib diisi.',
+                    'tanggal_lahir.date_format' => 'Format tanggal lahir harus YYYY-MM-DD.',
+                    'alamat.required' => 'Alamat wajib diisi.',
+                    'telepon.required' => 'Telepon wajib diisi.',
+                    'tanggal_bergabung.required' => 'Tanggal bergabung wajib diisi.',
+                    'tanggal_bergabung.date_format' => 'Format tanggal bergabung harus YYYY-MM-DD.',
+                    'email.email' => 'Email tidak valid.',
+                    'status.in' => 'Status tidak valid. Isi dengan "aktif" atau "tidak_aktif", atau kosongkan kolom agar otomatis "aktif".',
+                ]);
+
+                if ($validator->fails()) {
+                    $error[] = [
+                        'baris' => $baris,
+                        'nomor' => $nomorAnggota ?? '-',
+                        'nama' => $nama ?? ($nomorAnggota ?? $nik ?? '-'),
+                        'pesan' => implode('; ', $validator->errors()->all()),
+                    ];
+                    $baris++;
+                    continue;
+                }
+
+                if (Anggota::where('nik', $nik)->exists()) {
+                    $dilewati[] = [
+                        'baris' => $baris,
+                        'nama' => $nama,
+                        'alasan' => 'NIK sudah terdaftar dalam sistem.',
+                    ];
+                    $baris++;
+                    continue;
+                }
+
+                if (Anggota::where('nomor_anggota', $nomorAnggota)->exists()) {
+                    $error[] = [
+                        'baris' => $baris,
+                        'nomor' => $nomorAnggota,
+                        'nama' => $nama,
+                        'pesan' => 'Nomor anggota sudah terdaftar.',
+                    ];
+                    $baris++;
+                    continue;
+                }
+
+                if ($email && Anggota::where('email', $email)->exists()) {
+                    $error[] = [
+                        'baris' => $baris,
+                        'nomor' => $nomorAnggota,
+                        'nama' => $nama,
+                        'pesan' => 'Email sudah terdaftar.',
+                    ];
+                    $baris++;
+                    continue;
+                }
+
+                $anggota = Anggota::create([
+                    'nomor_anggota' => $nomorAnggota,
+                    'nama' => $nama,
+                    'nik' => $nik,
+                    'jenis_kelamin' => $jenisKelamin,
+                    'tempat_lahir' => $tempatLahir,
+                    'tanggal_lahir' => $tanggalLahir,
+                    'alamat' => $alamat,
+                    'telepon' => $telepon,
+                    'tanggal_bergabung' => $tanggalBergabung,
+                    'jenis_anggota' => $jenisAnggota ?: null,
+                    'email' => $email ?: null,
+                    'status' => $status ?: 'aktif',
+                ]);
+
+                $berhasil[] = [
+                    'baris' => $baris,
+                    'nama' => $nama,
+                    'nomor' => $nomorAnggota,
+                ];
+
+                $this->catatLog(
+                    'tambah',
+                    'Anggota',
+                    $anggota->id,
+                    $anggota->nama,
+                    'Anggota diimport dari CSV: ' . $nomorAnggota,
+                    null,
+                    $anggota->toArray()
+                );
+            } catch (\Exception $e) {
+                $error[] = [
+                    'baris' => $baris,
+                    'nomor' => $nomorAnggota ?? '-',
+                    'nama' => $nama ?? ($nomorAnggota ?? $nik ?? '-'),
+                    'pesan' => $e->getMessage(),
+                ];
+            }
+
+            $baris++;
+        }
+
+        if ($error === []) {
+            $request->session()->forget('import_errors.anggota');
+        } else {
+            $request->session()->put('import_errors.anggota', $error);
+        }
+
+        return view('koperasi.anggota.import-hasil', compact('berhasil', 'dilewati', 'error'));
+    }
+
     private function generateNomor(): string
     {
         return Anggota::generateNomor();

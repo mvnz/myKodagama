@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Koperasi;
 
+use App\Support\CsvImportReader;
 use App\Http\Controllers\Controller;
 
 use App\Models\Koperasi\Anggota;
@@ -305,50 +306,20 @@ class AnggotaController extends Controller
             'file.max' => 'Ukuran file maksimal 2 MB.',
         ]);
 
-        $file = $request->file('file');
-        $content = file_get_contents($file->getRealPath());
-
-        $delimiter = str_contains($content, ';') ? ';' : ',';
-
-        $lines = array_filter(preg_split('/\r?\n/', trim($content)));
-        if (empty($lines)) {
-            return redirect()->back()->with('error', 'File CSV kosong.');
-        }
-
-        $headers = str_getcsv(array_shift($lines), $delimiter);
-        $aliasKolom = [
+        $rows = CsvImportReader::read($request->file('file')->getRealPath(), [
             'no_anggota' => 'nomor_anggota',
             'nomor' => 'nomor_anggota',
             'no_induk' => 'nomor_anggota',
-        ];
-        $headers = array_map(function ($h) use ($aliasKolom) {
-            $h = strtolower(trim(preg_replace('/^\xEF\xBB\xBF/', '', $h)));
-            $h = preg_replace('/[\s\-]+/', '_', $h);
-
-            return $aliasKolom[$h] ?? $h;
-        }, $headers);
+        ]);
+        if ($rows === []) {
+            return redirect()->back()->with('error', 'File CSV kosong.');
+        }
 
         $berhasil = [];
         $dilewati = [];
         $error = [];
-        $baris = 1;
 
-        foreach ($lines as $line) {
-            if (empty(trim($line))) {
-                continue;
-            }
-
-            $baris++;
-
-            $row = str_getcsv($line, $delimiter);
-            $row = array_map('trim', $row);
-
-            if (count($row) !== count($headers)) {
-                $row = array_pad($row, count($headers), '');
-            }
-
-            $data = array_combine($headers, array_slice($row, 0, count($headers)));
-
+        foreach ($rows as ['baris' => $baris, 'data' => $data]) {
             // Toleran terhadap huruf besar/kecil, mis. "Aktif" atau "laki-laki"
             if (isset($data['status'])) {
                 $data['status'] = strtolower(preg_replace('/[\s\-]+/', '_', $data['status']));
@@ -481,7 +452,6 @@ class AnggotaController extends Controller
                     'pesan' => $e->getMessage(),
                 ];
             }
-
         }
 
         if ($error === []) {

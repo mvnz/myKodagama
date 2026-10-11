@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Koperasi;
 
+use App\Support\CsvImportReader;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\CatatAktivitas;
 use App\Models\Koperasi\UnitKerja;
@@ -141,48 +142,16 @@ class UnitKerjaController extends Controller
 			'file.max' => 'Ukuran file maksimal 2 MB.',
 		]);
 
-		$file = $request->file('file');
-		$content = file_get_contents($file->getRealPath());
-
-		$delimiters = [';', ','];
-		$detectedDelimiter = null;
-		foreach ($delimiters as $delim) {
-			if (strpos($content, $delim) !== false) {
-				$detectedDelimiter = $delim;
-				break;
-			}
-		}
-		$delimiter = $detectedDelimiter ?? ',';
-
-		$lines = array_filter(preg_split('/\r?\n/', trim($content)));
-		if (empty($lines)) {
+		$rows = CsvImportReader::read($request->file('file')->getRealPath());
+		if ($rows === []) {
 			return redirect()->back()->with('error', 'File CSV kosong.');
 		}
-
-		$headers = str_getcsv(array_shift($lines), $delimiter);
-		$headers = array_map('trim', $headers);
 
 		$berhasil = [];
 		$dilewati = [];
 		$error = [];
-		$baris = 1;
 
-		foreach ($lines as $line) {
-			if (empty(trim($line))) {
-				continue;
-			}
-
-			$baris++;
-
-			$row = str_getcsv($line, $delimiter);
-			$row = array_map('trim', $row);
-
-			if (count($row) !== count($headers)) {
-				$row = array_pad($row, count($headers), '');
-			}
-
-			$data = array_combine($headers, array_slice($row, 0, count($headers)));
-
+		foreach ($rows as ['baris' => $baris, 'data' => $data]) {
 			$kode = $data['kode'] ?? null;
 			$nama = $data['nama'] ?? null;
 			$singkatan = $data['singkatan'] ?? null;
@@ -247,7 +216,6 @@ class UnitKerjaController extends Controller
 					'pesan' => $e->getMessage(),
 				];
 			}
-
 		}
 
 		if ($error === []) {

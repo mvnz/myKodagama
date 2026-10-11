@@ -308,15 +308,7 @@ class AnggotaController extends Controller
         $file = $request->file('file');
         $content = file_get_contents($file->getRealPath());
 
-        $delimiters = [';', ','];
-        $detectedDelimiter = null;
-        foreach ($delimiters as $delim) {
-            if (strpos($content, $delim) !== false) {
-                $detectedDelimiter = $delim;
-                break;
-            }
-        }
-        $delimiter = $detectedDelimiter ?? ',';
+        $delimiter = str_contains($content, ';') ? ';' : ',';
 
         $lines = array_filter(preg_split('/\r?\n/', trim($content)));
         if (empty($lines)) {
@@ -339,12 +331,14 @@ class AnggotaController extends Controller
         $berhasil = [];
         $dilewati = [];
         $error = [];
-        $baris = 2;
+        $baris = 1;
 
         foreach ($lines as $line) {
             if (empty(trim($line))) {
                 continue;
             }
+
+            $baris++;
 
             $row = str_getcsv($line, $delimiter);
             $row = array_map('trim', $row);
@@ -417,7 +411,6 @@ class AnggotaController extends Controller
                         'nama' => $nama ?? ($nomorAnggota ?? $nik ?? '-'),
                         'pesan' => implode('; ', $validator->errors()->all()),
                     ];
-                    $baris++;
                     continue;
                 }
 
@@ -427,7 +420,6 @@ class AnggotaController extends Controller
                         'nama' => $nama,
                         'alasan' => 'NIK sudah terdaftar dalam sistem.',
                     ];
-                    $baris++;
                     continue;
                 }
 
@@ -438,7 +430,6 @@ class AnggotaController extends Controller
                         'nama' => $nama,
                         'pesan' => 'Nomor anggota sudah terdaftar.',
                     ];
-                    $baris++;
                     continue;
                 }
 
@@ -449,7 +440,6 @@ class AnggotaController extends Controller
                         'nama' => $nama,
                         'pesan' => 'Email sudah terdaftar.',
                     ];
-                    $baris++;
                     continue;
                 }
 
@@ -492,7 +482,6 @@ class AnggotaController extends Controller
                 ];
             }
 
-            $baris++;
         }
 
         if ($error === []) {

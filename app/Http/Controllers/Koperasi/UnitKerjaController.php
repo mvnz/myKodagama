@@ -165,12 +165,14 @@ class UnitKerjaController extends Controller
 		$berhasil = [];
 		$dilewati = [];
 		$error = [];
-		$baris = 2;
+		$baris = 1;
 
 		foreach ($lines as $line) {
 			if (empty(trim($line))) {
 				continue;
 			}
+
+			$baris++;
 
 			$row = str_getcsv($line, $delimiter);
 			$row = array_map('trim', $row);
@@ -202,7 +204,6 @@ class UnitKerjaController extends Controller
 						'kode' => $kode ?? '-',
 						'pesan' => implode('; ', $validator->errors()->all()),
 					];
-					$baris++;
 					continue;
 				}
 
@@ -213,7 +214,6 @@ class UnitKerjaController extends Controller
 						'nama' => $nama,
 						'alasan' => 'Kode unit kerja sudah terdaftar.',
 					];
-					$baris++;
 					continue;
 				}
 
@@ -248,7 +248,6 @@ class UnitKerjaController extends Controller
 				];
 			}
 
-			$baris++;
 		}
 
 		if ($error === []) {

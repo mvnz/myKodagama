@@ -221,12 +221,14 @@ class SimpananController extends Controller
 		$berhasil = [];
 		$dilewati = [];
 		$error = [];
-		$baris = 2;
+		$baris = 1;
 
 		foreach ($lines as $line) {
 			if (empty(trim($line))) {
 				continue;
 			}
+
+			$baris++;
 
 			$row = str_getcsv($line, $delimiter);
 			$row = array_map('trim', $row);
@@ -251,7 +253,6 @@ class SimpananController extends Controller
 						'nomor' => $nomorAnggota ?? '-',
 						'alasan' => 'Anggota tidak ditemukan.',
 					];
-					$baris++;
 					continue;
 				}
 
@@ -279,7 +280,6 @@ class SimpananController extends Controller
 						'nomor' => $nomorAnggota ?? '-',
 						'pesan' => implode('; ', $validator->errors()->all()),
 					];
-					$baris++;
 					continue;
 				}
 
@@ -317,7 +317,6 @@ class SimpananController extends Controller
 				];
 			}
 
-			$baris++;
 		}
 
 		if ($error === []) {

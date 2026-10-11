@@ -164,13 +164,11 @@ class ExportController extends Controller
 
     public function importErrors(Request $request, string $jenis): StreamedResponse
     {
-        $field = match ($jenis) {
-            'anggota' => 'nama',
-            'simpanan' => 'nomor',
-            'unit-kerja' => 'kode',
+        $identityFields = match ($jenis) {
+            'anggota' => ['nomor', 'nama'],
+            'simpanan' => ['nomor'],
+            'unit-kerja' => ['kode'],
         };
-
-        $identityFields = $jenis === 'anggota' ? ['nomor', 'nama'] : [$field];
         $errors = $request->session()->pull('import_errors.' . $jenis);
         abort_if (! is_array($errors) || $errors === [], 404);
 

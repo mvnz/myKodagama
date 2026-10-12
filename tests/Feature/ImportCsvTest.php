@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Koperasi\Angsuran;
 use App\Models\Koperasi\Anggota;
+use App\Models\Koperasi\Pinjaman;
 use App\Models\Koperasi\Simpanan;
 use App\Models\Koperasi\UnitKerja;
 use App\Models\User;
@@ -119,5 +121,79 @@ class ImportCsvTest extends TestCase
 
         $body = $this->get(route('import.errors.csv', 'anggota'))->streamedContent();
         $this->assertStringContainsString("'=CMD()", $body);
+    }
+
+    public function test_import_pinjaman_membuat_jadwal_dan_menandai_lunas(): void
+    {
+        Anggota::factory()->create(['nomor_anggota' => 'ANG-1']);
+        Anggota::factory()->create(['nomor_anggota' => 'ANG-2']);
+
+        $isi = "no_anggota;no_pinjaman;jumlah_pinjaman;jangka_waktu;bunga;tujuan;tanggal_pengajuan;status;angsuran_terbayar\n"
+            . "ANG-1;PIN-X-1;1200000;6;1,5;Modal;2024-01-10;Disetujui;2\n"
+            . "ANG-2;;600000;3;1.5;Biaya;2023-01-10;lunas;\n";
+
+        $this->actingAs($this->admin())
+            ->post(route('import.pinjaman'), ['file' => $this->csv($isi)])
+            ->assertOk()
+            ->assertViewHas('error', [])
+            ->assertViewHas('berhasil', fn ($b) => count($b) === 2);
+
+        $aktif = Pinjaman::where('nomor_pinjaman', 'PIN-X-1')->firstOrFail();
+        $this->assertSame('disetujui', $aktif->status);
+        $this->assertSame(6, Angsuran::where('pinjaman_id', $aktif->id)->count());
+        $this->assertSame(2, Angsuran::where('pinjaman_id', $aktif->id)->where('status', 'sudah')->count());
+
+        $lunas = Pinjaman::where('status', 'lunas')->firstOrFail();
+        $this->assertStringStartsWith('PIN-', $lunas->nomor_pinjaman);
+        $this->assertSame(3, Angsuran::where('pinjaman_id', $lunas->id)->where('status', 'sudah')->count());
+    }
+
+    public function test_import_pinjaman_melewati_anggota_tak_dikenal_dan_pinjaman_aktif_serta_error_duplikat(): void
+    {
+        $a = Anggota::factory()->create(['nomor_anggota' => 'ANG-1']);
+        Pinjaman::factory()->disetujui()->create(['anggota_id' => $a->id, 'nomor_pinjaman' => 'PIN-OLD']);
+        Anggota::factory()->create(['nomor_anggota' => 'ANG-3']);
+
+        $isi = "nomor_anggota;nomor_pinjaman;jumlah_pinjaman;jangka_waktu;bunga;tujuan;tanggal_pengajuan\n"
+            . "ANG-1;;500000;6;1.5;Modal;2024-01-10\n"
+            . "ZZZ;;500000;6;1.5;Modal;2024-01-10\n"
+            . "ANG-3;PIN-OLD;500000;6;1.5;Modal;2024-01-10\n"
+            . "ANG-3;;50;6;1.5;;2024-01-10\n";
+
+        $this->actingAs($this->admin())
+            ->post(route('import.pinjaman'), ['file' => $this->csv($isi)])
+            ->assertOk()
+            ->assertViewHas('berhasil', [])
+            ->assertViewHas('dilewati', fn ($d) => count($d) === 2)
+            ->assertViewHas('error', fn ($e) => count($e) === 2);
+
+        $respons = $this->get(route('import.errors.csv', 'pinjaman'));
+        $respons->assertOk();
+        $this->assertStringContainsString('Nomor pinjaman sudah terdaftar.', $respons->streamedContent());
+    }
+
+    public function test_import_pinjaman_ditolak_untuk_role_anggota(): void
+    {
+        $user = User::factory()->create(['role' => 'anggota']);
+
+        $this->actingAs($user)->get(route('import.pinjaman.form'))->assertForbidden();
+    }
+
+    public function test_template_import_dapat_diunduh(): void
+    {
+        $user = $this->admin();
+
+        foreach ([
+            'anggota' => 'nomor_anggota;nama',
+            'simpanan' => 'nomor_anggota;jenis_simpanan',
+            'unit-kerja' => 'kode;nama',
+            'pinjaman' => 'nomor_anggota;nomor_pinjaman',
+        ] as $jenis => $awal) {
+            $this->actingAs($user)
+                ->get(route('export.template.' . $jenis))
+                ->assertOk()
+                ->assertDownload();
+            $this->assertStringContainsString($awal, $this->actingAs($user)->get(route('export.template.' . $jenis))->streamedContent());
+        }
     }
 }

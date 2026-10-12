@@ -149,11 +149,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/import/simpanan',         [SimpananController::class, 'import'])->name('import.simpanan');
     Route::get('/export/template-simpanan', [ExportController::class, 'templateSimpanan'])->name('export.template.simpanan');
 
-    Route::get('/import/unit-kerja',           [UnitKerjaController::class, 'importForm'])->name('import.unit-kerja.form');
+    Route::get('/import/pinjaman',          [PinjamanController::class, 'importForm'])->name('import.pinjaman.form');
+Route::post('/import/pinjaman',         [PinjamanController::class, 'import'])->name('import.pinjaman');
+Route::get('/export/template-pinjaman', [ExportController::class, 'templatePinjaman'])->name('export.template.pinjaman');
+
+Route::get('/import/unit-kerja',           [UnitKerjaController::class, 'importForm'])->name('import.unit-kerja.form');
     Route::post('/import/unit-kerja',          [UnitKerjaController::class, 'import'])->name('import.unit-kerja');
     Route::get('/export/template-unit-kerja',  [ExportController::class, 'templateUnitKerja'])->name('export.template.unit-kerja');
     Route::get('/import/{jenis}/error-csv', [ExportController::class, 'importErrors'])
-        ->whereIn('jenis', ['anggota', 'simpanan', 'unit-kerja'])
+        ->whereIn('jenis', ['anggota', 'simpanan', 'unit-kerja', 'pinjaman'])
         ->name('import.errors.csv');
 
     // Pengeluaran
@@ -186,6 +190,8 @@ Route::middleware('auth')->group(function () {
 
     // ─── POS ─────────────────────────────────────────────────
     Route::prefix('pos')->name('pos.')->group(function () {
+        Route::view('/panduan', 'pos.panduan')->name('panduan');
+
         // Kasir
         Route::middleware('can:pos.kasir')->group(function () {
             Route::get('/',          [KasirController::class, 'index'])->name('kasir');

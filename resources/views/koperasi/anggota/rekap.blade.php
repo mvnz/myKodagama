@@ -29,26 +29,27 @@
 @endphp
 
 {{-- ─── PROFILE HEADER ─── --}}
-<div class="rekap-header mb-4">
+<div class="dashboard-welcome rekap-banner mb-4">
   <div class="d-flex align-items-center gap-4 flex-wrap">
     @if($anggota->foto)
       <img src="{{ Storage::url($anggota->foto) }}" alt="{{ $anggota->nama }}"
-        class="rounded-circle object-fit-cover flex-shrink-0 shadow is-avatar-80">
+        class="rounded-circle object-fit-cover flex-shrink-0 rekap-banner-foto">
     @else
-      <div class="rekap-avatar flex-shrink-0">{{ strtoupper(substr($anggota->nama,0,1)) }}</div>
+      <div class="rekap-banner-avatar flex-shrink-0">{{ strtoupper(substr($anggota->nama,0,1)) }}</div>
     @endif
     <div class="flex-grow-1 min-w-0">
-      <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-        <h4 class="mb-0 fw-700 is-5ca88772">{{ $anggota->nama }}</h4>
-        <span class="badge-status {{ $anggota->status === 'aktif' ? 'badge-aktif' : 'badge-ditolak' }}">
+      <div class="welcome-label mb-1">Rekap Profil Anggota</div>
+      <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+        <h4 class="mb-0 fw-700">{{ $anggota->nama }}</h4>
+        <span class="rekap-banner-badge {{ $anggota->status === 'aktif' ? 'is-aktif' : 'is-nonaktif' }}">
           {{ $anggota->status === 'aktif' ? 'Aktif' : 'Tidak Aktif' }}
         </span>
         @if($anggota->jenis_anggota)
-          <span class="rekap-badge-jenis">{{ $anggota->jenis_anggota }}</span>
+          <span class="rekap-banner-badge">{{ $anggota->jenis_anggota }}</span>
         @endif
       </div>
-      <div class="d-flex gap-4 flex-wrap is-2a884988">
-        <span><i class="bi bi-credit-card-2-front me-1"></i><code class="text-primary fw-600 is-80bae62c">{{ $anggota->nomor_anggota }}</code></span>
+      <div class="rekap-banner-meta d-flex gap-4 flex-wrap">
+        <span><i class="bi bi-credit-card-2-front me-1"></i>{{ $anggota->nomor_anggota }}</span>
         @if($anggota->unitKerja)
           <span><i class="bi bi-building me-1"></i>{{ $anggota->unitKerja->nama }}</span>
         @endif
@@ -65,65 +66,69 @@
       </div>
     </div>
     <div class="d-flex gap-2 flex-shrink-0">
-      <a href="{{ route('anggota.kartu', $anggota) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+      <a href="{{ route('anggota.kartu', $anggota) }}" target="_blank" class="btn btn-sm rekap-banner-btn">
         <i class="bi bi-credit-card-2-front me-1"></i>Kartu
       </a>
-      <a href="{{ route('anggota.edit', $anggota) }}" class="btn btn-sm btn-outline-warning">
+      <a href="{{ route('anggota.edit', $anggota) }}" class="btn btn-sm rekap-banner-btn">
         <i class="bi bi-pencil me-1"></i>Ubah
       </a>
-      <a href="{{ route('anggota.show', $anggota) }}" class="btn btn-sm btn-outline-secondary">
+      <a href="{{ route('anggota.show', $anggota) }}" class="btn btn-sm rekap-banner-btn">
         <i class="bi bi-person-vcard me-1"></i>Detail
       </a>
     </div>
   </div>
 </div>
 
-{{-- ─── 4 STAT CARDS ─── --}}
-<div class="row g-3 mb-4">
-  <div class="col-6 col-md-3">
-    <div class="rekap-stat-card is-04a4bb83">
-      <div class="rekap-stat-icon is-5d8ccbd2"><i class="bi bi-piggy-bank-fill"></i></div>
-      <div class="rekap-stat-label">Total Simpanan</div>
-      <div class="rekap-stat-value is-d4ac9708">Rp {{ number_format($totalSimpanan,0,',','.') }}</div>
-      <div class="rekap-stat-sub">{{ $anggota->simpanan->count() }} transaksi</div>
+{{-- Stat cards --}}
+<div class="row g-4 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="kstat-card kstat-blue">
+      <div class="kstat-deco"></div><div class="kstat-deco2"></div>
+      <div class="kstat-icon"><i class="bi bi-piggy-bank-fill"></i></div>
+      <div class="kstat-value kstat-value-sm">Rp {{ number_format($totalSimpanan,0,',','.') }}</div>
+      <div class="kstat-label">Total Simpanan</div>
+      <div class="kstat-trend"><i class="bi bi-receipt me-1"></i> {{ $anggota->simpanan->count() }} transaksi</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="rekap-stat-card is-731aac6f">
-      <div class="rekap-stat-icon is-1cbedf88"><i class="bi bi-bank"></i></div>
-      <div class="rekap-stat-label">Simpanan Wajib</div>
-      <div class="rekap-stat-value is-e987c5dc">Rp {{ number_format($totalWajib,0,',','.') }}</div>
-      <div class="rekap-stat-sub">
-        @if($wajibPerJenis) Seharusnya Rp {{ number_format($wajibPerJenis['nominal'],0,',','.') }}/bln
-        @else — @endif
+  <div class="col-6 col-xl-3">
+    <div class="kstat-card kstat-green">
+      <div class="kstat-deco"></div><div class="kstat-deco2"></div>
+      <div class="kstat-icon"><i class="bi bi-bank"></i></div>
+      <div class="kstat-value kstat-value-sm">Rp {{ number_format($totalWajib,0,',','.') }}</div>
+      <div class="kstat-label">Simpanan Wajib</div>
+      <div class="kstat-trend">
+        @if($wajibPerJenis)
+          <i class="bi bi-calendar-check-fill me-1"></i> Seharusnya Rp {{ number_format($wajibPerJenis['nominal'],0,',','.') }}/bln
+        @else
+          <i class="bi bi-dash-circle-fill me-1"></i> Belum diatur
+        @endif
       </div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="rekap-stat-card is-fea39794">
-      <div class="rekap-stat-icon is-6aacb7a0"><i class="bi bi-cash-stack"></i></div>
-      <div class="rekap-stat-label">Total Pinjaman</div>
-      <div class="rekap-stat-value is-f571fe9b">Rp {{ number_format($totalPinjaman,0,',','.') }}</div>
-      <div class="rekap-stat-sub">{{ $semuaPinjaman->count() }} pengajuan</div>
+  <div class="col-6 col-xl-3">
+    <div class="kstat-card kstat-amber">
+      <div class="kstat-deco"></div><div class="kstat-deco2"></div>
+      <div class="kstat-icon"><i class="bi bi-cash-stack"></i></div>
+      <div class="kstat-value kstat-value-sm">Rp {{ number_format($totalPinjaman,0,',','.') }}</div>
+      <div class="kstat-label">Total Pinjaman</div>
+      <div class="kstat-trend"><i class="bi bi-file-earmark-text-fill me-1"></i> {{ $semuaPinjaman->count() }} pengajuan</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="rekap-stat-card is-125e63ab">
-      <div class="rekap-stat-icon is-11eddb63">
-        <i class="bi bi-{{ $totalSisaHutang > 0 ? 'exclamation-circle' : 'check-circle' }}-fill"></i>
-      </div>
-      <div class="rekap-stat-label">Sisa Hutang</div>
-      <div class="rekap-stat-value is-95945249">Rp {{ number_format(max(0,$totalSisaHutang),0,',','.') }}</div>
-      <div class="rekap-stat-sub">
+  <div class="col-6 col-xl-3">
+    <div class="kstat-card {{ $totalSisaHutang > 0 ? 'kstat-red' : 'kstat-teal' }}">
+      <div class="kstat-deco"></div><div class="kstat-deco2"></div>
+      <div class="kstat-icon"><i class="bi bi-{{ $totalSisaHutang > 0 ? 'exclamation-circle' : 'check-circle' }}-fill"></i></div>
+      <div class="kstat-value kstat-value-sm">Rp {{ number_format(max(0,$totalSisaHutang),0,',','.') }}</div>
+      <div class="kstat-label">Sisa Hutang</div>
+      <div class="kstat-trend">
         {{ $totalSisaHutang > 0 ? 'Belum lunas' : 'Bersih' }}
         @if($totalDendaEstimasi > 0)
-          <span class="text-danger"> · Denda ~Rp {{ number_format($totalDendaEstimasi,0,',','.') }}</span>
+          &nbsp;· Denda ~Rp {{ number_format($totalDendaEstimasi,0,',','.') }}
         @endif
       </div>
     </div>
   </div>
 </div>
-
 <div class="row g-4">
 
   {{-- ─── SIMPANAN ─── --}}

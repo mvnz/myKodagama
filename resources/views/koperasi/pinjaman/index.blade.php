@@ -100,6 +100,11 @@
       <a href="{{ route('pinjaman.create') }}" class="btn btn-success">
         <i class="bi bi-plus me-1"></i> Tambah
       </a>
+      @if((auth()->user()->roleModel?->slug ?? auth()->user()->role) !== 'anggota')
+      <a href="{{ route('import.pinjaman.form') }}" class="btn btn-warning">
+        <i class="bi bi-box-arrow-in-down me-1"></i> Import
+      </a>
+      @endif
       @endcan
       <a href="{{ route('pinjaman.cetak', array_filter(request()->only(['cari','status']))) }}" class="btn btn-outline-secondary" target="_blank">
         <i class="bi bi-printer me-1"></i> Cetak

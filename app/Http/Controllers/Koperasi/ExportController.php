@@ -162,11 +162,64 @@ class ExportController extends Controller
         ]);
     }
 
+    public function templateAnggota(): StreamedResponse
+    {
+        return $this->templateCsv('template_import_anggota.csv',
+            ['nomor_anggota', 'nama', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'telepon', 'tanggal_bergabung', 'jenis_anggota', 'email', 'status'],
+            [
+                ['A-0001', 'Budi Santoso', '3201010101900001', 'Laki-laki', 'Bandung', '1990-01-01', 'Jl. Merdeka No. 1', '081234567890', '2024-01-15', 'Biasa', 'budi@example.com', 'aktif'],
+                ['A-0002', 'Siti Aminah', '3201010202920002', 'Perempuan', 'Jakarta', '1992-02-02', 'Jl. Sudirman No. 2', '081298765432', '2024-02-01', 'Biasa', 'siti@example.com', 'aktif'],
+            ]);
+    }
+
+    public function templateSimpanan(): StreamedResponse
+    {
+        return $this->templateCsv('template_import_simpanan.csv',
+            ['nomor_anggota', 'jenis_simpanan', 'jumlah', 'tanggal', 'keterangan'],
+            [
+                ['A-0001', 'pokok', '100000', '2024-01-15', 'Simpanan pokok awal'],
+                ['A-0001', 'wajib', '50000', '2024-02-15', 'Simpanan wajib bulanan'],
+            ]);
+    }
+
+    public function templateUnitKerja(): StreamedResponse
+    {
+        return $this->templateCsv('template_import_unit_kerja.csv',
+            ['kode', 'nama', 'singkatan', 'keterangan'],
+            [
+                ['UK-01', 'Dinas Pendidikan', 'DISDIK', 'Contoh keterangan'],
+                ['UK-02', 'Dinas Kesehatan', 'DINKES', ''],
+            ]);
+    }
+
+    public function templatePinjaman(): StreamedResponse
+    {
+        return $this->templateCsv('template_import_pinjaman.csv',
+            ['nomor_anggota', 'nomor_pinjaman', 'jenis_pinjaman', 'jumlah_pinjaman', 'jangka_waktu', 'bunga', 'tujuan', 'tanggal_pengajuan', 'tanggal_persetujuan', 'status', 'angsuran_terbayar'],
+            [
+                ['A-0001', 'PIN-202401-0001', 'Konsumtif', '5000000', '12', '1.5', 'Renovasi rumah', '2024-01-10', '2024-01-12', 'disetujui', '3'],
+                ['A-0002', '', 'Produktif', '3000000', '6', '1.5', 'Modal usaha', '2023-06-01', '2023-06-03', 'lunas', ''],
+            ]);
+    }
+
+    private function templateCsv(string $nama, array $header, array $contoh): StreamedResponse
+    {
+        return response()->streamDownload(function () use ($header, $contoh) {
+            $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, $header, ';');
+            foreach ($contoh as $row) {
+                fputcsv($handle, $row, ';');
+            }
+            fclose($handle);
+        }, $nama, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
     public function importErrors(Request $request, string $jenis): StreamedResponse
     {
         $identityFields = match ($jenis) {
             'anggota' => ['nomor', 'nama'],
-            'simpanan' => ['nomor'],
+            'simpanan', 'pinjaman' => ['nomor'],
             'unit-kerja' => ['kode'],
         };
         $errors = $request->session()->pull('import_errors.' . $jenis);
@@ -174,9 +227,9 @@ class ExportController extends Controller
 
         $headers = [
             'anggota' => ['Baris', 'Nomor Anggota', 'Nama', 'Pesan Error'],
-            'simpanan' => ['Baris', 'Nomor Anggota', 'Pesan Error'],
+            'simpanan', 'pinjaman' => ['Baris', 'Nomor Anggota', 'Pesan Error'],
             'unit-kerja' => ['Baris', 'Kode Unit Kerja', 'Pesan Error'],
-        ][$jenis];
+        ][$jenis] ?? ['Baris', 'Nomor Anggota', 'Pesan Error'];
 
         return response()->streamDownload(function () use ($errors, $identityFields, $headers) {
             $handle = fopen('php://output', 'w');

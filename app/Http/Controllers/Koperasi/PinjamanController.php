@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Koperasi;
 
 use App\Http\Controllers\Controller;
+use App\Support\CsvImportReader;
 
 use App\Models\Koperasi\Pinjaman;
 use App\Models\Koperasi\Anggota;
@@ -11,6 +12,8 @@ use App\Models\Koperasi\Pengaturan;
 use App\Http\Controllers\Concerns\CatatAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 
@@ -350,6 +353,187 @@ class PinjamanController extends Controller
             ->with('sukses', 'Data pinjaman berhasil dihapus.');
     }
 
+    public function importForm()
+    {
+        $this->authorizeImport();
+
+        return view('koperasi.pinjaman.import');
+    }
+
+    public function import(Request $request)
+    {
+        $this->authorizeImport();
+
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:5120',
+        ], [
+            'file.required' => 'File CSV wajib diunggah.',
+            'file.mimes' => 'File harus berformat CSV.',
+            'file.max' => 'Ukuran file maksimal 5 MB.',
+        ]);
+
+        $rows = CsvImportReader::read($request->file('file')->getRealPath(), [
+            'no_anggota' => 'nomor_anggota',
+            'no_pinjaman' => 'nomor_pinjaman',
+        ]);
+        if ($rows === []) {
+            return redirect()->back()->with('error', 'File CSV kosong.');
+        }
+
+        $berhasil = [];
+        $dilewati = [];
+        $error = [];
+        $statusAktif = ['diajukan', 'diverifikasi', 'disetujui'];
+
+        foreach ($rows as ['baris' => $baris, 'data' => $data]) {
+            $data += array_fill_keys(['nomor_pinjaman', 'jenis_pinjaman', 'tanggal_persetujuan', 'angsuran_terbayar'], '');
+            $nomorAnggota = $data['nomor_anggota'] ?? '';
+            $data['status'] = strtolower(trim($data['status'] ?? '')) ?: 'disetujui';
+            $data['bunga'] = str_replace(',', '.', $data['bunga'] ?? '');
+
+            try {
+                $validator = Validator::make($data, [
+                    'nomor_anggota' => 'required|string',
+                    'nomor_pinjaman' => 'nullable|string|max:50|unique:pinjaman,nomor_pinjaman',
+                    'jenis_pinjaman' => 'nullable|string|max:220',
+                    'jumlah_pinjaman' => 'required|numeric|min:100000',
+                    'jangka_waktu' => 'required|integer|min:1|max:60',
+                    'bunga' => 'required|numeric|min:0|max:30',
+                    'tujuan' => 'required|string',
+                    'tanggal_pengajuan' => 'required|date_format:Y-m-d',
+                    'tanggal_persetujuan' => 'nullable|date_format:Y-m-d',
+                    'status' => 'required|in:diajukan,diverifikasi,disetujui,lunas,ditolak',
+                    'angsuran_terbayar' => 'nullable|integer|min:0',
+                ], [
+                    'nomor_anggota.required' => 'Nomor anggota wajib diisi.',
+                    'nomor_pinjaman.unique' => 'Nomor pinjaman sudah terdaftar.',
+                    'jumlah_pinjaman.required' => 'Jumlah pinjaman wajib diisi.',
+                    'jumlah_pinjaman.numeric' => 'Jumlah pinjaman harus berupa angka.',
+                    'jumlah_pinjaman.min' => 'Jumlah minimal Rp 100.000.',
+                    'jangka_waktu.required' => 'Jangka waktu wajib diisi.',
+                    'jangka_waktu.integer' => 'Jangka waktu harus berupa angka bulat (bulan).',
+                    'jangka_waktu.min' => 'Jangka waktu minimal 1 bulan.',
+                    'jangka_waktu.max' => 'Jangka waktu maksimal 60 bulan.',
+                    'bunga.required' => 'Bunga wajib diisi.',
+                    'bunga.numeric' => 'Bunga harus berupa angka.',
+                    'bunga.max' => 'Bunga maksimal 30%.',
+                    'tujuan.required' => 'Tujuan pinjaman wajib diisi.',
+                    'tanggal_pengajuan.required' => 'Tanggal pengajuan wajib diisi.',
+                    'tanggal_pengajuan.date_format' => 'Format tanggal pengajuan harus YYYY-MM-DD.',
+                    'tanggal_persetujuan.date_format' => 'Format tanggal persetujuan harus YYYY-MM-DD.',
+                    'status.in' => 'Status tidak valid. Isi dengan diajukan, diverifikasi, disetujui, lunas, atau ditolak.',
+                    'angsuran_terbayar.integer' => 'Angsuran terbayar harus berupa angka bulat.',
+                ]);
+
+                if ($validator->fails()) {
+                    $error[] = [
+                        'baris' => $baris,
+                        'nomor' => $nomorAnggota ?: '-',
+                        'pesan' => implode('; ', $validator->errors()->all()),
+                    ];
+                    continue;
+                }
+
+                $anggota = Anggota::where('nomor_anggota', $nomorAnggota)->first();
+                if (! $anggota) {
+                    $dilewati[] = ['baris' => $baris, 'nomor' => $nomorAnggota, 'alasan' => 'Anggota tidak ditemukan.'];
+                    continue;
+                }
+
+                $status = $data['status'];
+                if (in_array($status, $statusAktif, true)
+                    && $anggota->pinjaman()->whereIn('status', $statusAktif)->exists()) {
+                    $dilewati[] = [
+                        'baris' => $baris,
+                        'nomor' => $nomorAnggota,
+                        'alasan' => 'Anggota masih memiliki pinjaman yang berjalan atau sedang diajukan.',
+                    ];
+                    continue;
+                }
+
+                $jumlah = (float) $data['jumlah_pinjaman'];
+                $jangka = (int) $data['jangka_waktu'];
+                $bunga = (float) $data['bunga'];
+                $punyaJadwal = in_array($status, ['disetujui', 'lunas'], true);
+                $terbayar = $status === 'lunas' ? $jangka : min((int) ($data['angsuran_terbayar'] ?? 0), $jangka);
+                if ($status === 'disetujui' && $terbayar >= $jangka) {
+                    $status = 'lunas';
+                }
+
+                $pinjaman = DB::transaction(function () use ($data, $anggota, $jumlah, $jangka, $bunga, $status, $punyaJadwal, $terbayar) {
+                    $pinjaman = Pinjaman::create([
+                        'nomor_pinjaman' => $data['nomor_pinjaman'] ?: $this->nomorPinjamanUnik(),
+                        'anggota_id' => $anggota->id,
+                        'jenis_pinjaman' => $data['jenis_pinjaman'] ?: null,
+                        'jumlah_pinjaman' => $jumlah,
+                        'jangka_waktu' => $jangka,
+                        'bunga' => $bunga,
+                        'cicilan_per_bulan' => round($jumlah / $jangka + $jumlah * $bunga / 100, 2),
+                        'tujuan' => $data['tujuan'],
+                        'status' => $status,
+                        'tanggal_pengajuan' => $data['tanggal_pengajuan'],
+                        'tanggal_persetujuan' => $punyaJadwal
+                            ? ($data['tanggal_persetujuan'] ?: $data['tanggal_pengajuan'])
+                            : null,
+                        'user_id' => Auth::id(),
+                    ]);
+
+                    if ($punyaJadwal) {
+                        $this->buatJadwalAngsuran($pinjaman, $terbayar);
+                    }
+
+                    return $pinjaman;
+                });
+
+                $berhasil[] = [
+                    'baris' => $baris,
+                    'nama' => $anggota->nama,
+                    'nomor' => $pinjaman->nomor_pinjaman,
+                    'jumlah' => (int) $jumlah,
+                    'status' => $status,
+                ];
+
+                $this->catatLog(
+                    'tambah',
+                    'Pinjaman',
+                    $pinjaman->id,
+                    $anggota->nama,
+                    'Pinjaman ' . $pinjaman->nomor_pinjaman . ' Rp ' . number_format($jumlah, 0, ',', '.') . ' diimport dari CSV',
+                    null,
+                    $pinjaman->toArray()
+                );
+            } catch (\Exception $e) {
+                $error[] = ['baris' => $baris, 'nomor' => $nomorAnggota ?: '-', 'pesan' => $e->getMessage()];
+            }
+        }
+
+        if ($error === []) {
+            $request->session()->forget('import_errors.pinjaman');
+        } else {
+            $request->session()->put('import_errors.pinjaman', $error);
+        }
+
+        return view('koperasi.pinjaman.import-hasil', compact('berhasil', 'dilewati', 'error'));
+    }
+
+    private function authorizeImport(): void
+    {
+        $this->authorize('pinjaman.tambah');
+        abort_if($this->isAnggotaUser(Auth::user()), 403);
+    }
+
+    private function nomorPinjamanUnik(): string
+    {
+        $nomor = $this->generateNomor();
+        $urutan = (int) substr($nomor, -4);
+
+        while (Pinjaman::where('nomor_pinjaman', $nomor)->exists()) {
+            $urutan++;
+            $nomor = 'PIN-' . Carbon::now()->format('Ym') . '-' . str_pad($urutan, 4, '0', STR_PAD_LEFT);
+        }
+
+        return $nomor;
+    }
     private function generateNomor(): string
     {
         $tahun  = Carbon::now()->format('Y');
@@ -358,7 +542,7 @@ class PinjamanController extends Controller
         return 'PIN-' . $tahun . $bulan . '-' . str_pad($urutan, 4, '0', STR_PAD_LEFT);
     }
 
-    private function buatJadwalAngsuran(Pinjaman $pinjaman): void
+    private function buatJadwalAngsuran(Pinjaman $pinjaman, int $terbayar = 0): void
     {
         $pokok         = $pinjaman->jumlah_pinjaman / $pinjaman->jangka_waktu;
         $bunga         = ($pinjaman->jumlah_pinjaman * $pinjaman->bunga / 100);
@@ -366,14 +550,18 @@ class PinjamanController extends Controller
         $tanggalMulai  = $pinjaman->tanggal_persetujuan ?? today();
 
         for ($i = 1; $i <= $pinjaman->jangka_waktu; $i++) {
+            $jatuhTempo = Carbon::parse($tanggalMulai)->addMonths($i);
+            $sudah = $i <= $terbayar;
+
             Angsuran::create([
                 'pinjaman_id'       => $pinjaman->id,
                 'ke'                => $i,
                 'jumlah_angsuran'   => $cicilan,
                 'pokok'             => round($pokok, 2),
                 'bunga'             => round($bunga, 2),
-                'tanggal_jatuh_tempo' => Carbon::parse($tanggalMulai)->addMonths($i),
-                'status'            => 'belum',
+                'tanggal_jatuh_tempo' => $jatuhTempo,
+                'tanggal_bayar'     => $sudah ? $jatuhTempo : null,
+                'status'            => $sudah ? 'sudah' : 'belum',
             ]);
         }
     }

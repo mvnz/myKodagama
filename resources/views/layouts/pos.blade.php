@@ -88,6 +88,14 @@
       </div>
       @endif
 
+      <div class="nav-section-title">Bantuan</div>
+      <div class="nav-item">
+        <a href="{{ route('pos.panduan') }}"
+           class="nav-link {{ request()->routeIs('pos.panduan') ? 'active' : '' }}">
+          <i class="bi bi-question-circle"></i> Panduan
+        </a>
+      </div>
+
       <div class="nav-section-title">Akun</div>
 
       <div class="nav-item">

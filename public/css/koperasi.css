@@ -925,6 +925,35 @@ section { padding: 60px 0; }
 .rekap-stat-label { font-size: .72rem; color: #9ca3af; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
 .rekap-stat-value { font-size: 1.05rem; font-weight: 700; color: #112344; line-height: 1.2; margin: .2rem 0; }
 .rekap-stat-sub   { font-size: .72rem; color: #9ca3af; }
+/* Rekap profil: banner gaya dashboard */
+.rekap-banner-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  border: 2px solid rgba(255,255,255,.35);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.rekap-banner-foto { width: 80px; height: 80px; border: 2px solid rgba(255,255,255,.35); }
+.rekap-banner-meta { font-size: .85rem; color: rgba(255,255,255,.8); }
+.rekap-banner-badge {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border-radius: 50px;
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .2rem .7rem;
+}
+.rekap-banner-badge.is-aktif { background: rgba(16,185,129,.35); }
+.rekap-banner-badge.is-nonaktif { background: rgba(248,113,113,.4); }
+.rekap-banner-btn {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.3);
+}
+.rekap-banner-btn:hover { background: rgba(255,255,255,.28); color: #fff; }
 /* Pinjaman item inside rekap */
 .pinjaman-rekap-item {
   padding: 1rem 1.25rem;

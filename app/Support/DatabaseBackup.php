@@ -260,31 +260,16 @@ class DatabaseBackup
         return is_file($path) ? $path : null;
     }
 
-    public static function bersihkan(int $hari): int
-    {
-        $batas = now()->subDays($hari)->timestamp;
-        $dihapus = 0;
-
-        foreach (glob(self::direktori() . DIRECTORY_SEPARATOR . 'kodagama-backup-*' . self::EKSTENSI) ?: [] as $file) {
-            if (filemtime($file) < $batas && @unlink($file)) {
-                $dihapus++;
-            }
-        }
-
-        return $dihapus;
-    }
-
     private static function tulis($handle, array $data): void
     {
         gzwrite($handle, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE) . "\n");
     }
 
-    /** Buat backup, hapus yang kedaluwarsa, dan catat statusnya. */
+    /** Buat backup dan catat statusnya. */
     public static function jalankanDanCatat(): string
     {
         try {
             $path = self::buat('backup');
-            self::bersihkan(max(1, (int) Pengaturan::get('backup_retensi', 14)));
             Pengaturan::set('backup_terakhir', now()->toDateTimeString() . '|ok|' . basename($path), 'backup', 'Backup terakhir');
 
             return $path;

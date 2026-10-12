@@ -106,7 +106,7 @@ class DatabaseBackupTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)->put(route('pengaturan.database.simpan'), [
-            'backup_auto' => '1', 'backup_waktu' => '03:30', 'backup_retensi' => 7,
+            'backup_auto' => '1', 'backup_waktu' => '03:30',
             'backup_lokasi' => 'custom', 'backup_path' => $this->dir,
         ])->assertRedirect();
 

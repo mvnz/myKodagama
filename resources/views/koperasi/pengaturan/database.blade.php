@@ -59,17 +59,12 @@
               <label class="form-check-label fw-600" for="backupAuto">Aktifkan auto backup</label>
             </div>
             <div class="row g-3">
-              <div class="col-md-4">
-                <label class="form-label fw-600">Jam</label>
+              <div class="col-md-6">
+                <label class="form-label fw-600">Dimulai dari jam</label>
                 <input type="time" name="backup_waktu" class="form-control"
                   value="{{ old('backup_waktu', $pengaturan['backup_waktu'] ?? '02:00') }}" required>
               </div>
-              <div class="col-md-4">
-                <label class="form-label fw-600">Simpan (hari)</label>
-                <input type="number" name="backup_retensi" class="form-control" min="1" max="365"
-                  value="{{ old('backup_retensi', $pengaturan['backup_retensi'] ?? 14) }}" required>
-              </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <label class="form-label fw-600">Lokasi</label>
                 @php $lokasi = old('backup_lokasi', $pengaturan['backup_lokasi'] ?? 'server'); @endphp
                 <select name="backup_lokasi" id="backupLokasi" class="form-select">
@@ -86,7 +81,7 @@
             <button class="btn btn-success mt-3"><i class="bi bi-save me-1"></i> Simpan Pengaturan</button>
           </form>
           <div class="alert alert-info small mt-3 mb-0">
-            Auto backup berjalan otomatis oleh aplikasi saat ada yang membuka halaman setelah jam yang diatur (sekali per hari), tanpa perlu cron atau perintah manual.
+            Backup dibuat sekali per hari, dimulai dari jam yang diatur (saat aplikasi pertama kali dibuka setelah jam tersebut). File backup tidak dihapus otomatis; hapus manual dari daftar di bawah bila perlu.
           </div>
         </div>
       </div>

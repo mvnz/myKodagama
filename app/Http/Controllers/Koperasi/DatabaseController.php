@@ -31,12 +31,10 @@ class DatabaseController extends Controller
     {
         $data = $request->validate([
             'backup_waktu' => ['required', 'date_format:H:i'],
-            'backup_retensi' => ['required', 'integer', 'min:1', 'max:365'],
             'backup_lokasi' => ['required', 'in:server,custom'],
             'backup_path' => ['nullable', 'required_if:backup_lokasi,custom', 'string', 'max:255'],
         ], [
             'backup_waktu.date_format' => 'Format jam harus HH:MM.',
-            'backup_retensi.min' => 'Retensi minimal 1 hari.',
             'backup_path.required_if' => 'Isi folder tujuan untuk lokasi kustom.',
         ]);
 
@@ -55,7 +53,6 @@ class DatabaseController extends Controller
 
         Pengaturan::set('backup_auto', $request->boolean('backup_auto') ? '1' : '0', 'backup', 'Auto backup harian');
         Pengaturan::set('backup_waktu', $data['backup_waktu'], 'backup', 'Jam auto backup');
-        Pengaturan::set('backup_retensi', $data['backup_retensi'], 'backup', 'Retensi backup (hari)');
         Pengaturan::set('backup_lokasi', $data['backup_lokasi'], 'backup', 'Lokasi backup');
         Pengaturan::set('backup_path', $data['backup_path'], 'backup', 'Folder backup kustom');
 

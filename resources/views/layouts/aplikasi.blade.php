@@ -255,7 +255,7 @@
       <div class="nav-section-title">Pengaturan</div>
 
       @if($adaPengaturan)
-      @php $pengaturanAktif = request()->routeIs('pengaturan.simpan-pinjam') || request()->routeIs('pengaturan.alur-pinjaman') || request()->routeIs('pengaturan.notifikasi-wa') || request()->routeIs('role.*') || request()->routeIs('user.*'); @endphp
+      @php $pengaturanAktif = request()->routeIs('pengaturan.simpan-pinjam') || request()->routeIs('pengaturan.alur-pinjaman') || request()->routeIs('pengaturan.notifikasi-wa') || request()->routeIs('pengaturan.database*') || request()->routeIs('role.*') || request()->routeIs('user.*'); @endphp
       <div class="nav-item">
         <a href="#submenuPengaturan"
           class="nav-link d-flex align-items-center justify-content-between {{ $pengaturanAktif ? 'active' : '' }}"
@@ -293,6 +293,13 @@
               class="nav-link py-1 {{ request()->routeIs('pengaturan.notifikasi-wa') ? 'active' : '' }}"
               style="font-size:.85rem">
               <i class="bi bi-whatsapp"></i> Notifikasi WA
+            </a>
+            @endif
+            @if($bisaAppSetting)
+            <a href="{{ route('pengaturan.database') }}"
+              class="nav-link py-1 {{ request()->routeIs('pengaturan.database*') ? 'active' : '' }}"
+              style="font-size:.85rem">
+              <i class="bi bi-database-fill-gear"></i> Database
             </a>
             @endif
             @if($bisaRole)

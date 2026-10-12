@@ -9,6 +9,7 @@ use App\Http\Controllers\Koperasi\PinjamanController;
 use App\Http\Controllers\Koperasi\AngsuranController;
 use App\Http\Controllers\Koperasi\RoleController;
 use App\Http\Controllers\Koperasi\PengaturanController;
+use App\Http\Controllers\Koperasi\DatabaseController;
 use App\Http\Controllers\Koperasi\LogAktivitasController;
 use App\Http\Controllers\Koperasi\LaporanController;
 use App\Http\Controllers\Koperasi\MonitoringController;
@@ -108,7 +109,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengaturan/alur-pinjaman', [PengaturanController::class, 'alurPinjaman'])->name('pengaturan.alur-pinjaman');
     Route::put('/pengaturan/alur-pinjaman', [PengaturanController::class, 'updateAlurPinjaman'])->name('pengaturan.alur-pinjaman.update');
 
-    // Pengaturan Pengurus
+// Pengaturan Database (backup & restore)
+Route::middleware('can:pengaturan.aplikasi')->group(function () {
+    Route::get('/pengaturan/database', [DatabaseController::class, 'index'])->name('pengaturan.database');
+    Route::put('/pengaturan/database', [DatabaseController::class, 'simpan'])->name('pengaturan.database.simpan');
+    Route::post('/pengaturan/database/backup', [DatabaseController::class, 'backup'])->name('pengaturan.database.backup');
+    Route::post('/pengaturan/database/restore', [DatabaseController::class, 'pulihkan'])->name('pengaturan.database.restore');
+    Route::get('/pengaturan/database/file/{nama}', [DatabaseController::class, 'unduh'])->name('pengaturan.database.unduh');
+    Route::delete('/pengaturan/database/file/{nama}', [DatabaseController::class, 'hapus'])->name('pengaturan.database.hapus');
+});
+
+// Pengaturan Pengurus
     Route::get('/pengaturan/pengurus', [PengaturanController::class, 'pengurus'])->name('pengaturan.pengurus');
     Route::put('/pengaturan/pengurus', [PengaturanController::class, 'updatePengurus'])->name('pengaturan.pengurus.update');
 

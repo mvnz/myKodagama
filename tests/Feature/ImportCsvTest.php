@@ -188,6 +188,7 @@ class ImportCsvTest extends TestCase
             'simpanan' => 'nomor_anggota;jenis_simpanan',
             'unit-kerja' => 'kode;nama',
             'pinjaman' => 'nomor_anggota;nomor_pinjaman',
+            'angsuran' => 'nomor_pinjaman;ke',
         ] as $jenis => $awal) {
             $this->actingAs($user)
                 ->get(route('export.template.' . $jenis))
@@ -195,5 +196,37 @@ class ImportCsvTest extends TestCase
                 ->assertDownload();
             $this->assertStringContainsString($awal, $this->actingAs($user)->get(route('export.template.' . $jenis))->streamedContent());
         }
+    }
+
+    public function test_import_angsuran_membayar_dan_melunasi_pinjaman(): void
+    {
+        $p = Pinjaman::factory()->disetujui()->create(['nomor_pinjaman' => 'PIN-A']);
+        foreach ([1, 2] as $ke) {
+            Angsuran::factory()->create([
+                'pinjaman_id' => $p->id,
+                'ke' => $ke,
+                'status' => 'belum',
+                'tanggal_jatuh_tempo' => '2024-0'.$ke.'-10',
+                'tanggal_bayar' => null,
+            ]);
+        }
+
+        $isi = "no_pinjaman;angsuran_ke;tanggal_bayar;denda\n"
+            . "PIN-A;1;2024-01-10;\n"
+            . "PIN-A;2;2024-02-15;7000\n"
+            . "PIN-A;1;2024-01-10;\n"
+            . "PIN-A;9;2024-01-10;\n"
+            . "PIN-ZZ;1;2024-01-10;\n";
+
+        $this->actingAs($this->admin())
+            ->post(route('import.angsuran'), ['file' => $this->csv($isi)])
+            ->assertOk()
+            ->assertViewHas('berhasil', fn ($b) => count($b) === 2)
+            ->assertViewHas('dilewati', fn ($d) => count($d) === 2)
+            ->assertViewHas('error', fn ($e) => count($e) === 1);
+
+        $this->assertSame(0, Angsuran::where('pinjaman_id', $p->id)->where('status', 'belum')->count());
+        $this->assertSame('7000.00', Angsuran::where('pinjaman_id', $p->id)->where('ke', 2)->value('denda'));
+        $this->assertSame('lunas', $p->fresh()->status);
     }
 }

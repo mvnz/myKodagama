@@ -102,6 +102,13 @@
     </div>
     <div class="col-md-auto d-flex gap-2 align-items-end">
       <button type="submit" class="btn btn-primary"><i class="bi bi-funnel me-1"></i> Filter</button>
+      @can('angsuran.bayar')
+      @if((auth()->user()->roleModel?->slug ?? auth()->user()->role) !== 'anggota')
+      <a href="{{ route('import.angsuran.form') }}" class="btn btn-warning">
+        <i class="bi bi-box-arrow-in-down me-1"></i> Import
+      </a>
+      @endif
+      @endcan
       <a href="{{ route('angsuran.cetak', array_filter(request()->only(['cari','status','jatuh_tempo']))) }}" class="btn btn-outline-secondary" target="_blank">
         <i class="bi bi-printer me-1"></i> Cetak
       </a>

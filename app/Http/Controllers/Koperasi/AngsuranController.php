@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Koperasi;
 use App\Http\Controllers\Controller;
 
 use App\Models\Koperasi\Angsuran;
+use App\Models\Koperasi\Pinjaman;
+use App\Support\CsvImportReader;
 use App\Http\Controllers\Concerns\CatatAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AngsuranController extends Controller
 {
@@ -99,8 +103,140 @@ class AngsuranController extends Controller
         return back()->with('sukses', $pesan);
     }
 
-    public function create() {}
-    public function store(Request $request) {}
+    public function importForm()
+    {
+        $this->authorizeImport();
+
+        return view('koperasi.angsuran.import');
+    }
+
+    public function import(Request $request)
+    {
+        $this->authorizeImport();
+
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:5120',
+        ], [
+            'file.required' => 'File CSV wajib diunggah.',
+            'file.mimes' => 'File harus berformat CSV.',
+            'file.max' => 'Ukuran file maksimal 5 MB.',
+        ]);
+
+        $rows = CsvImportReader::read($request->file('file')->getRealPath(), [
+            'no_pinjaman' => 'nomor_pinjaman',
+            'angsuran_ke' => 'ke',
+        ]);
+        if ($rows === []) {
+            return redirect()->back()->with('error', 'File CSV kosong.');
+        }
+
+        $berhasil = [];
+        $dilewati = [];
+        $error = [];
+
+        foreach ($rows as ['baris' => $baris, 'data' => $data]) {
+            $data += array_fill_keys(['nomor_pinjaman', 'ke', 'tanggal_bayar', 'denda'], '');
+            $nomor = $data['nomor_pinjaman'];
+            $ke = $data['ke'];
+            $data['denda'] = str_replace(',', '.', $data['denda']);
+
+            try {
+                $validator = Validator::make($data, [
+                    'nomor_pinjaman' => 'required|string',
+                    'ke' => 'required|integer|min:1',
+                    'tanggal_bayar' => 'required|date_format:Y-m-d',
+                    'denda' => 'nullable|numeric|min:0',
+                ], [
+                    'nomor_pinjaman.required' => 'Nomor pinjaman wajib diisi.',
+                    'ke.required' => 'Angsuran ke- wajib diisi.',
+                    'ke.integer' => 'Angsuran ke- harus berupa angka bulat.',
+                    'ke.min' => 'Angsuran ke- minimal 1.',
+                    'tanggal_bayar.required' => 'Tanggal bayar wajib diisi.',
+                    'tanggal_bayar.date_format' => 'Format tanggal bayar harus YYYY-MM-DD.',
+                    'denda.numeric' => 'Denda harus berupa angka.',
+                    'denda.min' => 'Denda tidak boleh negatif.',
+                ]);
+
+                if ($validator->fails()) {
+                    $error[] = ['baris' => $baris, 'nomor' => $nomor ?: '-', 'ke' => $ke, 'pesan' => implode('; ', $validator->errors()->all())];
+                    continue;
+                }
+
+                $pinjaman = Pinjaman::with('anggota')->where('nomor_pinjaman', $nomor)->first();
+                if (! $pinjaman) {
+                    $dilewati[] = ['baris' => $baris, 'nomor' => $nomor, 'ke' => $ke, 'alasan' => 'Pinjaman tidak ditemukan.'];
+                    continue;
+                }
+
+                $angsuran = $pinjaman->angsuran()->where('ke', (int) $ke)->first();
+                if (! $angsuran) {
+                    $error[] = ['baris' => $baris, 'nomor' => $nomor, 'ke' => $ke, 'pesan' => 'Angsuran ke-' . $ke . ' tidak ada pada jadwal pinjaman ini.'];
+                    continue;
+                }
+                if ($angsuran->status === 'sudah') {
+                    $dilewati[] = ['baris' => $baris, 'nomor' => $nomor, 'ke' => $ke, 'alasan' => 'Angsuran sudah dibayar.'];
+                    continue;
+                }
+
+                $tanggalBayar = $data['tanggal_bayar'];
+                $denda = $data['denda'] !== '' ? (float) $data['denda'] : $angsuran->hitungDenda($tanggalBayar);
+                $bayar = \Illuminate\Support\Carbon::parse($tanggalBayar);
+                $hariTerlambat = $bayar->gt($angsuran->tanggal_jatuh_tempo)
+                    ? (int) $angsuran->tanggal_jatuh_tempo->diffInDays($bayar)
+                    : 0;
+
+                DB::transaction(function () use ($angsuran, $pinjaman, $tanggalBayar, $denda, $hariTerlambat) {
+                    $angsuran->update([
+                        'status' => 'sudah',
+                        'tanggal_bayar' => $tanggalBayar,
+                        'denda' => $denda,
+                        'hari_terlambat' => $hariTerlambat,
+                    ]);
+
+                    if ($pinjaman->angsuran()->where('status', 'belum')->doesntExist()) {
+                        $pinjaman->update(['status' => 'lunas']);
+                    }
+                });
+
+                $berhasil[] = [
+                    'baris' => $baris,
+                    'nama' => $pinjaman->anggota->nama ?? '-',
+                    'nomor' => $nomor,
+                    'ke' => $angsuran->ke,
+                    'jumlah' => (float) $angsuran->jumlah_angsuran + $denda,
+                    'tanggal' => $tanggalBayar,
+                ];
+
+                $this->catatLog('bayar', 'Angsuran', $angsuran->id, $pinjaman->anggota->nama ?? '-',
+                    'Angsuran ke-' . $angsuran->ke . ' pinjaman ' . $nomor . ' dibayar (import CSV)');
+            } catch (\Exception $e) {
+                $error[] = ['baris' => $baris, 'nomor' => $nomor ?: '-', 'ke' => $ke, 'pesan' => $e->getMessage()];
+            }
+        }
+
+        if ($error === []) {
+            $request->session()->forget('import_errors.angsuran');
+        } else {
+            $request->session()->put('import_errors.angsuran', $error);
+        }
+
+        return view('koperasi.angsuran.import-hasil', compact('berhasil', 'dilewati', 'error'));
+    }
+
+    private function authorizeImport(): void
+    {
+        $this->authorize('angsuran.bayar');
+        abort_if(($this->roleSlug() === 'anggota'), 403);
+    }
+
+    private function roleSlug(): ?string
+    {
+        $user = Auth::user();
+
+        return $user->roleModel?->slug ?? $user->role;
+    }
+
+    public function create() {}    public function store(Request $request) {}
     public function edit(Angsuran $angsuran) {}
     public function update(Request $request, Angsuran $angsuran) {}
     public function destroy(Angsuran $angsuran) {}

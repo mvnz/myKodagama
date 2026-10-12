@@ -202,6 +202,16 @@ class ExportController extends Controller
             ]);
     }
 
+    public function templateAngsuran(): StreamedResponse
+    {
+        return $this->templateCsv('template_import_angsuran.csv',
+            ['nomor_pinjaman', 'ke', 'tanggal_bayar', 'denda'],
+            [
+                ['PIN-202401-0001', '1', '2024-02-12', ''],
+                ['PIN-202401-0001', '2', '2024-03-15', '5000'],
+            ]);
+    }
+
     private function templateCsv(string $nama, array $header, array $contoh): StreamedResponse
     {
         return response()->streamDownload(function () use ($header, $contoh) {
@@ -221,6 +231,7 @@ class ExportController extends Controller
             'anggota' => ['nomor', 'nama'],
             'simpanan', 'pinjaman' => ['nomor'],
             'unit-kerja' => ['kode'],
+            'angsuran' => ['nomor', 'ke'],
         };
         $errors = $request->session()->pull('import_errors.' . $jenis);
         abort_if (! is_array($errors) || $errors === [], 404);
@@ -229,7 +240,8 @@ class ExportController extends Controller
             'anggota' => ['Baris', 'Nomor Anggota', 'Nama', 'Pesan Error'],
             'simpanan', 'pinjaman' => ['Baris', 'Nomor Anggota', 'Pesan Error'],
             'unit-kerja' => ['Baris', 'Kode Unit Kerja', 'Pesan Error'],
-        ][$jenis] ?? ['Baris', 'Nomor Anggota', 'Pesan Error'];
+            'angsuran' => ['Baris', 'Nomor Pinjaman', 'Angsuran Ke', 'Pesan Error'],
+        ][$jenis];
 
         return response()->streamDownload(function () use ($errors, $identityFields, $headers) {
             $handle = fopen('php://output', 'w');

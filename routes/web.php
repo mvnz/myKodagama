@@ -153,11 +153,15 @@ Route::middleware('auth')->group(function () {
 Route::post('/import/pinjaman',         [PinjamanController::class, 'import'])->name('import.pinjaman');
 Route::get('/export/template-pinjaman', [ExportController::class, 'templatePinjaman'])->name('export.template.pinjaman');
 
+Route::get('/import/angsuran',          [AngsuranController::class, 'importForm'])->name('import.angsuran.form');
+Route::post('/import/angsuran',         [AngsuranController::class, 'import'])->name('import.angsuran');
+Route::get('/export/template-angsuran', [ExportController::class, 'templateAngsuran'])->name('export.template.angsuran');
+
 Route::get('/import/unit-kerja',           [UnitKerjaController::class, 'importForm'])->name('import.unit-kerja.form');
     Route::post('/import/unit-kerja',          [UnitKerjaController::class, 'import'])->name('import.unit-kerja');
     Route::get('/export/template-unit-kerja',  [ExportController::class, 'templateUnitKerja'])->name('export.template.unit-kerja');
     Route::get('/import/{jenis}/error-csv', [ExportController::class, 'importErrors'])
-        ->whereIn('jenis', ['anggota', 'simpanan', 'unit-kerja', 'pinjaman'])
+        ->whereIn('jenis', ['anggota', 'simpanan', 'unit-kerja', 'pinjaman', 'angsuran'])
         ->name('import.errors.csv');
 
     // Pengeluaran

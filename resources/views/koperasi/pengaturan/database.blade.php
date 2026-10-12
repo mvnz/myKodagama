@@ -86,9 +86,7 @@
             <button class="btn btn-success mt-3"><i class="bi bi-save me-1"></i> Simpan Pengaturan</button>
           </form>
           <div class="alert alert-info small mt-3 mb-0">
-            Auto backup berjalan lewat scheduler Laravel. Pastikan server memiliki cron:
-            <code>* * * * * php {{ base_path('artisan') }} schedule:run</code>
-            (Windows: Task Scheduler tiap menit).
+            Auto backup berjalan otomatis oleh aplikasi saat ada yang membuka halaman setelah jam yang diatur (sekali per hari), tanpa perlu cron atau perintah manual.
           </div>
         </div>
       </div>
@@ -129,11 +127,10 @@
 
     {{-- Restore dari upload --}}
     <div class="form-card mb-4">
-      <h6 class="fw-700 mb-1 text-danger"><i class="bi bi-upload me-2"></i>Restore dari File (Pindah Server)</h6>
+      <h6 class="fw-700 mb-1 text-danger"><i class="bi bi-upload me-2"></i>Restore</h6>
       <p class="text-muted small mb-3">
-        Unggah file backup dari server lama. Struktur tabel dibuat otomatis (migrasi), lalu <strong>seluruh data saat ini diganti</strong>.
-        Kondisi sebelumnya dicadangkan otomatis (<code>prerestore</code>). Pada server baru tanpa akun, gunakan perintah:
-        <code>php artisan backup:restore path/ke/file.ndjson.gz</code>
+        Unggah file backup dari server lama. Struktur tabel dibuat otomatis, lalu <strong>seluruh data saat ini diganti</strong>.
+        Kondisi sebelumnya dicadangkan otomatis (<code>prerestore</code>). Di server baru yang belum punya akun, restore tersedia dari halaman login.
       </p>
       <form action="{{ route('pengaturan.database.restore') }}" method="POST" enctype="multipart/form-data" class="row g-3 align-items-end">
         @csrf
@@ -150,7 +147,6 @@
         </div>
       </form>
     </div>
-
   </div>
 </div>
 

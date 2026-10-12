@@ -131,4 +131,32 @@ class DatabaseController extends Controller
         return redirect()->route('pengaturan.database')
             ->with('sukses', "Restore selesai: {$hasil['tabel']} tabel, {$hasil['baris']} baris. Backup kondisi sebelumnya disimpan (prerestore).");
     }
+
+    // Tanpa login: hanya tersedia selama aplikasi belum memiliki akun (server baru).
+    public function pemulihanAwal(): View
+    {
+        abort_unless(DatabaseBackup::belumAdaAkun(), 404);
+
+        return view('auth.pemulihan');
+    }
+
+    public function prosesPemulihanAwal(Request $request): RedirectResponse
+    {
+        abort_unless(DatabaseBackup::belumAdaAkun(), 404);
+
+        $request->validate(['file' => ['required', 'file', 'max:512000']], [
+            'file.required' => 'Pilih file backup.',
+        ]);
+
+        set_time_limit(0);
+
+        try {
+            $hasil = DatabaseBackup::pulihkan($request->file('file')->getRealPath());
+        } catch (\Throwable $e) {
+            return back()->with('galat', 'Restore gagal: ' . $e->getMessage());
+        }
+
+        return redirect()->route('masuk')
+            ->with('sukses', "Restore selesai ({$hasil['tabel']} tabel, {$hasil['baris']} baris). Silakan masuk dengan akun dari data lama.");
+    }
 }

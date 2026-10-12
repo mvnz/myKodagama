@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Koperasi\Pengaturan;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use RuntimeException;
@@ -276,5 +277,59 @@ class DatabaseBackup
     private static function tulis($handle, array $data): void
     {
         gzwrite($handle, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE) . "\n");
+    }
+
+    /** Buat backup, hapus yang kedaluwarsa, dan catat statusnya. */
+    public static function jalankanDanCatat(): string
+    {
+        try {
+            $path = self::buat('backup');
+            self::bersihkan(max(1, (int) Pengaturan::get('backup_retensi', 14)));
+            Pengaturan::set('backup_terakhir', now()->toDateTimeString() . '|ok|' . basename($path), 'backup', 'Backup terakhir');
+
+            return $path;
+        } catch (\Throwable $e) {
+            Pengaturan::set('backup_terakhir', now()->toDateTimeString() . '|gagal|' . $e->getMessage(), 'backup', 'Backup terakhir');
+            throw $e;
+        }
+    }
+
+    /** Jalankan auto backup bila sudah waktunya dan hari ini belum dijalankan. */
+    public static function jalankanBilaJatuhTempo(): void
+    {
+        $cfg = Pengaturan::whereIn('kunci', ['backup_auto', 'backup_waktu', 'backup_auto_tanggal'])->pluck('nilai', 'kunci');
+        if (($cfg['backup_auto'] ?? '0') !== '1') {
+            return;
+        }
+
+        $hariIni = now()->toDateString();
+        if (($cfg['backup_auto_tanggal'] ?? '') === $hariIni || now()->format('H:i') < ($cfg['backup_waktu'] ?? '02:00')) {
+            return;
+        }
+
+        $kunci = Cache::lock('backup-otomatis', 3600);
+        if (! $kunci->get()) {
+            return;
+        }
+
+        try {
+            // Dicatat sebelum berjalan agar kegagalan tidak diulang pada setiap request.
+            Pengaturan::set('backup_auto_tanggal', $hariIni, 'backup', 'Tanggal auto backup terakhir');
+            self::jalankanDanCatat();
+        } catch (\Throwable $e) {
+            report($e);
+        } finally {
+            $kunci->release();
+        }
+    }
+
+    /** Aplikasi baru/kosong (belum ada akun) — boleh restore tanpa login. */
+    public static function belumAdaAkun(): bool
+    {
+        try {
+            return ! DB::table('users')->exists();
+        } catch (\Throwable) {
+            return true;
+        }
     }
 }

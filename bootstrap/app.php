@@ -11,6 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [\App\Http\Middleware\BackupOtomatis::class]);
         $middleware->redirectGuestsTo(fn () => route('masuk'));
         $middleware->trimStrings(except: ['password_baru', 'password_baru_confirmation', 'password', 'password_confirmation', 'current_password']);
     })

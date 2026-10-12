@@ -113,7 +113,50 @@ class DatabaseBackupTest extends TestCase
         $this->assertSame('1', Pengaturan::get('backup_auto'));
         $this->assertSame('03:30', Pengaturan::get('backup_waktu'));
 
-        $this->artisan('backup:run --auto')->assertSuccessful();
+        $this->artisan('backup:run')->assertSuccessful();
         $this->assertCount(1, DatabaseBackup::daftar());
+    }
+
+    public function test_auto_backup_berjalan_sekali_per_hari_setelah_jam_diatur(): void
+    {
+        Pengaturan::set('backup_auto', '1', 'backup');
+        Pengaturan::set('backup_waktu', '10:00', 'backup');
+
+        $this->travelTo(now()->setTime(9, 0));
+        DatabaseBackup::jalankanBilaJatuhTempo();
+        $this->assertCount(0, DatabaseBackup::daftar());
+
+        $this->travelTo(now()->setTime(10, 5));
+        DatabaseBackup::jalankanBilaJatuhTempo();
+        DatabaseBackup::jalankanBilaJatuhTempo();
+        $this->assertCount(1, DatabaseBackup::daftar());
+        $this->assertStringContainsString('|ok|', Pengaturan::get('backup_terakhir'));
+    }
+
+    public function test_auto_backup_nonaktif_tidak_membuat_file(): void
+    {
+        Pengaturan::set('backup_auto', '0', 'backup');
+        Pengaturan::set('backup_waktu', '00:00', 'backup');
+
+        DatabaseBackup::jalankanBilaJatuhTempo();
+
+        $this->assertCount(0, DatabaseBackup::daftar());
+    }
+
+    public function test_restore_tanpa_login_hanya_saat_belum_ada_akun(): void
+    {
+        Anggota::factory()->create(['nama' => 'Dari Server Lama']);
+        $path = DatabaseBackup::buat();
+        Anggota::query()->delete();
+        User::query()->delete();
+
+        $file = new UploadedFile($path, 'b.ndjson.gz', null, null, true);
+        $this->get(route('pemulihan'))->assertOk();
+        $this->post(route('pemulihan.proses'), ['file' => $file])->assertRedirect(route('masuk'));
+        $this->assertDatabaseHas('anggota', ['nama' => 'Dari Server Lama']);
+
+        User::factory()->create();
+        $this->get(route('pemulihan'))->assertNotFound();
+        $this->post(route('pemulihan.proses'), ['file' => $file])->assertNotFound();
     }
 }

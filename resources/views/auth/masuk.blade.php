@@ -80,6 +80,10 @@
           </div>
         @endif
 
+        @if(session('sukses'))
+        <div class="alert alert-success py-2 small">{{ session('sukses') }}</div>
+        @endif
+
         <form method="POST" action="{{ route('masuk.proses') }}">
           @csrf
 
@@ -128,6 +132,12 @@
             <i class="bi bi-box-arrow-in-right"></i> Masuk Sekarang
           </button>
         </form>
+
+        @if(\App\Support\DatabaseBackup::belumAdaAkun())
+        <p class="text-center mt-3 mb-0" style="font-size:.85rem">
+          Server baru? <a href="{{ route('pemulihan') }}">Pulihkan dari file backup</a>
+        </p>
+        @endif
 
       </div>
     </div>

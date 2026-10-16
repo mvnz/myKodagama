@@ -2052,3 +2052,23 @@ section { padding: 60px 0; }
   }
 }
 
+
+/* Panduan POS: tema cokelat-amber seperti halaman Produk */
+.pos-app .help-step-line { background: linear-gradient(180deg, #b45309 0%, #f6e5cf 100%); }
+.pos-app .help-step-num { background: linear-gradient(135deg, #7c2d12, #b45309); box-shadow: 0 6px 14px rgba(180, 83, 9, .3); }
+.pos-app .help-step-card { background: linear-gradient(180deg, #ffffff 0%, #fffaf3 100%); border-color: #f6e5cf; box-shadow: 0 10px 24px rgba(124, 45, 18, .08); }
+.pos-app .help-step-card:hover { border-color: #f2b55d; box-shadow: 0 14px 28px rgba(124, 45, 18, .14); }
+.pos-app .help-step-card h5 { color: #5b2d16; }
+.pos-app .help-sub-list .bi,
+.pos-app .help-nav-link .bi,
+.pos-app .help-shortcut .bi { color: #b45309; }
+.pos-app .help-nav-link:hover { color: #b45309; }
+.pos-app .help-tip { background: #fff1df; border-left-color: #b45309; color: #7c2d12; }
+.pos-app .help-section-title { color: #8d5a38; }
+.pos-app .help-section-title::before { background: #b45309; box-shadow: 0 0 0 4px rgba(180, 83, 9, .14); }
+.pos-app .help-section-title::after { background: linear-gradient(90deg, rgba(180, 83, 9, .32) 0%, rgba(180, 83, 9, .08) 40%, rgba(180, 83, 9, 0) 100%); }
+.pos-app .help-role-card { border-color: #f6e5cf; }
+.pos-app .help-role-card h6 { color: #5b2d16; }
+.pos-app .help-badge.bg-primary { background-color: #b45309 !important; }
+.pos-app .help-shortcut { background: #fffaf3; border-color: #f6e5cf; }
+.pos-app .bi.text-primary { color: #b45309 !important; }

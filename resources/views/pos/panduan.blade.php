@@ -12,7 +12,7 @@
 
 @section('konten')
 
-<div class="dashboard-welcome mb-4">
+<div class="dashboard-welcome mb-4 is-5d93e480">
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
     <div>
       <div class="welcome-label mb-1">Dokumentasi</div>
